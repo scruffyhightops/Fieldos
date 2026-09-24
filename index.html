@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ECTO OS // Visual Demo 001</title>
+<style>
+:root{
+ --bg:#070806;--panel:#0d100d;--panel2:#111711;--line:#405344;
+ --fg:#b9e8bf;--bright:#d9ffe0;--dim:#718674;--accent:#b7d86b;
+ --cyan:#63d7d1;--amber:#e7b85b;--danger:#e56a5f;--blue:#69a9d8;
+ font-family:"Courier New",Courier,monospace
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:inherit}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.045;
+background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 4px);z-index:20}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);
+padding:0 18px;background:linear-gradient(180deg,#111611,#090c09)}
+.brand{font-size:23px;letter-spacing:.12em;color:var(--bright)}
+.brand small{display:block;font-size:9px;color:var(--dim);letter-spacing:.18em;margin-top:4px}
+.topstatus{text-align:right;font-size:10px;line-height:1.6;color:var(--dim)}
+.topstatus b{color:var(--accent)}
+.layout{display:flex;flex:1;min-height:0}
+.nav{width:218px;flex:0 0 218px;border-right:1px solid var(--line);background:#090c09;padding:11px;display:flex;flex-direction:column;gap:6px}
+.nav-title{font-size:9px;color:var(--dim);letter-spacing:.16em;padding:3px 4px 7px}
+.nav button,.btn{border:1px solid var(--line);background:#0b0f0b;color:var(--fg);padding:10px 11px;min-height:43px;
+font:inherit;font-size:11px;text-align:left;cursor:pointer;letter-spacing:.04em}
+.nav button:hover,.nav button.active,.btn:hover{border-color:var(--accent);background:#121a12}
+.nav button.active{box-shadow:inset 3px 0 0 var(--accent);color:var(--bright)}
+.content{flex:1;min-width:0;padding:17px;overflow:auto}
+.screen{max-width:1180px;margin:auto}
+h1{font-size:19px;margin:0 0 5px;letter-spacing:.08em;color:var(--bright)}
+.subtitle{font-size:10px;color:var(--dim);margin-bottom:14px;letter-spacing:.08em}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(18,24,18,.94),rgba(9,12,9,.96));padding:13px}
+.card h2{font-size:11px;color:var(--bright);letter-spacing:.1em;margin:0 0 10px}
+.metric{display:flex;justify-content:space-between;gap:12px;border-top:1px dotted #29352b;padding:7px 0;font-size:11px}
+.metric:first-of-type{border-top:0}
+.dim{color:var(--dim)}
+.ok{color:#75df82}.amber{color:var(--amber)}.danger{color:var(--danger)}.cyan{color:var(--cyan)}
+.notice{border-left:3px solid var(--accent);background:#111711;padding:10px;font-size:10px;color:var(--bright)}
+.bar{height:7px;border:1px solid #304034;background:#080b08;margin:6px 0 9px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.reticle{height:500px;position:relative;overflow:hidden;border:1px solid var(--line);
+background:
+linear-gradient(rgba(112,150,112,.07) 1px,transparent 1px),
+linear-gradient(90deg,rgba(112,150,112,.07) 1px,transparent 1px),#070a07;background-size:34px 34px}
+.uk{position:absolute;inset:9% 28%;border:1px solid rgba(183,216,107,.65);
+clip-path:polygon(38% 0,63% 5%,75% 18%,68% 32%,86% 48%,72% 63%,78% 80%,56% 100%,38% 91%,26% 74%,5% 65%,17% 48%,9% 28%,28% 18%);
+background:rgba(183,216,107,.035)}
+.node{position:absolute;transform:translate(-50%,-50%);width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent);cursor:pointer}
+.node:after{content:"";position:absolute;left:50%;top:50%;width:28px;height:28px;transform:translate(-50%,-50%);border:1px solid currentColor;border-radius:50%;animation:pulse 1.8s ease-out infinite}
+.node span{position:absolute;top:17px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--bright)}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(.7);opacity:.9}75%{transform:translate(-50%,-50%) scale(1.3);opacity:.25}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
+.readout{font-size:10px;line-height:1.7}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.tabs button{border:1px solid var(--line);background:#0a0d0a;color:var(--dim);padding:7px 9px;font:inherit;font-size:10px;cursor:pointer}
+.tabs button.active{color:var(--bright);border-color:var(--accent);background:#121812}
+.wave{height:125px;border:1px solid var(--line);background:#070a07;position:relative;overflow:hidden}
+.wave:before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 49%,#28352b 50%,transparent 51%),
+linear-gradient(90deg,transparent 49%,#28352b 50%,transparent 51%);background-size:100% 25px,34px 100%}
+.wave svg{position:absolute;inset:0;width:100%;height:100%}
+.code{font-size:10px;line-height:1.7;color:var(--dim);white-space:pre-line}
+.tag{display:inline-block;border:1px solid var(--line);padding:3px 6px;font-size:9px;color:var(--dim);margin:2px 3px 2px 0}
+.footer{border-top:1px solid var(--line);padding:7px 13px;font-size:9px;color:var(--dim);display:flex;justify-content:space-between}
+@media(max-width:760px){
+ .topbar{height:58px;padding:0 11px}.brand{font-size:18px}.layout{flex-direction:column}
+ .nav{width:100%;flex:none;border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);padding:7px}
+ .nav-title{grid-column:1/-1}.nav button{min-height:40px}.content{padding:10px}.grid,.grid3{grid-template-columns:1fr}.reticle{height:390px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="brand">ECTO OS<small>FIELD OPERATIONS SYSTEM // VISUAL DEMO 001</small></div>
+ <div class="topstatus">SYSTEM // <b>OPERATIONAL</b><br>LINK // LOCAL // 22:14:07</div>
+</header>
+<div class="layout">
+<nav class="nav" id="nav">
+ <div class="nav-title">ECTO FIELD TERMINAL</div>
+ <button data-route="response">01 RESPONSE MAP</button>
+ <button data-route="dispatch">02 ECTO DISPATCH</button>
+ <button data-route="spectres">03 SPECTRE DATABASE</button>
+ <button data-route="incidents">04 INCIDENT LOG</button>
+ <button data-route="grid">05 CONTAINMENT GRID</button>
+ <button data-route="diagnostics">06 DIAGNOSTICS</button>
+ <button data-route="config">07 CONFIGURATION</button>
+</nav>
+<main class="content"><div id="screen" class="screen"></div></main>
+</div>
+<footer class="footer"><span>ECTO OS // VISUAL DIRECTION PROTOTYPE</span><span>DESIGN BASE // SER + PKE + FOUNDATION 002</span></footer>
+</div>
+<script>
+(()=>{
+"use strict";
+let route="response";
+const locations=[
+ {city:"London",id:"LON-01",x:57,y:28,state:"ROUTINE"},
+ {city:"Portsmouth",id:"POR-01",x:52,y:57,state:"ELEVATED"},
+ {city:"Birmingham",id:"BHM-01",x:45,y:42,state:"ROUTINE"},
+ {city:"Manchester",id:"MAN-01",x:42,y:27,state:"SERIOUS"},
+ {city:"Bristol",id:"BRI-01",x:43,y:58,state:"ROUTINE"},
+ {city:"Edinburgh",id:"EDI-01",x:54,y:9,state:"ROUTINE"}
+];
+function setRoute(r){route=r;render()}
+function render(){
+ document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
+ const s=document.getElementById("screen");
+ ({response,dispatch,spectres,incidents,grid,diagnostics,config}[route]||response)(s);
+}
+function response(s){
+ const marks=locations.map(l=>`<button class="node" style="left:${l.x}%;top:${l.y}%" data-city="${l.city}"><span>${l.city}</span></button>`).join("");
+ s.innerHTML=`<h1>RESPONSE MAP</h1><div class="subtitle">UK RESPONSE NETWORK // GEOGRAPHIC FIELD OVERVIEW</div>
+ <div class="notice">SELECT CITY RETICLE TO INSPECT INVESTIGATION-LOCATION DATA. MAP REPRESENTS REGIONAL OPERATING SECTORS — NOT STREET-LEVEL NAVIGATION.</div>
+ <div class="spacer"></div><div class="grid">
+ <div class="card"><h2>REGIONAL RESPONSE GRID</h2><div class="reticle"><div class="uk"></div>${marks}</div></div>
+ <div><div class="card"><h2>SELECTED LOCATION</h2><div id="locReadout" class="readout"><span class="dim">AWAITING CITY SELECTION...</span></div></div>
+ <div class="card" style="margin-top:10px"><h2>SECTOR STATES</h2>
+ <div class="metric"><span>GREEN</span><b class="ok">ROUTINE</b></div>
+ <div class="metric"><span>YELLOW</span><b class="amber">ELEVATED</b></div>
+ <div class="metric"><span>ORANGE</span><b style="color:#ff8a35">SERIOUS</b></div>
+ <div class="metric"><span>RED</span><b class="danger">CRITICAL</b></div>
+ </div></div></div>`;
+}
+function dispatch(s){
+ s.innerHTML=`<h1>ECTO DISPATCH</h1><div class="subtitle">FIELD DEPLOYMENT CONTROL // CASE-TO-TEAM WORKFLOW</div>
+ <div class="grid"><div class="card"><h2>INCOMING CASE</h2>
+ <div class="metric"><span>CASE ID</span><b>SE-0261</b></div><div class="metric"><span>LOCATION</span><b>PORTSMOUTH, HAMPSHIRE</b></div>
+ <div class="metric"><span>INVESTIGATION SITE</span><b>PORTSMOUTH HARBOUR SECTOR</b></div><div class="metric"><span>RESPONSE TYPE</span><b class="cyan">AWE</b></div>
+ <div class="metric"><span>STATUS</span><b class="amber">ACTIVE INVESTIGATION</b></div></div>
+ <div class="card"><h2>DEPLOYMENT SELECTION</h2>
+ <div class="tabs"><button class="active">ALPHA UNIT</button><button>BRAVO UNIT</button><button>CHARLIE UNIT</button></div>
+ <div class="metric"><span>VEHICLE</span><b>ECTO-1 // AVAILABLE</b></div><div class="metric"><span>TEAM</span><b>ALPHA UNIT // 06 OPERATIVES</b></div>
+ <div class="row" style="margin-top:10px"><button class="btn" onclick="alert('PREFLIGHT // DEMO STATE')">OPEN PREFLIGHT</button><button class="btn" onclick="alert('DEPLOYMENT // DEMO STATE')">PREPARE DEPLOYMENT</button></div></div></div>
+ <div class="card" style="margin-top:10px"><h2>DISPATCH SEQUENCE</h2><span class="tag">CASE ACCEPTED</span><span class="tag">LOCATION CONFIRMED</span><span class="tag">TEAM SELECTED</span><span class="tag">VEHICLE AVAILABLE</span><span class="tag">PREFLIGHT PENDING</span></div>`;
+}
+function spectres(s){
+ s.innerHTML=`<h1>SPECTRE DATABASE</h1><div class="subtitle">PARANORMAL ENTITY CATALOG // FIELD REFERENCE</div>
+ <div class="tabs">${["CLASS I","CLASS II","CLASS III","CLASS IV","CLASS V","CLASS VI","CLASS VII"].map((x,i)=>`<button class="${i===2?"active":""}">${x}</button>`).join("")}</div>
+ <div class="grid"><div class="card"><h2>CLASS III // PSYCHOKINETIC</h2><div class="metric"><span>FIELD SIGNATURE</span><b class="cyan">ELEVATED</b></div>
+ <div class="metric"><span>PKE RESPONSE</span><b>742</b></div><div class="metric"><span>SPECTRAL VELOCITY</span><b>HIGH</b></div><div class="metric"><span>CONTAINMENT</span><b class="amber">REQUIRED</b></div></div>
+ <div class="card"><h2>FIELD REFERENCE</h2><div class="readout">Observed behaviour and classification data are presented as operational reference. Research ownership remains with SER.</div>
+ <div class="spacer"></div><div class="wave"><svg viewBox="0 0 500 125" preserveAspectRatio="none"><polyline fill="none" stroke="#63d7d1" stroke-width="2" points="0,70 35,68 55,75 80,35 105,92 135,62 165,72 190,25 215,98 245,54 275,73 305,46 335,86 365,38 395,80 425,58 460,70 500,50"/></svg></div></div></div>`;
+}
+function incidents(s){
+ s.innerHTML=`<h1>INCIDENT LOG</h1><div class="subtitle">LOCAL FIELD ARCHIVE // OPERATIONAL RECORDS</div>
+ <div class="grid"><div class="card"><h2>SE-0261</h2><div class="metric"><span>LOCATION</span><b>PORTSMOUTH</b></div><div class="metric"><span>STATUS</span><b class="amber">ACTIVE</b></div><div class="metric"><span>LEAD</span><b>ALPHA UNIT</b></div></div>
+ <div class="card"><h2>FIELD RECORD</h2><div class="code">22:06 // ARRIVAL CONFIRMED
+22:09 // PKE FIELD ELEVATED
+22:11 // SITE SECURED
+22:14 // CONTAINMENT PREPARED</div></div></div>
+ <div class="card" style="margin-top:10px"><h2>RECORD HANDLING</h2><div class="notice">ECTO operational records can reference SER research data without rewriting SER-owned evidence, analysis or observations.</div></div>`;
+}
+function grid(s){
+ s.innerHTML=`<h1>CONTAINMENT GRID</h1><div class="subtitle">FIELD STABILITY // ELECTROMAGNETIC RESPONSE // SIMULATION</div>
+ <div class="grid3"><div class="card"><h2>GRID STABILITY</h2><div style="font-size:25px;color:var(--accent)">96.2%</div><div class="bar"><i style="width:96%"></i></div><div class="metric"><span>STATE</span><b class="ok">NOMINAL</b></div></div>
+ <div class="card"><h2>EMF FIELD</h2><div style="font-size:25px;color:var(--cyan)">184.7 mG</div><div class="metric"><span>INDUCTION</span><b>14.2 T/s</b></div></div>
+ <div class="card"><h2>FIELD SIMULATION</h2><div style="font-size:25px">STABLE</div><div class="metric"><span>PHASE</span><b class="ok">LOCKED</b></div></div></div>
+ <div class="card" style="margin-top:10px"><h2>LIVE FIELD WAVEFORM</h2><div class="wave"><svg viewBox="0 0 900 125" preserveAspectRatio="none"><polyline fill="none" stroke="#b7d86b" stroke-width="2" points="0,66 40,65 75,58 105,75 135,61 165,68 195,35 220,95 250,54 280,71 315,65 350,83 385,42 420,74 455,60 490,67 530,31 555,101 590,52 620,73 655,62 690,78 725,43 760,81 800,57 840,69 900,54"/></svg></div></div>`;
+}
+function diagnostics(s){
+ s.innerHTML=`<h1>DIAGNOSTICS</h1><div class="subtitle">FIELD HARDWARE // CONNECTION & TELEMETRY</div>
+ <div class="grid3">${[
+ ["PROTON PACK","CONNECTED","3,840 RPM","118.4 V","ok"],
+ ["PKE METER","CONNECTED","FIELD 742","SWEEP READY","cyan"],
+ ["GHOST TRAP","STANDBY","GRID 98%","DOOR LOCKED","ok"]
+ ].map(x=>`<div class="card"><h2>${x[0]}</h2><div class="metric"><span>LINK</span><b class="${x[4]}">${x[1]}</b></div><div class="metric"><span>PRIMARY</span><b>${x[2]}</b></div><div class="metric"><span>SECONDARY</span><b>${x[3]}</b></div><div class="bar"><i style="width:${x[0]==="PKE METER"?74:92}%"></i></div><button class="btn" style="width:100%" onclick="alert('${x[0]} // DIAGNOSTIC DEMO')">RUN DIAGNOSTIC</button></div>`).join("")}</div>`;
+}
+function config(s){
+ s.innerHTML=`<h1>CONFIGURATION</h1><div class="subtitle">SYSTEM PREFERENCES // VISUAL PROFILE</div>
+ <div class="grid"><div class="card"><h2>DISPLAY PROFILE</h2><div class="row"><button class="btn" onclick="document.documentElement.style.setProperty('--accent','#b7d86b')">PHOSPHOR</button><button class="btn" onclick="document.documentElement.style.setProperty('--accent','#e7b85b')">AMBER</button><button class="btn" onclick="document.documentElement.style.setProperty('--accent','#63d7d1')">CYAN</button></div></div>
+ <div class="card"><h2>DESIGN PRINCIPLE</h2><div class="readout">RETRO-TECHNICAL / FIELD PRACTICAL / LOW VISUAL NOISE<br><br>SER research language + PKE instrumentation language + ECTO operational structure.</div></div></div>
+ <div class="card" style="margin-top:10px"><h2>DEMO SCOPE</h2><div class="metric"><span>FUNCTIONALITY</span><b>VISUAL / INTERACTION ONLY</b></div><div class="metric"><span>DATABASE</span><b>NOT CONNECTED</b></div><div class="metric"><span>FOUNDATION BUILD</span><b>PRESERVED SEPARATELY</b></div></div>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-route]");if(b)setRoute(b.dataset.route);
+ const n=e.target.closest("[data-city]");if(n){const l=locations.find(x=>x.city===n.dataset.city);const r=document.getElementById("locReadout");if(r)r.innerHTML=`<b>${l.city.toUpperCase()} [${l.id}]</b><br><span class="dim">SECTOR STATE</span> // <span class="${l.state==="ROUTINE"?"ok":"amber"}">${l.state}</span><br><span class="dim">GRID</span> // REGIONAL<br><span class="dim">FUNCTION</span> // INVESTIGATION LOCATION`;}}});
+render();
+})();
+</script>
+</body>
+</html>
