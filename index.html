@@ -60,12 +60,12 @@ footer{padding:20px 18px;color:#4f7956;font-size:10px;text-align:center}
  <h1>OPERATION CONTROL</h1><div class="sub">Operational record management // Demo case SE-0261</div>
  <div class="grid g3">
   <div class="panel"><h2>CASE</h2><div class="metric">SE-0261</div><div class="kv"><b>LOCATION</b><span>Portsmouth, Hampshire</span><b>SITE</b><span>Portsmouth Harbour Sector</span><b>TYPE</b><span>AWE</span></div></div>
-  <div class="panel"><h2>DEPLOYMENT</h2><div class="metric">DEP-0001</div><div class="kv"><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>STATUS</b><span class="badge ok">OPERATION COMPLETE</span></div></div>
+  <div class="panel"><h2>DEPLOYMENT</h2><div class="metric">DEP-0001</div><div class="kv"><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>STATUS</b><span class="badge ok">READY</span></div></div>
   <div class="panel"><h2>DATA STATE</h2><div class="metric">LOCAL</div><div class="kv"><b>SER REFERENCE</b><span class="badge">READ ONLY</span><b>ECTO RECORD</b><span class="badge ok">ACTIVE</span><b>SYNC</b><span>RETURN PACKAGE READY</span></div></div>
  </div>
  <div class="grid g2" style="margin-top:12px">
-  <div class="panel"><h2>OPERATION LIFECYCLE</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="advance()">ADVANCE EVENT</button><button onclick="resetOp()">RESET DEMO</button></div></div>
-  <div class="panel"><h2>QUICK RECORD</h2><div class="toolbar"><button onclick="show('timeline')">VIEW TIMELINE</button><button onclick="show('record')">OPERATION RECORD</button><button onclick="show('return')">RETURN PACKAGE</button></div><div class="note">Demo 004 tests ECTO-owned operational history without rewriting SER research data.</div></div>
+  <div class="panel"><h2>OPERATION LIFECYCLE // EVENT DRIVEN</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="triggerAction('deploy')">DEPLOY</button><button onclick="triggerAction('arrive')">ARRIVE ON SITE</button><button onclick="triggerAction('investigate')">BEGIN INVESTIGATION</button><button onclick="triggerAction('detect')">DETECT ENTITY</button><button onclick="triggerAction('contain')">INITIATE CONTAINMENT</button><button onclick="triggerAction('return')">RETURN TO HQ</button><button onclick="triggerAction('complete')">HQ ARRIVAL</button><button onclick="resetOp()">RESET</button></div></div>
+  <div class="panel"><h2>QUICK RECORD</h2><div class="toolbar"><button onclick="show('timeline')">VIEW TIMELINE</button><button onclick="show('record')">OPERATION RECORD</button><button onclick="show('return')">RETURN PACKAGE</button></div><div class="note">Lifecycle transitions are event-driven: operator actions elsewhere in ECTO advance the operation and automatically append timestamped events.</div></div>
  </div>
 </section>
 
@@ -118,11 +118,31 @@ const events=[
  ['19:38','TEAM RETURNING TO HQ','RETURNING'],
  ['19:52','OPERATION CLOSED','COMPLETE']
 ];
-let idx=8;
+let idx=0;
+const actionMap={
+ deploy:1,
+ arrive:2,
+ investigate:3,
+ detect:4,
+ contain:5,
+ return:7,
+ complete:8
+};
+function nowTime(){
+ const d=new Date();
+ return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
 function show(id){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  document.getElementById(id).classList.add('active');
- document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.v===id));
+ document.querySelectorAll('nav button').forEach(b=>b.dataset.v && b.classList.toggle('active',b.dataset.v===id));
+ render();
+}
+function triggerAction(action){
+ const target=actionMap[action];
+ if(target===undefined || target<=idx) return;
+ idx=target;
+ events[idx][0]=nowTime();
  render();
 }
 function render(){
@@ -133,8 +153,13 @@ function render(){
  document.getElementById('timelineBox').innerHTML=events.slice(0,idx+1).map(e=>`<div class="event"><small>${e[0]} // ${e[2]}</small>${e[1]}</div>`).join('');
  document.getElementById('eventTable').innerHTML=events.slice(0,idx+1).map(e=>`<tr><td>${e[0]}</td><td>${e[1]}</td><td>${e[2]}</td><td>ECTO OS</td></tr>`).join('');
 }
-function advance(){if(idx<events.length-1)idx++;render()}
-function resetOp(){idx=0;render()}
+function resetOp(){
+ idx=0;
+ events[0][0]='18:42';
+ events[1][0]='18:45'; events[2][0]='18:58'; events[3][0]='19:07'; events[4][0]='19:14';
+ events[5][0]='19:21'; events[6][0]='19:24'; events[7][0]='19:38'; events[8][0]='19:52';
+ render();
+}
 function prepare(){document.getElementById('packageMsg').textContent='RETURN PACKAGE PREPARED // 9 ECTO EVENTS // SER REFERENCE PRESERVED // READY FOR TRANSFER';}
 function exportDemo(){
  const payload={version:1,caseId:'SE-0261',deploymentId:'DEP-0001',location:'Portsmouth, Hampshire',site:'Portsmouth Harbour Sector',team:'ECHO-2',vehicle:'ECTO-04',status:'COMPLETE',events:events.slice(0,idx+1)};
