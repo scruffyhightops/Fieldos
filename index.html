@@ -26,10 +26,13 @@ button:focus-visible{outline:1px solid var(--green)}
 .clock{margin-left:auto;font:12px var(--font-data);color:var(--cyan)}
 .layout{display:grid;grid-template-columns:190px 1fr;flex:1;min-height:0}
 .nav{border-right:1px solid var(--line);padding:14px 10px;background:#090c09}
-.nav button{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;padding:10px 9px;margin-bottom:4px;color:var(--fg2);font-size:11px;letter-spacing:.09em;cursor:pointer}
+.nav button{display:flex;width:100%;align-items:center;text-align:left;border:1px solid transparent;background:transparent;padding:10px 9px;margin-bottom:4px;color:var(--fg2);font-size:11px;letter-spacing:.09em;cursor:pointer}
 .nav button:hover{border-color:var(--line);background:var(--panel)}
 .nav button.active{border-color:var(--green2);color:var(--green);background:#101710}
-.nav .num{color:var(--dim);font:11px var(--font-data);margin-right:8px}
+.nav .num{flex:0 0 24px;color:var(--dim);font:11px var(--font-data);margin-right:7px;text-align:left}
+.nav button.active .num{color:var(--green2)}
+.nav button::after{content:"";flex:1}
+.nav button{line-height:1.2}
 .main{padding:15px;min-width:0}
 .screen-head{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 2px 11px;margin-bottom:12px}
 .eyebrow{font-size:10px;color:var(--dim);letter-spacing:.13em}
@@ -93,7 +96,7 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 .case-meta{font:10px var(--font-data);color:var(--dim);margin-top:4px}
 .footer{height:30px;border-top:1px solid var(--line);padding:0 15px;display:flex;align-items:center;justify-content:space-between;font:10px var(--font-data);color:var(--dim)}
 @media(max-width:900px){
- .layout{grid-template-columns:1fr}.nav{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);padding:7px}.nav button{min-width:145px;margin:0 4px 0 0}
+ .layout{grid-template-columns:1fr}.nav{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);padding:7px}.nav button{min-width:145px;margin:0 4px 0 0} .nav .num{flex-basis:24px;margin-right:7px}
  .grid{grid-template-columns:1fr}.map-panel{min-height:520px}
 }
 @media(max-width:600px){
