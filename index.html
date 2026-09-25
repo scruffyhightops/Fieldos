@@ -1,632 +1,237 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ECTO OS // Visual Demo 004</title>
+<title>ECTO OS // RESPONSE MAP</title>
 <style>
 :root{
-  /* ECTO / SER / PKE shared visual family */
-  --bg:#070907;
-  --bg2:#0a0d0a;
-  --panel:#101410;
-  --panel2:#151a15;
-  --line:#394039;
-  --line2:#596059;
-  --fg:#c4c9c0;
-  --fg2:#9fa79e;
-  --dim:#697069;
-  --green:#72ff7a;
-  --green2:#4fc95b;
-  --olive:#a79b45;
-  --yellow:#d8c84f;
-  --cyan:#69c8c8;
-  --blue:#4e9ed2;
-  --red:#df5c52;
-  --shadow:rgba(0,0,0,.58);
-}
-*{box-sizing:border-box}
-html,body{
-  margin:0;min-height:100%;
-  background:var(--bg);
-  color:var(--fg);
-  font-family:"Courier New",Courier,monospace;
-}
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
-  opacity:.028;
-  background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px);
-}
-body:after{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:29;
-  background:linear-gradient(90deg,rgba(120,255,120,.012),transparent 28%,transparent 72%,rgba(255,220,80,.01));
-}
-button,select{font:inherit}
-button{
-  background:#0d100d;
-  color:var(--fg);
-  border:1px solid var(--line);
-  padding:9px 12px;
-  cursor:pointer;
-  letter-spacing:.35px;
-  border-radius:0;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012);
-}
-button:hover{border-color:var(--olive);color:#e0e4dc}
-button.active{
-  background:#171a12;
-  border-color:var(--yellow);
-  color:var(--yellow);
-}
-select{
-  background:#090c09;color:var(--fg);
-  border:1px solid var(--line);padding:9px;width:100%;
-  border-radius:0;
-}
-header{
-  min-height:66px;
-  border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;
-  background:#080a08;
-  position:sticky;top:0;z-index:10;
-  box-shadow:0 3px 18px var(--shadow);
-}
-.brand{
-  font-size:19px;letter-spacing:2px;
-  color:var(--fg);
-}
-.brand span{color:var(--dim);font-size:12px}
-.status{
-  font-size:11px;color:var(--green);
-  letter-spacing:.7px;
-  border-left:1px solid var(--line);
-  padding-left:14px;
-}
-nav{
-  display:flex;gap:4px;overflow:auto;
-  padding:9px 14px;
-  border-bottom:1px solid #202620;
-  background:#0b0e0b;
-}
-nav button{
-  white-space:nowrap;padding:8px 10px;font-size:11px;
-  border-color:#363d36;background:#0e110e;
-}
-main{padding:20px;max-width:1500px;margin:auto}
-.view{display:none}.view.active{display:block}
-h1{
-  font-size:18px;font-weight:normal;
-  margin:0 0 5px;
-  letter-spacing:1.5px;color:#d1d5ce;
-}
-h2{
-  font-size:11px;font-weight:normal;
-  color:var(--olive);
-  letter-spacing:1.5px;margin:0 0 11px;
-}
-.sub{
-  font-size:11px;color:var(--dim);
-  margin-bottom:16px;
-}
-.grid{display:grid;gap:10px}
-.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.panel{
-  border:1px solid var(--line);
-  background:linear-gradient(145deg,rgba(19,24,19,.97),rgba(12,15,12,.97));
-  padding:14px;min-width:0;position:relative;
-}
-.panel:before{
-  content:"";position:absolute;top:-1px;left:12px;
-  width:34px;height:1px;background:var(--olive);
-}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.kv{
-  display:grid;grid-template-columns:150px 1fr;
-  gap:7px;font-size:11px;
-}
-.kv b{
-  font-weight:normal;color:var(--dim);
-  letter-spacing:.5px;
-}
-.badge{
-  display:inline-block;
-  border:1px solid var(--line2);
-  padding:4px 7px;font-size:10px;letter-spacing:.5px;
-}
-.badge.ok{color:var(--green);border-color:#477c4d}
-.badge.warn{color:var(--yellow);border-color:#776e31}
-.badge.red{color:var(--red);border-color:#713a35}
-.timeline{
-  border-left:1px solid var(--line);
-  margin:12px 0 0 7px;padding-left:18px;
-}
-.event{
-  position:relative;padding:8px 0;
-  border-bottom:1px dotted #293029;
-  font-size:11px;
-}
-.event:before{
-  content:"";position:absolute;left:-23px;top:12px;
-  width:6px;height:6px;
-  border:1px solid var(--olive);background:var(--bg);
-}
-.event small{
-  display:block;color:var(--dim);
-  margin-bottom:3px;
-}
-.metric{
-  font-size:23px;color:var(--fg);
-  margin:4px 0 10px;letter-spacing:1px;
-}
-.progress{
-  height:8px;border:1px solid var(--line);
-  background:#050705;margin:7px 0 12px;
-}
-.progress i{
-  display:block;height:100%;width:72%;
-  background:var(--green);
-}
-.log{
-  height:210px;overflow:auto;
-  border:1px solid var(--line);
-  background:#060806;
-  padding:10px;font-size:10px;line-height:1.55;
-}
-.log div{
-  border-bottom:1px dotted #242a24;
-  padding:3px 0;
-}
-.toolbar{
-  display:flex;flex-wrap:wrap;
-  gap:6px;margin:10px 0 14px;
-}
-.table{
-  width:100%;border-collapse:collapse;font-size:10px;
-}
-.table th,.table td{
-  border-bottom:1px solid #293029;
-  padding:8px;text-align:left;
-}
-.table th{
-  color:var(--dim);font-weight:normal;
-  letter-spacing:.5px;
-}
-.note{
-  border-left:2px solid var(--cyan);
-  padding:9px 11px;
-  background:#09100f;
-  color:#a8cecd;
-  font-size:10px;
-}
-footer{
-  padding:22px 18px;
-  color:#4f584f;
-  font-size:9px;text-align:center;
-  letter-spacing:.6px;
-}
-
-/* ===== ECTO TYPOGRAPHY FOUNDATION =====
-   Eurostile = interface / headings / labels
-   Courier  = telemetry / records / technical data
-*/
-:root{
+  --bg:#070907;--bg2:#0a0d0a;--panel:#101410;--panel2:#151a15;
+  --line:#394039;--line2:#596059;--fg:#c4c9c0;--fg2:#9fa79e;--dim:#697069;
+  --green:#72ff7a;--green2:#4fc95b;--olive:#a79b45;--yellow:#d8c84f;
+  --cyan:#69c8c8;--blue:#4e9ed2;--red:#df5c52;
   --font-ui:"Eurostile","Eurostile Extended","Microgramma","Arial Narrow",Arial,sans-serif;
   --font-data:"Courier New",Courier,monospace;
 }
-
-/* Interface chrome */
-header,.brand,nav,nav button,h1,h2,.sub,button,select,.badge,footer{
-  font-family:var(--font-ui);
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg)}
+body{font-family:var(--font-ui);letter-spacing:.035em}
+button{font:inherit;color:inherit}
+button:focus-visible{outline:1px solid var(--green)}
+#app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:54px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 18px;gap:20px;background:#090c09}
+.brand{font-weight:700;letter-spacing:.12em;color:var(--green);font-size:17px;white-space:nowrap}
+.top-status{font-size:11px;color:var(--fg2);border-left:1px solid var(--line);padding-left:18px}
+.top-status b{color:var(--green)}
+.clock{margin-left:auto;font:12px var(--font-data);color:var(--cyan)}
+.layout{display:grid;grid-template-columns:190px 1fr;flex:1;min-height:0}
+.nav{border-right:1px solid var(--line);padding:14px 10px;background:#090c09}
+.nav button{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;padding:10px 9px;margin-bottom:4px;color:var(--fg2);font-size:11px;letter-spacing:.09em;cursor:pointer}
+.nav button:hover{border-color:var(--line);background:var(--panel)}
+.nav button.active{border-color:var(--green2);color:var(--green);background:#101710}
+.nav .num{color:var(--dim);font:11px var(--font-data);margin-right:8px}
+.main{padding:15px;min-width:0}
+.screen-head{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 2px 11px;margin-bottom:12px}
+.eyebrow{font-size:10px;color:var(--dim);letter-spacing:.13em}
+h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
+.sub{font-size:11px;color:var(--fg2);margin-top:4px}
+.readout{font-family:var(--font-data)}
+.head-meta{text-align:right;font:11px var(--font-data);color:var(--fg2);line-height:1.7}
+.head-meta .live{color:var(--green)}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(310px,.75fr);gap:12px}
+.panel{border:1px solid var(--line);background:var(--panel);min-width:0}
+.panel-head{height:34px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+.panel-title{font-size:11px;letter-spacing:.1em}
+.panel-code{font:10px var(--font-data);color:var(--dim)}
+.map-panel{min-height:610px;position:relative;overflow:hidden;background:#0b100c}
+.map{
+ position:absolute;inset:34px 0 0;
+ background:
+   linear-gradient(rgba(110,130,110,.07) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(110,130,110,.07) 1px,transparent 1px);
+ background-size:42px 42px;
 }
-
-/* Instrument/data layer */
-.kv,.metric,.timeline,.event,.table,.table th,.table td,.log,.note{
-  font-family:var(--font-data);
+.map:before{
+ content:"";position:absolute;inset:8% 15% 8% 15%;
+ border:1px solid #596559;
+ clip-path:polygon(47% 0,61% 6%,68% 15%,79% 25%,77% 34%,86% 44%,77% 53%,84% 64%,72% 72%,69% 84%,58% 91%,52% 100%,41% 92%,37% 83%,27% 78%,30% 67%,20% 59%,24% 48%,15% 39%,23% 29%,28% 19%,39% 13%);
+ opacity:.7;
 }
-
-/* Eurostile-style technical hierarchy */
-h1{
-  font-weight:600;
-  letter-spacing:1.8px;
-  text-transform:uppercase;
+.map:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 0,transparent 45%,rgba(0,0,0,.3) 100%)}
+.map-label{position:absolute;color:#677167;font:10px var(--font-data);letter-spacing:.05em}
+.marker{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:4}
+.marker-dot{width:12px;height:12px;border:2px solid var(--green);background:#0b120b;box-shadow:0 0 0 3px rgba(114,255,122,.08)}
+.marker.warn .marker-dot{border-color:var(--yellow)}
+.marker.alert .marker-dot{border-color:var(--red)}
+.marker span{display:block;margin-top:5px;font:10px var(--font-data);white-space:nowrap;color:var(--fg2);text-align:center}
+.marker.selected .marker-dot{background:var(--green);box-shadow:0 0 0 5px rgba(114,255,122,.12)}
+.marker.selected span{color:var(--green)}
+.map-gridref{position:absolute;left:12px;bottom:10px;font:11px var(--font-data);color:var(--dim);z-index:5}
+.map-mode{position:absolute;right:12px;bottom:10px;font:10px var(--font-data);color:var(--cyan);z-index:5}
+.legend{display:flex;gap:16px;padding:9px 10px;border-top:1px solid var(--line);font:10px var(--font-data);color:var(--fg2)}
+.legend i{display:inline-block;width:8px;height:8px;border:1px solid currentColor;margin-right:5px}
+.green{color:var(--green)}.amber{color:var(--yellow)}.red{color:var(--red)}
+.side{display:grid;gap:12px;align-content:start}
+.info{padding:11px}
+.kv{display:grid;grid-template-columns:112px 1fr;gap:7px;padding:6px 0;border-bottom:1px solid #252b25;font:12px var(--font-data)}
+.kv:last-child{border-bottom:0}
+.k{color:var(--dim)}.v{color:var(--fg)}
+.v.green{color:var(--green)}.v.cyan{color:var(--cyan)}.v.blue{color:var(--blue)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
+.action{border:1px solid var(--line2);background:#111611;padding:10px 8px;font-size:10px;letter-spacing:.07em;cursor:pointer}
+.action:hover{border-color:var(--green2);background:#151b15}
+.action.primary{border-color:var(--green2);color:var(--green)}
+.action.warn{color:var(--yellow)}
+.action:disabled{opacity:.35;cursor:not-allowed}
+.case-list{padding:7px}
+.case{border:1px solid transparent;padding:9px 8px;cursor:pointer}
+.case:hover{border-color:var(--line);background:#141914}
+.case.selected{border-color:var(--green2);background:#111811}
+.case-top{display:flex;justify-content:space-between;font:12px var(--font-data)}
+.case-top b{color:var(--green)}
+.case-name{font-size:11px;margin-top:5px;color:var(--fg2)}
+.case-meta{font:10px var(--font-data);color:var(--dim);margin-top:4px}
+.footer{height:30px;border-top:1px solid var(--line);padding:0 15px;display:flex;align-items:center;justify-content:space-between;font:10px var(--font-data);color:var(--dim)}
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}.nav{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);padding:7px}.nav button{min-width:145px;margin:0 4px 0 0}
+ .grid{grid-template-columns:1fr}.map-panel{min-height:520px}
 }
-h2{
-  font-weight:600;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-}
-.brand{
-  font-weight:600;
-  letter-spacing:2.2px;
-}
-nav button{
-  font-weight:600;
-  letter-spacing:1px;
-}
-.sub{
-  letter-spacing:.7px;
-}
-button{
-  font-weight:600;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-}
-.badge{
-  font-family:var(--font-data);
-}
-
-/* Compact ECTO instrument labels */
-.instrument-label{
-  font-family:var(--font-ui);
-  font-size:10px;
-  letter-spacing:1.2px;
-  text-transform:uppercase;
-  color:var(--dim);
-}
-.readout{
-  font-family:var(--font-data);
-  letter-spacing:1px;
-  color:var(--fg);
-}
-.readout.active{color:var(--green)}
-.readout.warning{color:var(--yellow)}
-.readout.info{color:var(--cyan)}
-
-
-/* ===== ECTO INTERFACE COMPONENT FOUNDATION ===== */
-.panel{
-  border-color:#394039;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.008);
-}
-.panel:after{
-  content:"";
-  position:absolute;
-  right:10px;
-  bottom:-1px;
-  width:22px;
-  height:1px;
-  background:#293029;
-}
-.panel.compact{padding:10px}
-.panel.instrument{
-  background:#090c09;
-  border-color:#4a514a;
-}
-
-/* Instrument readouts */
-.readout-box{
-  border:1px solid var(--line);
-  background:#060806;
-  padding:10px 12px;
-  min-height:48px;
-}
-.readout-box .readout-label{
-  font-family:var(--font-ui);
-  color:var(--dim);
-  font-size:9px;
-  letter-spacing:1.1px;
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-.readout-box .readout-value{
-  font-family:var(--font-data);
-  color:var(--fg);
-  font-size:15px;
-  letter-spacing:.7px;
-}
-.readout-box.active .readout-value{color:var(--green)}
-.readout-box.warning .readout-value{color:var(--yellow)}
-.readout-box.info .readout-value{color:var(--cyan)}
-.readout-box.danger .readout-value{color:var(--red)}
-
-/* ECTO status lamps */
-.status-lamp{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  font-family:var(--font-ui);
-  font-size:9px;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  color:var(--fg2);
-}
-.status-lamp:before{
-  content:"";
-  width:6px;height:6px;
-  border:1px solid currentColor;
-  background:transparent;
-  display:inline-block;
-}
-.status-lamp.ok{color:var(--green)}
-.status-lamp.ok:before{background:var(--green)}
-.status-lamp.warn{color:var(--yellow)}
-.status-lamp.warn:before{background:var(--yellow)}
-.status-lamp.info{color:var(--cyan)}
-.status-lamp.info:before{background:var(--cyan)}
-.status-lamp.fault{color:var(--red)}
-.status-lamp.fault:before{background:var(--red)}
-
-/* Controls: flat specialist-instrument treatment */
-.ecto-control{
-  min-height:36px;
-  border:1px solid #454c45;
-  background:#0c0f0c;
-  color:var(--fg);
-  font-family:var(--font-ui);
-  font-size:10px;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-.ecto-control:hover{
-  border-color:var(--olive);
-  background:#111510;
-}
-.ecto-control.selected,
-.ecto-control.active{
-  border-color:var(--yellow);
-  color:var(--yellow);
-  background:#15170f;
-}
-.ecto-control.green{
-  border-color:#47734b;
-  color:var(--green);
-}
-.ecto-control.cyan{
-  border-color:#386767;
-  color:var(--cyan);
-}
-.ecto-control.danger{
-  border-color:#6d3a35;
-  color:var(--red);
-}
-
-/* Small technical divider */
-.ecto-rule{
-  height:1px;
-  background:#293029;
-  margin:10px 0;
-  position:relative;
-}
-.ecto-rule:after{
-  content:"";
-  position:absolute;
-  left:0;top:0;width:42px;height:1px;
-  background:var(--olive);
-}
-
-/* Operational state strip */
-.state-strip{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  border:1px solid var(--line);
-  background:#070907;
-}
-.state-strip > div{
-  padding:7px 8px;
-  border-right:1px solid #293029;
-  font-family:var(--font-ui);
-  font-size:9px;
-  letter-spacing:.8px;
-  color:var(--dim);
-  text-align:center;
-}
-.state-strip > div:last-child{border-right:0}
-.state-strip > div.current{
-  color:var(--green);
-  background:#0d140d;
-}
-.state-strip > div.warning{
-  color:var(--yellow);
-  background:#121109;
-}
-
-/* Information hierarchy */
-.meta-line{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  font-family:var(--font-ui);
-  font-size:9px;
-  letter-spacing:.7px;
-  text-transform:uppercase;
-  color:var(--dim);
-}
-.meta-line strong{
-  color:var(--fg2);
-  font-weight:normal;
-}
-
-/* Keep controls usable on smaller screens */
-@media(max-width:850px){
-  .state-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .state-strip > div:nth-child(2){border-right:0}
-  .state-strip > div:nth-child(-n+2){border-bottom:1px solid #293029}
-}
-
-@media(max-width:850px){
-  .g2,.g3{grid-template-columns:1fr}
-  .kv{grid-template-columns:120px 1fr}
-  header{position:relative}
-  .brand{font-size:16px}
-  .status{display:none}
+@media(max-width:600px){
+ .topbar{height:auto;min-height:52px;flex-wrap:wrap;padding:9px 12px}.clock{margin-left:0}.main{padding:9px}.grid{gap:9px}.map-panel{min-height:430px}.kv{grid-template-columns:96px 1fr}
 }
 </style>
 </head>
 <body>
-<header>
- <div class="brand">ECTO OS <span style="color:var(--dim)">// VISUAL DEMO 004</span></div>
- <div class="status">● SYSTEM OPERATIONAL // LOCAL OPERATIONS STORE</div>
+<div id="app">
+<header class="topbar">
+  <div class="brand">ECTO OS</div>
+  <div class="top-status">SYSTEM <b>OPERATIONAL</b> // RESPONSE NETWORK <b>ONLINE</b></div>
+  <div class="clock" id="clock"></div>
 </header>
-<nav id="nav"></nav>
-<main>
+<div class="layout">
+<nav class="nav" id="nav">
+ <button class="active"><span class="num">01</span>RESPONSE MAP</button>
+ <button><span class="num">02</span>ECTO DISPATCH</button>
+ <button><span class="num">03</span>SPECTRE DATABASE</button>
+ <button><span class="num">04</span>INCIDENT LOG</button>
+ <button><span class="num">05</span>CONTAINMENT GRID</button>
+ <button><span class="num">06</span>DIAGNOSTICS</button>
+ <button><span class="num">07</span>CONFIGURATION</button>
+</nav>
 
-<section id="dashboard" class="view active">
- <h1>OPERATION CONTROL</h1><div class="sub">Operational record management // Demo case SE-0261</div>
- <div class="grid g3">
-  <div class="panel"><h2>CASE</h2><div class="metric">SE-0261</div><div class="kv"><b>LOCATION</b><span>Portsmouth, Hampshire</span><b>SITE</b><span>Portsmouth Harbour Sector</span><b>TYPE</b><span>AWE</span></div></div>
-  <div class="panel"><h2>DEPLOYMENT</h2><div class="metric">DEP-0001</div><div class="kv"><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>STATUS</b><span class="badge ok">READY</span></div></div>
-  <div class="panel"><h2>DATA STATE</h2><div class="metric" style="color:var(--green)">LOCAL</div><div class="kv"><b>SER REFERENCE</b><span class="badge">READ ONLY</span><b>ECTO RECORD</b><span class="badge ok">ACTIVE</span><b>SYNC</b><span>RETURN PACKAGE READY</span></div></div>
- </div>
- <div class="panel" style="margin-top:12px">
-  <h2>INTERFACE TYPE SYSTEM</h2>
-  <div class="grid g2">
-    <div>
-      <div class="instrument-label">EUROSTILE / INTERFACE</div>
-      <div style="font-family:var(--font-ui);font-size:18px;letter-spacing:1.2px;margin-top:5px">ECTO COMMAND / FIELD OPERATIONS</div>
+<main class="main">
+<section class="screen-head">
+ <div><div class="eyebrow">FIELD OPERATIONS // GEOGRAPHIC RESPONSE CONTROL</div><h1>RESPONSE MAP</h1><div class="sub">Regional incident and investigation-site overview</div></div>
+ <div class="head-meta"><span class="live">● LIVE</span><br>MAP GRID // UK REGIONAL</div>
+</section>
+
+<div class="grid">
+ <section class="panel map-panel">
+   <div class="panel-head"><div class="panel-title">UK RESPONSE GRID</div><div class="panel-code">GRID / C3 // SCALE REGIONAL</div></div>
+   <div class="map" id="map">
+     <div class="map-label" style="left:18%;top:14%">SCOTLAND</div>
+     <div class="map-label" style="left:28%;top:39%">NORTHERN ENGLAND</div>
+     <div class="map-label" style="left:43%;top:65%">MIDLANDS</div>
+     <div class="map-label" style="left:52%;top:82%">SOUTHERN REGION</div>
+     <div class="map-label" style="left:7%;top:88%">WALES</div>
+     <div class="map-label" style="left:74%;top:91%">CHANNEL</div>
+     <div class="map-gridref">GRID // C3 &nbsp;|&nbsp; REGIONAL VIEW &nbsp;|&nbsp; STREET DATA SUPPRESSED</div>
+     <div class="map-mode">DISPLAY // OPERATIONAL</div>
+   </div>
+   <div class="legend">
+     <span class="green"><i></i>ACTIVE</span>
+     <span class="amber"><i></i>MONITOR</span>
+     <span class="red"><i></i>ALERT</span>
+     <span>MARKERS // CITY / REGION</span>
+   </div>
+ </section>
+
+ <aside class="side">
+   <section class="panel">
+    <div class="panel-head"><div class="panel-title">SELECTED LOCATION</div><div class="panel-code">LOC-UK-PORTSMOUTH</div></div>
+    <div class="info" id="locationInfo"></div>
+    <div class="actions">
+      <button class="action primary" id="openCase">OPEN CASE</button>
+      <button class="action" id="dispatch">ECTO DISPATCH</button>
+      <button class="action" id="sites">VIEW SITES</button>
+      <button class="action warn" id="brief">FIELD BRIEF</button>
     </div>
-    <div>
-      <div class="instrument-label">COURIER / DATA</div>
-      <div class="readout active" style="font-size:18px;margin-top:5px">PKE 742 // EMF ELEVATED</div>
-    </div>
-  </div>
+   </section>
+
+   <section class="panel">
+    <div class="panel-head"><div class="panel-title">ACTIVE CASES</div><div class="panel-code">LOCAL INDEX</div></div>
+    <div class="case-list" id="caseList"></div>
+   </section>
+ </aside>
 </div>
- 
-<div class="panel" style="margin-top:12px">
-  <h2>INTERFACE COMPONENTS</h2>
-  <div class="grid g3">
-    <div class="readout-box active">
-      <div class="readout-label">PKE RESPONSE</div>
-      <div class="readout-value">742</div>
-    </div>
-    <div class="readout-box warning">
-      <div class="readout-label">EM FIELD</div>
-      <div class="readout-value">ELEVATED</div>
-    </div>
-    <div class="readout-box info">
-      <div class="readout-label">GRID STABILITY</div>
-      <div class="readout-value">94%</div>
-    </div>
-  </div>
-  <div class="ecto-rule"></div>
-  <div class="row" style="align-items:flex-start;flex-wrap:wrap">
-    <div class="meta-line">
-      <span>CASE <strong>SE-0261</strong></span>
-      <span>DEP <strong>DEP-0001</strong></span>
-      <span>SITE <strong>PORTSMOUTH HARBOUR SECTOR</strong></span>
-    </div>
-    <div class="status-lamp ok">SYSTEM READY</div>
-  </div>
-  <div class="toolbar">
-    <button class="ecto-control selected">SELECTED</button>
-    <button class="ecto-control">STANDARD</button>
-    <button class="ecto-control green">OPERATIONAL</button>
-    <button class="ecto-control cyan">TECHNICAL</button>
-    <button class="ecto-control danger">FAULT</button>
-  </div>
-  <div class="state-strip">
-    <div class="current">STANDBY</div>
-    <div>EN ROUTE</div>
-    <div>ON SITE</div>
-    <div>COMPLETE</div>
-  </div>
-</div>
-
-<div class="grid g2" style="margin-top:12px">
-  <div class="panel"><h2>OPERATION LIFECYCLE // EVENT DRIVEN</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="triggerAction('deploy')">DEPLOY</button><button onclick="triggerAction('arrive')">ARRIVE ON SITE</button><button onclick="triggerAction('investigate')">BEGIN INVESTIGATION</button><button onclick="triggerAction('detect')">DETECT ENTITY</button><button onclick="triggerAction('contain')">INITIATE CONTAINMENT</button><button onclick="triggerAction('return')">RETURN TO HQ</button><button onclick="triggerAction('complete')">HQ ARRIVAL</button><button onclick="resetOp()">RESET</button></div></div>
-  <div class="panel"><h2>QUICK RECORD</h2><div class="toolbar"><button onclick="show('timeline')">VIEW TIMELINE</button><button onclick="show('record')">OPERATION RECORD</button><button onclick="show('return')">RETURN PACKAGE</button></div><div class="note">Lifecycle transitions are event-driven: operator actions elsewhere in ECTO advance the operation and automatically append timestamped events.</div></div>
- </div>
-</section>
-
-<section id="timeline" class="view">
- <h1>OPERATION TIMELINE</h1><div class="sub">ECTO-owned operational events for deployment DEP-0001</div>
- <div class="panel"><div id="timelineBox" class="timeline"></div></div>
-</section>
-
-<section id="record" class="view">
- <h1>OPERATION RECORD</h1><div class="sub">Structured operational record // generated by ECTO OS</div>
- <div class="grid g2">
-  <div class="panel"><h2>DEPLOYMENT</h2><div class="kv"><b>DEPLOYMENT ID</b><span>DEP-0001</span><b>CASE ID</b><span>SE-0261</span><b>LOCATION</b><span>Portsmouth, Hampshire</span><b>SITE</b><span>Portsmouth Harbour Sector</span><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span></div></div>
-  <div class="panel"><h2>FIELD SUMMARY</h2><div class="kv"><b>DETECTION</b><span id="det">RECORDED</span><b>PKE</b><span>742</span><b>EMF</b><span>ELEVATED</span><b>FIELD STABILITY</b><span>94%</span><b>CONTAINMENT</b><span class="badge ok">SUCCESSFUL</span></div></div>
- </div>
- <div class="panel" style="margin-top:12px"><h2>EVENT REGISTER</h2><table class="table"><thead><tr><th>TIME</th><th>EVENT</th><th>STATE</th><th>OWNER</th></tr></thead><tbody id="eventTable"></tbody></table></div>
-</section>
-
-<section id="return" class="view">
- <h1>RETURN PACKAGE</h1><div class="sub">Prepared for transfer back to SER // no automatic write-back in Demo 004</div>
- <div class="grid g2">
-  <div class="panel"><h2>SER REFERENCE DATA</h2><div class="kv"><b>CASE ID</b><span>SE-0261</span><b>LOCATION</b><span>Portsmouth, Hampshire</span><b>SITE</b><span>Portsmouth Harbour Sector</span><b>CLASSIFICATION</b><span>AWE</span><b>INITIAL OBSERVATION</b><span>High PKE response reported during harbour-sector investigation.</span></div><div class="badge" style="margin-top:12px">READ ONLY // SOURCE: SER</div></div>
-  <div class="panel"><h2>ECTO FIELD RESULTS</h2><div class="kv"><b>DEPLOYMENT</b><span>DEP-0001</span><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>DETECTION</b><span>ENTITY DETECTED</span><b>CONTAINMENT</b><span>SUCCESSFUL</span><b>RETURN STATUS</b><span>READY FOR HQ</span></div><div class="toolbar"><button onclick="prepare()">PREPARE PACKAGE</button><button onclick="exportDemo()">EXPORT JSON</button></div><div id="packageMsg" class="note">No transfer has been initiated. Demo only.</div></div>
- </div>
-</section>
-
-<section id="data" class="view">
- <h1>DATA OWNERSHIP</h1><div class="sub">Boundary test for SER / ECTO shared case architecture</div>
- <div class="grid g2">
-  <div class="panel"><h2>SER-OWNED</h2><div class="kv"><b>CASE</b><span>SE-0261</span><b>RESEARCH NOTES</b><span>Protected</span><b>EVIDENCE</b><span>Protected</span><b>ANALYSIS</b><span>Protected</span><b>TIMELINE</b><span>Protected</span></div><p class="note">ECTO displays shared reference information but does not edit these research records.</p></div>
-  <div class="panel"><h2>ECTO-OWNED</h2><div class="kv"><b>DEPLOYMENT</b><span>DEP-0001</span><b>TEAM / VEHICLE</b><span>ECHO-2 / ECTO-04</span><b>PREFLIGHT</b><span>COMPLETE</span><b>FIELD EVENTS</b><span>RECORDED</span><b>RESULTS</b><span>CONTAINMENT SUCCESSFUL</span></div><p class="note">These operational records belong to ECTO and can later form the ECTO → SER return package.</p></div>
- </div>
-</section>
-
 </main>
-<footer>ECTO OS // VISUAL DEMO 004 // OPERATIONAL DATA & CASE LIFECYCLE // PROTOTYPE ONLY</footer>
+</div>
+<footer class="footer"><span>ECTO OS // RESPONSE MAP 001</span><span id="footerState">READY // SELECT A LOCATION</span></footer>
+</div>
+
 <script>
-const navItems=[
- ['dashboard','01 CONTROL'],['timeline','02 TIMELINE'],['record','03 OPERATION RECORD'],['return','04 RETURN PACKAGE'],['data','05 DATA OWNERSHIP']
+const locations=[
+ {id:"LOC-UK-LONDON",city:"London",region:"Greater London",grid:"D4",status:"ACTIVE",class:"green",cases:3},
+ {id:"LOC-UK-BIRMINGHAM",city:"Birmingham",region:"West Midlands",grid:"C3",status:"MONITOR",class:"amber",cases:1},
+ {id:"LOC-UK-MANCHESTER",city:"Manchester",region:"Greater Manchester",grid:"B3",status:"MONITOR",class:"amber",cases:1},
+ {id:"LOC-UK-PORTSMOUTH",city:"Portsmouth",region:"Hampshire",grid:"C4",status:"ACTIVE",class:"green",cases:1},
+ {id:"LOC-UK-BRISTOL",city:"Bristol",region:"South West",grid:"B4",status:"ACTIVE",class:"green",cases:1},
+ {id:"LOC-UK-EDINBURGH",city:"Edinburgh",region:"Scotland",grid:"B1",status:"ALERT",class:"alert",cases:1}
 ];
-const nav=document.getElementById('nav');
-nav.innerHTML=navItems.map(x=>`<button data-v="${x[0]}" onclick="show('${x[0]}')">${x[1]}</button>`).join('');
-const events=[
- ['18:42','DEPLOYMENT CREATED','READY'],
- ['18:45','TEAM ECHO-2 DEPARTED HQ','EN ROUTE'],
- ['18:58','TEAM ARRIVED ON SITE','ON SITE'],
- ['19:07','INITIAL SWEEP COMMENCED','SWEEPING'],
- ['19:14','ENTITY DETECTED // PKE 742','DETECTED'],
- ['19:21','CONTAINMENT INITIATED','CONTAINMENT'],
- ['19:24','CONTAINMENT SUCCESSFUL','CONTAINED'],
- ['19:38','TEAM RETURNING TO HQ','RETURNING'],
- ['19:52','OPERATION CLOSED','COMPLETE']
+const cases=[
+ {id:"SE-0261",loc:"LOC-UK-PORTSMOUTH",site:"Portsmouth Harbour Sector",type:"AWE",status:"ACTIVE INVESTIGATION",date:"2026-09-24"},
+ {id:"SE-0258",loc:"LOC-UK-LONDON",site:"Central London Sector",type:"ANOMALOUS",status:"FIELD REVIEW",date:"2026-09-23"},
+ {id:"SE-0256",loc:"LOC-UK-BRISTOL",site:"Avon Industrial Sector",type:"AWE",status:"MONITORING",date:"2026-09-22"},
+ {id:"SE-0252",loc:"LOC-UK-EDINBURGH",site:"Old Town Sector",type:"SPECTRAL",status:"ALERT",date:"2026-09-21"}
 ];
-let idx=0;
-const actionMap={
- deploy:1,
- arrive:2,
- investigate:3,
- detect:4,
- contain:5,
- return:7,
- complete:8
+const markerPos={
+ "LOC-UK-EDINBURGH":[29,22],"LOC-UK-MANCHESTER":[39,39],"LOC-UK-BIRMINGHAM":[48,55],
+ "LOC-UK-BRISTOL":[40,69],"LOC-UK-LONDON":[59,75],"LOC-UK-PORTSMOUTH":[63,84]
 };
-function nowTime(){
- const d=new Date();
- return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+let selected=locations[3];
+
+function renderMarkers(){
+ const map=document.getElementById("map");
+ map.querySelectorAll(".marker").forEach(x=>x.remove());
+ locations.forEach(l=>{
+   const m=document.createElement("div");
+   m.className="marker "+(l.class==="alert"?"alert":l.class==="amber"?"warn":"")+(selected.id===l.id?" selected":"");
+   m.style.left=markerPos[l.id][0]+"%";m.style.top=markerPos[l.id][1]+"%";
+   m.innerHTML='<div class="marker-dot"></div><span>'+l.city+'</span>';
+   m.onclick=()=>selectLocation(l.id);
+   map.appendChild(m);
+ });
 }
-function show(id){
- document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('nav button').forEach(b=>b.dataset.v && b.classList.toggle('active',b.dataset.v===id));
- render();
+function selectLocation(id){
+ selected=locations.find(x=>x.id===id)||selected;
+ renderMarkers();renderInfo();renderCases();
+ document.getElementById("footerState").textContent="LOCATION // "+selected.id+" // "+selected.grid;
 }
-function triggerAction(action){
- const target=actionMap[action];
- if(target===undefined || target<=idx) return;
- idx=target;
- events[idx][0]=nowTime();
- render();
+function renderInfo(){
+ const active=cases.filter(c=>c.loc===selected.id);
+ document.getElementById("locationInfo").innerHTML=
+  '<div class="kv"><span class="k">LOCATION</span><span class="v">'+selected.city+'</span></div>'+
+  '<div class="kv"><span class="k">REGION</span><span class="v">'+selected.region+'</span></div>'+
+  '<div class="kv"><span class="k">GRID REF</span><span class="v cyan">'+selected.grid+'</span></div>'+
+  '<div class="kv"><span class="k">STATUS</span><span class="v '+selected.class+'">'+selected.status+'</span></div>'+
+  '<div class="kv"><span class="k">ACTIVE CASES</span><span class="v">'+active.length+'</span></div>';
 }
-function render(){
- const pct=Math.round(idx/(events.length-1)*100);
- document.getElementById('lifeBar').style.width=pct+'%';
- document.getElementById('lifePct').textContent=pct+'%';
- document.getElementById('lifeState').textContent=events[idx][2];
- document.getElementById('timelineBox').innerHTML=events.slice(0,idx+1).map(e=>`<div class="event"><small>${e[0]} // ${e[2]}</small>${e[1]}</div>`).join('');
- document.getElementById('eventTable').innerHTML=events.slice(0,idx+1).map(e=>`<tr><td>${e[0]}</td><td>${e[1]}</td><td>${e[2]}</td><td>ECTO OS</td></tr>`).join('');
+function renderCases(){
+ const list=document.getElementById("caseList");
+ const local=cases.filter(c=>c.loc===selected.id);
+ list.innerHTML=local.length?local.map(c=>
+ '<div class="case selected" data-id="'+c.id+'"><div class="case-top"><b>'+c.id+'</b><span>'+c.date+'</span></div><div class="case-name">'+c.site+'</div><div class="case-meta">'+c.type+' // '+c.status+'</div></div>'
+ ).join(""):'<div class="case-meta" style="padding:10px">NO ACTIVE CASES</div>';
+ list.querySelectorAll(".case").forEach(el=>el.onclick=()=>setFooter("CASE // "+el.dataset.id+" // SELECTED"));
 }
-function resetOp(){
- idx=0;
- events[0][0]='18:42';
- events[1][0]='18:45'; events[2][0]='18:58'; events[3][0]='19:07'; events[4][0]='19:14';
- events[5][0]='19:21'; events[6][0]='19:24'; events[7][0]='19:38'; events[8][0]='19:52';
- render();
-}
-function prepare(){document.getElementById('packageMsg').textContent='RETURN PACKAGE PREPARED // 9 ECTO EVENTS // SER REFERENCE PRESERVED // READY FOR TRANSFER';}
-function exportDemo(){
- const payload={version:1,caseId:'SE-0261',deploymentId:'DEP-0001',location:'Portsmouth, Hampshire',site:'Portsmouth Harbour Sector',team:'ECHO-2',vehicle:'ECTO-04',status:'COMPLETE',events:events.slice(0,idx+1)};
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='DEP-0001_RETURN_PACKAGE.json';a.click();URL.revokeObjectURL(a.href);
-}
-render();show('dashboard');
+function setFooter(t){document.getElementById("footerState").textContent=t}
+document.getElementById("openCase").onclick=()=>setFooter("CASE // SE-0261 // OPEN REQUEST");
+document.getElementById("dispatch").onclick=()=>setFooter("DISPATCH // CASE TRANSFER READY");
+document.getElementById("sites").onclick=()=>setFooter("SITE INDEX // "+selected.city+" // READ ONLY");
+document.getElementById("brief").onclick=()=>setFooter("FIELD BRIEF // "+selected.city+" // PREPARING");
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setFooter("MODULE // "+b.textContent.trim()+" // SCREEN PLACEHOLDER"));
+function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB",{hour12:false})+" UTC";}
+setInterval(tick,1000);tick();renderMarkers();renderInfo();renderCases();
 </script>
 </body>
 </html>
