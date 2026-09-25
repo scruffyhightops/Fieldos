@@ -6,128 +6,212 @@
 <title>ECTO OS // Visual Demo 004</title>
 <style>
 :root{
-  --bg:#0b0a07;
-  --bg2:#11100b;
-  --panel:#15130d;
-  --panel2:#1b1810;
-  --line:#63542b;
-  --line2:#8a7334;
-  --fg:#f1e1a0;
-  --fg2:#c9ba7a;
-  --dim:#8f845f;
-  --amber:#e4a93a;
-  --amber-hi:#ffd36a;
-  --green:#72c77a;
-  --cyan:#67c9c8;
-  --red:#e05c4f;
-  --shadow:rgba(0,0,0,.5)
+  /* ECTO / SER / PKE shared visual family */
+  --bg:#070907;
+  --bg2:#0a0d0a;
+  --panel:#101410;
+  --panel2:#151a15;
+  --line:#394039;
+  --line2:#596059;
+  --fg:#c4c9c0;
+  --fg2:#9fa79e;
+  --dim:#697069;
+  --green:#72ff7a;
+  --green2:#4fc95b;
+  --olive:#a79b45;
+  --yellow:#d8c84f;
+  --cyan:#69c8c8;
+  --blue:#4e9ed2;
+  --red:#df5c52;
+  --shadow:rgba(0,0,0,.58);
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:
-  radial-gradient(circle at 50% -20%,#262014 0,#0d0c08 42%,#080806 100%);
-  color:var(--fg);font-family:"Courier New",monospace}
+html,body{
+  margin:0;min-height:100%;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:"Courier New",monospace;
+}
 body:before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
-  opacity:.045;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px)
+  opacity:.028;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px);
 }
 body:after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:29;
-  background:linear-gradient(90deg,rgba(255,190,70,.018),transparent 30%,transparent 70%,rgba(255,190,70,.018));
+  background:linear-gradient(90deg,rgba(120,255,120,.012),transparent 28%,transparent 72%,rgba(255,220,80,.01));
 }
 button,select{font:inherit}
 button{
-  background:#11100b;color:var(--fg);border:1px solid var(--line);
-  padding:9px 12px;cursor:pointer;letter-spacing:.35px;
-  box-shadow:inset 0 0 0 1px rgba(255,210,100,.025)
+  background:#0d100d;
+  color:var(--fg);
+  border:1px solid var(--line);
+  padding:9px 12px;
+  cursor:pointer;
+  letter-spacing:.35px;
+  border-radius:0;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012);
 }
-button:hover{border-color:var(--amber);color:#fff3c6}
-button.active{background:#241d0e;border-color:var(--amber);color:var(--amber-hi)}
-select{background:#0d0c08;color:var(--fg);border:1px solid var(--line);padding:9px;width:100%}
+button:hover{border-color:var(--olive);color:#e0e4dc}
+button.active{
+  background:#171a12;
+  border-color:var(--yellow);
+  color:var(--yellow);
+}
+select{
+  background:#090c09;color:var(--fg);
+  border:1px solid var(--line);padding:9px;width:100%;
+  border-radius:0;
+}
 header{
-  min-height:66px;border-bottom:1px solid var(--line);
+  min-height:66px;
+  border-bottom:1px solid var(--line);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;background:rgba(10,9,6,.96);
+  padding:0 18px;
+  background:#080a08;
   position:sticky;top:0;z-index:10;
-  box-shadow:0 3px 18px var(--shadow)
+  box-shadow:0 3px 18px var(--shadow);
 }
-.brand{font-size:19px;letter-spacing:2px;color:var(--amber-hi)}
+.brand{
+  font-size:19px;letter-spacing:2px;
+  color:var(--fg);
+}
 .brand span{color:var(--dim);font-size:12px}
 .status{
-  font-size:11px;color:var(--green);letter-spacing:.7px;
-  border-left:1px solid var(--line);padding-left:14px
+  font-size:11px;color:var(--green);
+  letter-spacing:.7px;
+  border-left:1px solid var(--line);
+  padding-left:14px;
 }
 nav{
-  display:flex;gap:4px;overflow:auto;padding:9px 14px;
-  border-bottom:1px solid #3a3119;background:#0d0c08
+  display:flex;gap:4px;overflow:auto;
+  padding:9px 14px;
+  border-bottom:1px solid #202620;
+  background:#0b0e0b;
 }
 nav button{
   white-space:nowrap;padding:8px 10px;font-size:11px;
-  border-color:#4b4022;background:#11100b
+  border-color:#363d36;background:#0e110e;
 }
 main{padding:20px;max-width:1500px;margin:auto}
 .view{display:none}.view.active{display:block}
 h1{
-  font-size:18px;font-weight:normal;margin:0 0 5px;
-  letter-spacing:1.5px;color:#f4dfa0
+  font-size:18px;font-weight:normal;
+  margin:0 0 5px;
+  letter-spacing:1.5px;color:#d1d5ce;
 }
 h2{
-  font-size:11px;font-weight:normal;color:var(--amber);
-  letter-spacing:1.5px;margin:0 0 11px
+  font-size:11px;font-weight:normal;
+  color:var(--olive);
+  letter-spacing:1.5px;margin:0 0 11px;
 }
-.sub{font-size:11px;color:var(--dim);margin-bottom:16px}
-.grid{display:grid;gap:10px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sub{
+  font-size:11px;color:var(--dim);
+  margin-bottom:16px;
+}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .panel{
-  border:1px solid var(--line);background:
-  linear-gradient(145deg,rgba(27,24,16,.96),rgba(15,14,9,.96));
-  padding:14px;min-width:0;position:relative
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,rgba(19,24,19,.97),rgba(12,15,12,.97));
+  padding:14px;min-width:0;position:relative;
 }
 .panel:before{
-  content:"";position:absolute;top:-1px;left:12px;width:34px;
-  height:1px;background:var(--amber)
+  content:"";position:absolute;top:-1px;left:12px;
+  width:34px;height:1px;background:var(--olive);
 }
 .row{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.kv{display:grid;grid-template-columns:150px 1fr;gap:7px;font-size:11px}
-.kv b{font-weight:normal;color:var(--dim);letter-spacing:.5px}
+.kv{
+  display:grid;grid-template-columns:150px 1fr;
+  gap:7px;font-size:11px;
+}
+.kv b{
+  font-weight:normal;color:var(--dim);
+  letter-spacing:.5px;
+}
 .badge{
-  display:inline-block;border:1px solid var(--line2);
-  padding:4px 7px;font-size:10px;letter-spacing:.5px
+  display:inline-block;
+  border:1px solid var(--line2);
+  padding:4px 7px;font-size:10px;letter-spacing:.5px;
 }
-.badge.ok{color:var(--green);border-color:#48764c}
-.badge.warn{color:var(--amber-hi);border-color:#80621f}
-.badge.red{color:var(--red);border-color:#743b34}
-.timeline{border-left:1px solid var(--line);margin:12px 0 0 7px;padding-left:18px}
-.event{position:relative;padding:8px 0;border-bottom:1px dotted #40371f;font-size:11px}
+.badge.ok{color:var(--green);border-color:#477c4d}
+.badge.warn{color:var(--yellow);border-color:#776e31}
+.badge.red{color:var(--red);border-color:#713a35}
+.timeline{
+  border-left:1px solid var(--line);
+  margin:12px 0 0 7px;padding-left:18px;
+}
+.event{
+  position:relative;padding:8px 0;
+  border-bottom:1px dotted #293029;
+  font-size:11px;
+}
 .event:before{
-  content:"";position:absolute;left:-23px;top:12px;width:6px;height:6px;
-  border:1px solid var(--amber);background:var(--bg)
+  content:"";position:absolute;left:-23px;top:12px;
+  width:6px;height:6px;
+  border:1px solid var(--olive);background:var(--bg);
 }
-.event small{display:block;color:var(--dim);margin-bottom:3px}
+.event small{
+  display:block;color:var(--dim);
+  margin-bottom:3px;
+}
 .metric{
-  font-size:23px;color:var(--amber-hi);margin:4px 0 10px;
-  letter-spacing:1px
+  font-size:23px;color:var(--fg);
+  margin:4px 0 10px;letter-spacing:1px;
 }
-.progress{height:8px;border:1px solid var(--line);background:#070704;margin:7px 0 12px}
-.progress i{display:block;height:100%;width:72%;background:var(--green);box-shadow:0 0 7px rgba(114,199,122,.18)}
+.progress{
+  height:8px;border:1px solid var(--line);
+  background:#050705;margin:7px 0 12px;
+}
+.progress i{
+  display:block;height:100%;width:72%;
+  background:var(--green);
+}
 .log{
-  height:210px;overflow:auto;border:1px solid var(--line);
-  background:#080806;padding:10px;font-size:10px;line-height:1.55
+  height:210px;overflow:auto;
+  border:1px solid var(--line);
+  background:#060806;
+  padding:10px;font-size:10px;line-height:1.55;
 }
-.log div{border-bottom:1px dotted #302919;padding:3px 0}
-.toolbar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
-.table{width:100%;border-collapse:collapse;font-size:10px}
-.table th,.table td{border-bottom:1px solid #332c19;padding:8px;text-align:left}
-.table th{color:var(--dim);font-weight:normal;letter-spacing:.5px}
+.log div{
+  border-bottom:1px dotted #242a24;
+  padding:3px 0;
+}
+.toolbar{
+  display:flex;flex-wrap:wrap;
+  gap:6px;margin:10px 0 14px;
+}
+.table{
+  width:100%;border-collapse:collapse;font-size:10px;
+}
+.table th,.table td{
+  border-bottom:1px solid #293029;
+  padding:8px;text-align:left;
+}
+.table th{
+  color:var(--dim);font-weight:normal;
+  letter-spacing:.5px;
+}
 .note{
-  border-left:2px solid var(--cyan);padding:9px 11px;
-  background:#0b1110;color:#a8d6d4;font-size:10px
+  border-left:2px solid var(--cyan);
+  padding:9px 11px;
+  background:#09100f;
+  color:#a8cecd;
+  font-size:10px;
 }
-footer{padding:22px 18px;color:#665d43;font-size:9px;text-align:center;letter-spacing:.6px}
+footer{
+  padding:22px 18px;
+  color:#4f584f;
+  font-size:9px;text-align:center;
+  letter-spacing:.6px;
+}
 @media(max-width:850px){
   .g2,.g3{grid-template-columns:1fr}
   .kv{grid-template-columns:120px 1fr}
   header{position:relative}
-  .brand{font-size:16px}.status{display:none}
+  .brand{font-size:16px}
+  .status{display:none}
 }
 </style>
 </head>
@@ -140,11 +224,11 @@ footer{padding:22px 18px;color:#665d43;font-size:9px;text-align:center;letter-sp
 <main>
 
 <section id="dashboard" class="view active">
- <h1>OPERATION CONTROL</h1><div class="sub">FIELD OPERATIONS SYSTEM // OPERATIONAL RECORD MANAGEMENT // DEMO CASE SE-0261</div>
+ <h1>OPERATION CONTROL</h1><div class="sub">Operational record management // Demo case SE-0261</div>
  <div class="grid g3">
   <div class="panel"><h2>CASE</h2><div class="metric">SE-0261</div><div class="kv"><b>LOCATION</b><span>Portsmouth, Hampshire</span><b>SITE</b><span>Portsmouth Harbour Sector</span><b>TYPE</b><span>AWE</span></div></div>
   <div class="panel"><h2>DEPLOYMENT</h2><div class="metric">DEP-0001</div><div class="kv"><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>STATUS</b><span class="badge ok">READY</span></div></div>
-  <div class="panel"><h2>DATA STATE</h2><div class="metric">LOCAL</div><div class="kv"><b>SER REFERENCE</b><span class="badge">READ ONLY</span><b>ECTO RECORD</b><span class="badge ok">ACTIVE</span><b>SYNC</b><span>RETURN PACKAGE READY</span></div></div>
+  <div class="panel"><h2>DATA STATE</h2><div class="metric" style="color:var(--green)">LOCAL</div><div class="kv"><b>SER REFERENCE</b><span class="badge">READ ONLY</span><b>ECTO RECORD</b><span class="badge ok">ACTIVE</span><b>SYNC</b><span>RETURN PACKAGE READY</span></div></div>
  </div>
  <div class="grid g2" style="margin-top:12px">
   <div class="panel"><h2>OPERATION LIFECYCLE // EVENT DRIVEN</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="triggerAction('deploy')">DEPLOY</button><button onclick="triggerAction('arrive')">ARRIVE ON SITE</button><button onclick="triggerAction('investigate')">BEGIN INVESTIGATION</button><button onclick="triggerAction('detect')">DETECT ENTITY</button><button onclick="triggerAction('contain')">INITIATE CONTAINMENT</button><button onclick="triggerAction('return')">RETURN TO HQ</button><button onclick="triggerAction('complete')">HQ ARRIVAL</button><button onclick="resetOp()">RESET</button></div></div>
