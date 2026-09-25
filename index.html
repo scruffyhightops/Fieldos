@@ -274,6 +274,177 @@ button{
 .readout.warning{color:var(--yellow)}
 .readout.info{color:var(--cyan)}
 
+
+/* ===== ECTO INTERFACE COMPONENT FOUNDATION ===== */
+.panel{
+  border-color:#394039;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.008);
+}
+.panel:after{
+  content:"";
+  position:absolute;
+  right:10px;
+  bottom:-1px;
+  width:22px;
+  height:1px;
+  background:#293029;
+}
+.panel.compact{padding:10px}
+.panel.instrument{
+  background:#090c09;
+  border-color:#4a514a;
+}
+
+/* Instrument readouts */
+.readout-box{
+  border:1px solid var(--line);
+  background:#060806;
+  padding:10px 12px;
+  min-height:48px;
+}
+.readout-box .readout-label{
+  font-family:var(--font-ui);
+  color:var(--dim);
+  font-size:9px;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.readout-box .readout-value{
+  font-family:var(--font-data);
+  color:var(--fg);
+  font-size:15px;
+  letter-spacing:.7px;
+}
+.readout-box.active .readout-value{color:var(--green)}
+.readout-box.warning .readout-value{color:var(--yellow)}
+.readout-box.info .readout-value{color:var(--cyan)}
+.readout-box.danger .readout-value{color:var(--red)}
+
+/* ECTO status lamps */
+.status-lamp{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-family:var(--font-ui);
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--fg2);
+}
+.status-lamp:before{
+  content:"";
+  width:6px;height:6px;
+  border:1px solid currentColor;
+  background:transparent;
+  display:inline-block;
+}
+.status-lamp.ok{color:var(--green)}
+.status-lamp.ok:before{background:var(--green)}
+.status-lamp.warn{color:var(--yellow)}
+.status-lamp.warn:before{background:var(--yellow)}
+.status-lamp.info{color:var(--cyan)}
+.status-lamp.info:before{background:var(--cyan)}
+.status-lamp.fault{color:var(--red)}
+.status-lamp.fault:before{background:var(--red)}
+
+/* Controls: flat specialist-instrument treatment */
+.ecto-control{
+  min-height:36px;
+  border:1px solid #454c45;
+  background:#0c0f0c;
+  color:var(--fg);
+  font-family:var(--font-ui);
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.ecto-control:hover{
+  border-color:var(--olive);
+  background:#111510;
+}
+.ecto-control.selected,
+.ecto-control.active{
+  border-color:var(--yellow);
+  color:var(--yellow);
+  background:#15170f;
+}
+.ecto-control.green{
+  border-color:#47734b;
+  color:var(--green);
+}
+.ecto-control.cyan{
+  border-color:#386767;
+  color:var(--cyan);
+}
+.ecto-control.danger{
+  border-color:#6d3a35;
+  color:var(--red);
+}
+
+/* Small technical divider */
+.ecto-rule{
+  height:1px;
+  background:#293029;
+  margin:10px 0;
+  position:relative;
+}
+.ecto-rule:after{
+  content:"";
+  position:absolute;
+  left:0;top:0;width:42px;height:1px;
+  background:var(--olive);
+}
+
+/* Operational state strip */
+.state-strip{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  border:1px solid var(--line);
+  background:#070907;
+}
+.state-strip > div{
+  padding:7px 8px;
+  border-right:1px solid #293029;
+  font-family:var(--font-ui);
+  font-size:9px;
+  letter-spacing:.8px;
+  color:var(--dim);
+  text-align:center;
+}
+.state-strip > div:last-child{border-right:0}
+.state-strip > div.current{
+  color:var(--green);
+  background:#0d140d;
+}
+.state-strip > div.warning{
+  color:var(--yellow);
+  background:#121109;
+}
+
+/* Information hierarchy */
+.meta-line{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  font-family:var(--font-ui);
+  font-size:9px;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  color:var(--dim);
+}
+.meta-line strong{
+  color:var(--fg2);
+  font-weight:normal;
+}
+
+/* Keep controls usable on smaller screens */
+@media(max-width:850px){
+  .state-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .state-strip > div:nth-child(2){border-right:0}
+  .state-strip > div:nth-child(-n+2){border-bottom:1px solid #293029}
+}
+
 @media(max-width:850px){
   .g2,.g3{grid-template-columns:1fr}
   .kv{grid-template-columns:120px 1fr}
@@ -311,7 +482,48 @@ button{
     </div>
   </div>
 </div>
- <div class="grid g2" style="margin-top:12px">
+ 
+<div class="panel" style="margin-top:12px">
+  <h2>INTERFACE COMPONENTS</h2>
+  <div class="grid g3">
+    <div class="readout-box active">
+      <div class="readout-label">PKE RESPONSE</div>
+      <div class="readout-value">742</div>
+    </div>
+    <div class="readout-box warning">
+      <div class="readout-label">EM FIELD</div>
+      <div class="readout-value">ELEVATED</div>
+    </div>
+    <div class="readout-box info">
+      <div class="readout-label">GRID STABILITY</div>
+      <div class="readout-value">94%</div>
+    </div>
+  </div>
+  <div class="ecto-rule"></div>
+  <div class="row" style="align-items:flex-start;flex-wrap:wrap">
+    <div class="meta-line">
+      <span>CASE <strong>SE-0261</strong></span>
+      <span>DEP <strong>DEP-0001</strong></span>
+      <span>SITE <strong>PORTSMOUTH HARBOUR SECTOR</strong></span>
+    </div>
+    <div class="status-lamp ok">SYSTEM READY</div>
+  </div>
+  <div class="toolbar">
+    <button class="ecto-control selected">SELECTED</button>
+    <button class="ecto-control">STANDARD</button>
+    <button class="ecto-control green">OPERATIONAL</button>
+    <button class="ecto-control cyan">TECHNICAL</button>
+    <button class="ecto-control danger">FAULT</button>
+  </div>
+  <div class="state-strip">
+    <div class="current">STANDBY</div>
+    <div>EN ROUTE</div>
+    <div>ON SITE</div>
+    <div>COMPLETE</div>
+  </div>
+</div>
+
+<div class="grid g2" style="margin-top:12px">
   <div class="panel"><h2>OPERATION LIFECYCLE // EVENT DRIVEN</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="triggerAction('deploy')">DEPLOY</button><button onclick="triggerAction('arrive')">ARRIVE ON SITE</button><button onclick="triggerAction('investigate')">BEGIN INVESTIGATION</button><button onclick="triggerAction('detect')">DETECT ENTITY</button><button onclick="triggerAction('contain')">INITIATE CONTAINMENT</button><button onclick="triggerAction('return')">RETURN TO HQ</button><button onclick="triggerAction('complete')">HQ ARRIVAL</button><button onclick="resetOp()">RESET</button></div></div>
   <div class="panel"><h2>QUICK RECORD</h2><div class="toolbar"><button onclick="show('timeline')">VIEW TIMELINE</button><button onclick="show('record')">OPERATION RECORD</button><button onclick="show('return')">RETURN PACKAGE</button></div><div class="note">Lifecycle transitions are event-driven: operator actions elsewhere in ECTO advance the operation and automatically append timestamped events.</div></div>
  </div>
