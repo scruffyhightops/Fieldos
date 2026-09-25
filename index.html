@@ -30,7 +30,7 @@ html,body{
   margin:0;min-height:100%;
   background:var(--bg);
   color:var(--fg);
-  font-family:"Courier New",monospace;
+  font-family:"Courier New",Courier,monospace;
 }
 body:before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
@@ -206,6 +206,74 @@ footer{
   font-size:9px;text-align:center;
   letter-spacing:.6px;
 }
+
+/* ===== ECTO TYPOGRAPHY FOUNDATION =====
+   Eurostile = interface / headings / labels
+   Courier  = telemetry / records / technical data
+*/
+:root{
+  --font-ui:"Eurostile","Eurostile Extended","Microgramma","Arial Narrow",Arial,sans-serif;
+  --font-data:"Courier New",Courier,monospace;
+}
+
+/* Interface chrome */
+header,.brand,nav,nav button,h1,h2,.sub,button,select,.badge,footer{
+  font-family:var(--font-ui);
+}
+
+/* Instrument/data layer */
+.kv,.metric,.timeline,.event,.table,.table th,.table td,.log,.note{
+  font-family:var(--font-data);
+}
+
+/* Eurostile-style technical hierarchy */
+h1{
+  font-weight:600;
+  letter-spacing:1.8px;
+  text-transform:uppercase;
+}
+h2{
+  font-weight:600;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+.brand{
+  font-weight:600;
+  letter-spacing:2.2px;
+}
+nav button{
+  font-weight:600;
+  letter-spacing:1px;
+}
+.sub{
+  letter-spacing:.7px;
+}
+button{
+  font-weight:600;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+.badge{
+  font-family:var(--font-data);
+}
+
+/* Compact ECTO instrument labels */
+.instrument-label{
+  font-family:var(--font-ui);
+  font-size:10px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--dim);
+}
+.readout{
+  font-family:var(--font-data);
+  letter-spacing:1px;
+  color:var(--fg);
+}
+.readout.active{color:var(--green)}
+.readout.warning{color:var(--yellow)}
+.readout.info{color:var(--cyan)}
+
 @media(max-width:850px){
   .g2,.g3{grid-template-columns:1fr}
   .kv{grid-template-columns:120px 1fr}
@@ -230,6 +298,19 @@ footer{
   <div class="panel"><h2>DEPLOYMENT</h2><div class="metric">DEP-0001</div><div class="kv"><b>TEAM</b><span>ECHO-2</span><b>VEHICLE</b><span>ECTO-04</span><b>STATUS</b><span class="badge ok">READY</span></div></div>
   <div class="panel"><h2>DATA STATE</h2><div class="metric" style="color:var(--green)">LOCAL</div><div class="kv"><b>SER REFERENCE</b><span class="badge">READ ONLY</span><b>ECTO RECORD</b><span class="badge ok">ACTIVE</span><b>SYNC</b><span>RETURN PACKAGE READY</span></div></div>
  </div>
+ <div class="panel" style="margin-top:12px">
+  <h2>INTERFACE TYPE SYSTEM</h2>
+  <div class="grid g2">
+    <div>
+      <div class="instrument-label">EUROSTILE / INTERFACE</div>
+      <div style="font-family:var(--font-ui);font-size:18px;letter-spacing:1.2px;margin-top:5px">ECTO COMMAND / FIELD OPERATIONS</div>
+    </div>
+    <div>
+      <div class="instrument-label">COURIER / DATA</div>
+      <div class="readout active" style="font-size:18px;margin-top:5px">PKE 742 // EMF ELEVATED</div>
+    </div>
+  </div>
+</div>
  <div class="grid g2" style="margin-top:12px">
   <div class="panel"><h2>OPERATION LIFECYCLE // EVENT DRIVEN</h2><div class="progress"><i id="lifeBar"></i></div><div class="row"><span id="lifeState">OPERATION COMPLETE</span><span id="lifePct">100%</span></div><div class="toolbar"><button onclick="triggerAction('deploy')">DEPLOY</button><button onclick="triggerAction('arrive')">ARRIVE ON SITE</button><button onclick="triggerAction('investigate')">BEGIN INVESTIGATION</button><button onclick="triggerAction('detect')">DETECT ENTITY</button><button onclick="triggerAction('contain')">INITIATE CONTAINMENT</button><button onclick="triggerAction('return')">RETURN TO HQ</button><button onclick="triggerAction('complete')">HQ ARRIVAL</button><button onclick="resetOp()">RESET</button></div></div>
   <div class="panel"><h2>QUICK RECORD</h2><div class="toolbar"><button onclick="show('timeline')">VIEW TIMELINE</button><button onclick="show('record')">OPERATION RECORD</button><button onclick="show('return')">RETURN PACKAGE</button></div><div class="note">Lifecycle transitions are event-driven: operator actions elsewhere in ECTO advance the operation and automatically append timestamped events.</div></div>
