@@ -65,8 +65,22 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 .marker{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:4}
 .marker-dot{width:12px;height:12px;border:2px solid var(--green);background:#0b120b;box-shadow:0 0 0 3px rgba(114,255,122,.08)}
 .marker.warn .marker-dot{border-color:var(--yellow)}
-.marker.alert .marker-dot{border-color:var(--red)}
+.marker.alert .marker-dot{border-color:var(--red);position:relative;animation:ectoAlertFlash 1.15s steps(2,end) infinite}
+.marker.alert .marker-dot:before{content:"";position:absolute;inset:-5px;border:1px solid var(--red);opacity:.65;animation:ectoAlertRing 1.15s ease-out infinite}
+.marker.alert .marker-dot:after{content:"";position:absolute;inset:1px;background:var(--red);opacity:.18;animation:ectoAlertCore 1.15s steps(2,end) infinite}
+.marker.high .marker-dot{border-color:var(--red);position:relative;animation:ectoHighPulse 1.8s ease-in-out infinite}
+.marker.high .marker-dot:before{content:"";position:absolute;inset:-4px;border:1px solid var(--red);opacity:.4;animation:ectoHighRing 1.8s ease-out infinite}
+.marker.warn .marker-dot{position:relative}
+.marker.warn .marker-dot:before{content:"";position:absolute;inset:-4px;border:1px solid var(--yellow);opacity:.25;animation:ectoWarnRing 2.2s ease-out infinite}
+@keyframes ectoAlertFlash{0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(223,92,82,.16),0 0 12px rgba(223,92,82,.18)}50%{opacity:.38;box-shadow:0 0 0 3px rgba(223,92,82,.04)}}
+@keyframes ectoAlertRing{0%{transform:scale(.55);opacity:.75}70%,100%{transform:scale(1.55);opacity:0}}
+@keyframes ectoAlertCore{0%,100%{opacity:.28}50%{opacity:.9}}
+@keyframes ectoHighPulse{0%,100%{box-shadow:0 0 0 3px rgba(223,92,82,.08)}50%{box-shadow:0 0 0 6px rgba(223,92,82,.18)}}
+@keyframes ectoHighRing{0%{transform:scale(.7);opacity:.45}70%,100%{transform:scale(1.35);opacity:0}}
+@keyframes ectoWarnRing{0%{transform:scale(.75);opacity:.35}70%,100%{transform:scale(1.45);opacity:0}}
+@media (prefers-reduced-motion:reduce){.marker.alert .marker-dot,.marker.alert .marker-dot:before,.marker.alert .marker-dot:after,.marker.high .marker-dot,.marker.high .marker-dot:before,.marker.warn .marker-dot:before{animation:none}}
 .marker span{display:block;margin-top:5px;font:10px var(--font-data);white-space:nowrap;color:var(--fg2);text-align:center}
+.marker.alert span{color:var(--red);font-weight:bold;text-shadow:0 0 6px rgba(223,92,82,.22)}
 .marker.selected .marker-dot{background:var(--green);box-shadow:0 0 0 5px rgba(114,255,122,.12)}
 .marker.selected span{color:var(--green)}
 .map-gridref{position:absolute;left:12px;bottom:10px;font:11px var(--font-data);color:var(--dim);z-index:5}
@@ -77,7 +91,21 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 .side{display:grid;gap:12px;align-content:start}
 .info{padding:11px}
 .kv{display:grid;grid-template-columns:112px 1fr;gap:7px;padding:6px 0;border-bottom:1px solid #252b25;font:12px var(--font-data)}
-.kv:last-child{border-bottom:0}
+.kv:last-child{border-bottom:0}.location-hierarchy{padding:10px;border-bottom:1px solid var(--line);background:#0d120d}
+.location-country{font-size:9px;color:var(--dim);letter-spacing:.12em;margin-bottom:4px}
+.location-admin{font-size:12px;color:var(--fg2);letter-spacing:.06em}
+.location-city{font-size:19px;color:var(--fg);letter-spacing:.08em;margin-top:2px}
+.location-grid{margin-top:9px;padding-top:8px;border-top:1px solid #252b25;display:flex;justify-content:space-between;align-items:baseline}
+.location-grid-label{font-size:9px;color:var(--dim);letter-spacing:.1em}
+.location-grid-value{font:16px var(--font-data);color:var(--cyan)}
+.site-readout{padding:10px;border-bottom:1px solid var(--line)}
+.site-label{font-size:9px;color:var(--dim);letter-spacing:.1em;margin-bottom:4px}
+.site-name{font-size:12px;color:var(--fg2)}
+.site-ref{font:11px var(--font-data);color:var(--olive);margin-top:4px}.shared-ref{padding:8px 10px;border-bottom:1px solid var(--line);font:10px var(--font-data);color:var(--dim)}
+.shared-ref b{color:var(--cyan);font-weight:normal}
+.ref-block{margin-top:4px;color:var(--fg2)}
+.ref-block span{color:var(--dim)}
+.ownership{padding:8px 10px;border-top:1px solid var(--line);font:9px var(--font-data);color:var(--dim);letter-spacing:.04em}
 .k{color:var(--dim)}.v{color:var(--fg)}
 .v.green{color:var(--green)}.v.cyan{color:var(--cyan)}.v.blue{color:var(--blue)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
@@ -124,7 +152,7 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 
 <main class="main">
 <section class="screen-head">
- <div><div class="eyebrow">FIELD OPERATIONS // GEOGRAPHIC RESPONSE CONTROL</div><h1>RESPONSE MAP</h1><div class="sub">Regional incident and investigation-site overview</div></div>
+ <div><div class="eyebrow">FIELD OPERATIONS // GEOGRAPHIC RESPONSE CONTROL</div><h1>RESPONSE MAP</h1><div class="sub">Regional incident and investigation-site overview // administrative geography + ECTO operational grid</div></div>
  <div class="head-meta"><span class="live">● LIVE</span><br>MAP GRID // UK REGIONAL</div>
 </section>
 
@@ -138,7 +166,7 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
      <div class="map-label" style="left:52%;top:82%">SOUTHERN REGION</div>
      <div class="map-label" style="left:7%;top:88%">WALES</div>
      <div class="map-label" style="left:74%;top:91%">CHANNEL</div>
-     <div class="map-gridref">GRID // C3 &nbsp;|&nbsp; REGIONAL VIEW &nbsp;|&nbsp; STREET DATA SUPPRESSED</div>
+     <div class="map-gridref">ECTO GRID // REGIONAL VIEW &nbsp;|&nbsp; STREET DATA SUPPRESSED</div>
      <div class="map-mode">DISPLAY // OPERATIONAL</div>
    </div>
    <div class="legend">
@@ -169,23 +197,23 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 </div>
 </main>
 </div>
-<footer class="footer"><span>ECTO OS // RESPONSE MAP 001</span><span id="footerState">READY // SELECT A LOCATION</span></footer>
+<footer class="footer"><span>ECTO OS // RESPONSE MAP 006</span><span id="footerState">READY // SELECT A LOCATION</span></footer>
 </div>
 
 <script>
 const locations=[
- {id:"LOC-UK-LONDON",city:"London",region:"Greater London",grid:"D4",status:"ACTIVE",class:"green",cases:3},
- {id:"LOC-UK-BIRMINGHAM",city:"Birmingham",region:"West Midlands",grid:"C3",status:"MONITOR",class:"amber",cases:1},
- {id:"LOC-UK-MANCHESTER",city:"Manchester",region:"Greater Manchester",grid:"B3",status:"MONITOR",class:"amber",cases:1},
- {id:"LOC-UK-PORTSMOUTH",city:"Portsmouth",region:"Hampshire",grid:"C4",status:"ACTIVE",class:"green",cases:1},
- {id:"LOC-UK-BRISTOL",city:"Bristol",region:"South West",grid:"B4",status:"ACTIVE",class:"green",cases:1},
- {id:"LOC-UK-EDINBURGH",city:"Edinburgh",region:"Scotland",grid:"B1",status:"ALERT",class:"alert",cases:1}
+ {locationId:"LOC-UK-LONDON",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"Greater London",adminRegionType:"region",city:"London"},ecto:{gridReference:"D4",status:"ACTIVE",severity:"NORMAL"},class:"green",cases:3},
+ {locationId:"LOC-UK-BIRMINGHAM",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"West Midlands",adminRegionType:"county/region",city:"Birmingham"},ecto:{gridReference:"C3",status:"MONITOR",severity:"ELEVATED"},class:"amber",cases:1},
+ {locationId:"LOC-UK-MANCHESTER",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"Greater Manchester",adminRegionType:"metropolitan county",city:"Manchester"},ecto:{gridReference:"B3",status:"MONITOR",severity:"ELEVATED"},class:"amber",cases:1},
+ {locationId:"LOC-UK-PORTSMOUTH",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"Hampshire",adminRegionType:"county",city:"Portsmouth"},ecto:{gridReference:"C4-B2",status:"ACTIVE",severity:"NORMAL"},class:"green",cases:1},
+ {locationId:"LOC-UK-BRISTOL",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"South West",adminRegionType:"region",city:"Bristol"},ecto:{gridReference:"B4",status:"ACTIVE",severity:"NORMAL"},class:"green",cases:1},
+ {locationId:"LOC-UK-EDINBURGH",shared:{country:"United Kingdom",countryCode:"GB",adminRegion:"Scotland",adminRegionType:"country",city:"Edinburgh"},ecto:{gridReference:"B1",status:"ALERT",severity:"CRITICAL"},class:"alert",cases:1}
 ];
 const cases=[
- {id:"SE-0261",loc:"LOC-UK-PORTSMOUTH",site:"Portsmouth Harbour Sector",type:"AWE",status:"ACTIVE INVESTIGATION",date:"2026-09-24"},
- {id:"SE-0258",loc:"LOC-UK-LONDON",site:"Central London Sector",type:"ANOMALOUS",status:"FIELD REVIEW",date:"2026-09-23"},
- {id:"SE-0256",loc:"LOC-UK-BRISTOL",site:"Avon Industrial Sector",type:"AWE",status:"MONITORING",date:"2026-09-22"},
- {id:"SE-0252",loc:"LOC-UK-EDINBURGH",site:"Old Town Sector",type:"SPECTRAL",status:"ALERT",date:"2026-09-21"}
+ {id:"SE-0261",locationId:"LOC-UK-PORTSMOUTH",siteId:"SITE-PORTSMOUTH-HARBOUR",site:"Portsmouth Harbour Sector",type:"AWE",status:"ACTIVE INVESTIGATION",date:"2026-09-24"},
+ {id:"SE-0258",locationId:"LOC-UK-LONDON",siteId:"SITE-LONDON-CENTRAL",site:"Central London Sector",type:"ANOMALOUS",status:"FIELD REVIEW",date:"2026-09-23"},
+ {id:"SE-0256",locationId:"LOC-UK-BRISTOL",siteId:"SITE-BRISTOL-AVON",site:"Avon Industrial Sector",type:"AWE",status:"MONITORING",date:"2026-09-22"},
+ {id:"SE-0252",locationId:"LOC-UK-EDINBURGH",siteId:"SITE-EDINBURGH-OLDTOWN",site:"Old Town Sector",type:"SPECTRAL",status:"ALERT",date:"2026-09-21"}
 ];
 const markerPos={
  "LOC-UK-EDINBURGH":[29,22],"LOC-UK-MANCHESTER":[39,39],"LOC-UK-BIRMINGHAM":[48,55],
@@ -198,40 +226,52 @@ function renderMarkers(){
  map.querySelectorAll(".marker").forEach(x=>x.remove());
  locations.forEach(l=>{
    const m=document.createElement("div");
-   m.className="marker "+(l.class==="alert"?"alert":l.class==="amber"?"warn":"")+(selected.id===l.id?" selected":"");
-   m.style.left=markerPos[l.id][0]+"%";m.style.top=markerPos[l.id][1]+"%";
-   m.innerHTML='<div class="marker-dot"></div><span>'+l.city+'</span>';
-   m.onclick=()=>selectLocation(l.id);
+   m.className="marker "+(l.class==="alert"?"alert":l.class==="amber"?"warn":"")+(selected.locationId===l.locationId?" selected":"");
+   m.style.left=markerPos[l.locationId][0]+"%";m.style.top=markerPos[l.locationId][1]+"%";
+   m.innerHTML='<div class="marker-dot"></div><span>'+l.shared.city+'</span>';
+   m.onclick=()=>selectLocation(l.locationId);
    map.appendChild(m);
  });
 }
 function selectLocation(id){
- selected=locations.find(x=>x.id===id)||selected;
+ selected=locations.find(x=>x.locationId===id)||selected;
  renderMarkers();renderInfo();renderCases();
- document.getElementById("footerState").textContent="LOCATION // "+selected.id+" // "+selected.grid;
+ document.getElementById("footerState").textContent="LOCATION // "+selected.locationId+" // "+selected.ecto.gridReference;
 }
 function renderInfo(){
- const active=cases.filter(c=>c.loc===selected.id);
+ const active=cases.filter(c=>c.locationId===selected.locationId);
+ const geo=selected.shared, ops=selected.ecto, primaryCase=active[0];
  document.getElementById("locationInfo").innerHTML=
-  '<div class="kv"><span class="k">LOCATION</span><span class="v">'+selected.city+'</span></div>'+
-  '<div class="kv"><span class="k">REGION</span><span class="v">'+selected.region+'</span></div>'+
-  '<div class="kv"><span class="k">GRID REF</span><span class="v cyan">'+selected.grid+'</span></div>'+
-  '<div class="kv"><span class="k">STATUS</span><span class="v '+selected.class+'">'+selected.status+'</span></div>'+
-  '<div class="kv"><span class="k">ACTIVE CASES</span><span class="v">'+active.length+'</span></div>';
+  '<div class="location-hierarchy">'+
+    '<div class="location-country">'+geo.country.toUpperCase()+' // '+geo.countryCode+'</div>'+
+    '<div class="location-admin">'+geo.adminRegion+'</div>'+
+    '<div class="location-city">'+geo.city.toUpperCase()+'</div>'+
+    '<div class="location-grid"><span class="location-grid-label">ECTO GRID</span><span class="location-grid-value">'+ops.gridReference+'</span></div>'+
+  '</div>'+
+  '<div class="shared-ref">'+
+    '<b>SHARED LOCATION REFERENCE</b>'+
+    '<div class="ref-block"><span>LOCATION ID</span> // '+selected.locationId+'</div>'+
+    '<div class="ref-block"><span>ADMIN TYPE</span> // '+geo.adminRegionType.toUpperCase()+'</div>'+
+  '</div>'+
+  (primaryCase?'<div class="site-readout"><div class="site-label">INVESTIGATION SITE</div><div class="site-name">'+primaryCase.site+'</div><div class="site-ref">'+ops.gridReference+' // '+primaryCase.siteId+'</div></div>':'')+
+  '<div class="kv"><span class="k">STATUS</span><span class="v '+selected.class+'">'+ops.status+'</span></div>'+
+  '<div class="kv"><span class="k">RISK LEVEL</span><span class="v '+selected.class+'">'+(ops.severity||'NORMAL')+'</span></div>'+
+  '<div class="kv"><span class="k">ACTIVE CASES</span><span class="v">'+active.length+'</span></div>'+
+  '<div class="ownership">SER // SHARED GEOGRAPHIC IDENTITY &nbsp;|&nbsp; ECTO // OPERATIONAL GRID + SITE</div>';
 }
 function renderCases(){
  const list=document.getElementById("caseList");
- const local=cases.filter(c=>c.loc===selected.id);
+ const local=cases.filter(c=>c.locationId===selected.locationId);
  list.innerHTML=local.length?local.map(c=>
  '<div class="case selected" data-id="'+c.id+'"><div class="case-top"><b>'+c.id+'</b><span>'+c.date+'</span></div><div class="case-name">'+c.site+'</div><div class="case-meta">'+c.type+' // '+c.status+'</div></div>'
  ).join(""):'<div class="case-meta" style="padding:10px">NO ACTIVE CASES</div>';
  list.querySelectorAll(".case").forEach(el=>el.onclick=()=>setFooter("CASE // "+el.dataset.id+" // SELECTED"));
 }
 function setFooter(t){document.getElementById("footerState").textContent=t}
-document.getElementById("openCase").onclick=()=>setFooter("CASE // SE-0261 // OPEN REQUEST");
-document.getElementById("dispatch").onclick=()=>setFooter("DISPATCH // CASE TRANSFER READY");
-document.getElementById("sites").onclick=()=>setFooter("SITE INDEX // "+selected.city+" // READ ONLY");
-document.getElementById("brief").onclick=()=>setFooter("FIELD BRIEF // "+selected.city+" // PREPARING");
+document.getElementById("openCase").onclick=()=>setFooter("CASE // "+(cases.find(c=>c.locationId===selected.locationId)?.id||"NONE")+" // OPEN REQUEST");
+document.getElementById("dispatch").onclick=()=>setFooter("DISPATCH // "+selected.locationId+" // CASE TRANSFER READY");
+document.getElementById("sites").onclick=()=>setFooter("SITE INDEX // "+selected.shared.city+" // READ ONLY");
+document.getElementById("brief").onclick=()=>setFooter("FIELD BRIEF // "+selected.shared.city+" // PREPARING");
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setFooter("MODULE // "+b.textContent.trim()+" // SCREEN PLACEHOLDER"));
 function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB",{hour12:false})+" UTC";}
 setInterval(tick,1000);tick();renderMarkers();renderInfo();renderCases();
