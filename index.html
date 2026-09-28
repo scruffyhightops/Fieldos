@@ -130,6 +130,23 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 @media(max-width:600px){
  .topbar{height:auto;min-height:52px;flex-wrap:wrap;padding:9px 12px}.clock{margin-left:0}.main{padding:9px}.grid{gap:9px}.map-panel{min-height:430px}.kv{grid-template-columns:96px 1fr}
 }
+
+/* ECTO DISPATCH */
+.dispatch-screen{display:none}.dispatch-screen.active{display:block}
+.dispatch-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.75fr);gap:12px}
+.dispatch-panel{border:1px solid var(--line);background:var(--panel)}
+.dispatch-head{height:34px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+.dispatch-title{font-size:11px;letter-spacing:.1em}.dispatch-code{font:10px var(--font-data);color:var(--dim)}
+.dispatch-body{padding:11px}.dispatch-section{border:1px solid #252b25;margin-bottom:10px;background:#0d120d}.dispatch-section:last-child{margin-bottom:0}
+.dispatch-section-head{padding:8px 9px;border-bottom:1px solid #252b25;font-size:10px;letter-spacing:.1em;color:var(--fg2);display:flex;justify-content:space-between}
+.dispatch-row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:8px 9px;border-bottom:1px solid #202620;font:12px var(--font-data)}
+.dispatch-row:last-child{border-bottom:0}.dispatch-label{color:var(--dim)}.dispatch-value{color:var(--fg)}.dispatch-value.cyan{color:var(--cyan)}.dispatch-value.green{color:var(--green)}.dispatch-value.yellow{color:var(--yellow)}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:9px}.choice{border:1px solid var(--line2);background:#111611;padding:10px;text-align:left;cursor:pointer}.choice:hover{border-color:var(--green2);background:#151b15}.choice.selected{border-color:var(--green2);background:#111b12;box-shadow:inset 2px 0 0 var(--green)}
+.choice-name{font-size:11px;color:var(--fg)}.choice-meta{font:10px var(--font-data);color:var(--dim);margin-top:5px}.choice-status{margin-top:6px;font:9px var(--font-data);color:var(--green)}
+.dispatch-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.dispatch-action{border:1px solid var(--line2);background:#111611;padding:12px 9px;font-size:10px;letter-spacing:.08em;cursor:pointer}.dispatch-action.primary{border-color:var(--green2);color:var(--green)}.dispatch-action:hover{border-color:var(--green2);background:#151b15}.dispatch-action:disabled{opacity:.35;cursor:not-allowed}
+.route-box{padding:10px;font:11px var(--font-data);color:var(--cyan);background:#0b100c;border-top:1px solid #252b25}.dispatch-note{font:10px var(--font-data);color:var(--dim);line-height:1.6;padding:9px;border-top:1px solid #252b25}
+@media(max-width:900px){.dispatch-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.choice-grid{grid-template-columns:1fr}.dispatch-row{grid-template-columns:96px 1fr}.dispatch-actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -151,6 +168,7 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
 </nav>
 
 <main class="main">
+<div id="mapScreen">
 <section class="screen-head">
  <div><div class="eyebrow">FIELD OPERATIONS // GEOGRAPHIC RESPONSE CONTROL</div><h1>RESPONSE MAP</h1><div class="sub">Regional incident and investigation-site overview // administrative geography + ECTO operational grid</div></div>
  <div class="head-meta"><span class="live">● LIVE</span><br>MAP GRID // UK REGIONAL</div>
@@ -194,6 +212,55 @@ h1{margin:4px 0 0;font-size:22px;letter-spacing:.08em;font-weight:600}
     <div class="case-list" id="caseList"></div>
    </section>
  </aside>
+</div>
+</div>
+
+<div id="dispatchScreen" class="dispatch-screen">
+<section class="screen-head">
+ <div><div class="eyebrow">FIELD OPERATIONS // DEPLOYMENT CONTROL</div><h1>ECTO DISPATCH</h1><div class="sub">Assign response team and vehicle // prepare operational deployment</div></div>
+ <div class="head-meta"><span class="live">● READY</span><br>DISPATCH NETWORK // ONLINE</div>
+</section>
+<div class="dispatch-grid">
+ <section class="dispatch-panel">
+  <div class="dispatch-head"><div class="dispatch-title">DEPLOYMENT REQUEST</div><div class="dispatch-code" id="dispatchId">DEP-0001</div></div>
+  <div class="dispatch-body">
+   <div class="dispatch-section">
+    <div class="dispatch-section-head"><span>CASE / LOCATION</span><span>SHARED REFERENCE</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">CASE ID</span><span class="dispatch-value" id="dCase">SE-0261</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">LOCATION</span><span class="dispatch-value" id="dLocation">Portsmouth, Hampshire</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">SITE</span><span class="dispatch-value" id="dSite">Portsmouth Harbour Sector</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">ECTO GRID</span><span class="dispatch-value cyan" id="dGrid">C4-B2</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">CASE TYPE</span><span class="dispatch-value" id="dType">AWE</span></div>
+   </div>
+   <div class="dispatch-section">
+    <div class="dispatch-section-head"><span>RESPONSE TEAM</span><span>SELECT ONE</span></div>
+    <div class="choice-grid" id="teamChoices"></div>
+   </div>
+   <div class="dispatch-section">
+    <div class="dispatch-section-head"><span>VEHICLE</span><span>SELECT ONE</span></div>
+    <div class="choice-grid" id="vehicleChoices"></div>
+   </div>
+  </div>
+ </section>
+ <aside class="dispatch-panel">
+  <div class="dispatch-head"><div class="dispatch-title">DEPLOYMENT SUMMARY</div><div class="dispatch-code">PRE-FLIGHT GATE</div></div>
+  <div class="dispatch-body">
+   <div class="dispatch-section">
+    <div class="dispatch-section-head"><span>ASSIGNMENT</span><span>LIVE</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">TEAM</span><span class="dispatch-value green" id="sumTeam">ECHO-2</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">VEHICLE</span><span class="dispatch-value green" id="sumVehicle">ECTO-04</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">CREW</span><span class="dispatch-value" id="sumCrew">6 OPERATORS</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">READINESS</span><span class="dispatch-value yellow" id="sumReady">PRE-FLIGHT REQUIRED</span></div>
+   </div>
+   <div class="route-box" id="routeBox">ROUTE // HQ → PORTSMOUTH HARBOUR SECTOR<br>MODE // RESPONSE / PRIORITY</div>
+   <div class="dispatch-note">ECTO DISPATCH controls operational assignment. Research data remains SER-owned. Location identity, case and investigation-site references are shared.</div>
+   <div class="dispatch-actions">
+    <button class="dispatch-action" id="backMap">RETURN TO MAP</button>
+    <button class="dispatch-action primary" id="preflightBtn">PROCEED TO PRE-FLIGHT</button>
+   </div>
+  </div>
+ </aside>
+</div>
 </div>
 </main>
 </div>
@@ -272,7 +339,36 @@ document.getElementById("openCase").onclick=()=>setFooter("CASE // "+(cases.find
 document.getElementById("dispatch").onclick=()=>setFooter("DISPATCH // "+selected.locationId+" // CASE TRANSFER READY");
 document.getElementById("sites").onclick=()=>setFooter("SITE INDEX // "+selected.shared.city+" // READ ONLY");
 document.getElementById("brief").onclick=()=>setFooter("FIELD BRIEF // "+selected.shared.city+" // PREPARING");
-document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setFooter("MODULE // "+b.textContent.trim()+" // SCREEN PLACEHOLDER"));
+const mapScreen=document.getElementById("mapScreen"), dispatchScreen=document.getElementById("dispatchScreen");
+const navButtons=[...document.querySelectorAll("#nav button")];
+function showScreen(name){
+ mapScreen.style.display=name==="map"?"block":"none";
+ dispatchScreen.classList.toggle("active",name==="dispatch");
+ navButtons.forEach((b,i)=>b.classList.toggle("active",(name==="map"&&i===0)||(name==="dispatch"&&i===1)));
+}
+navButtons[0].onclick=()=>showScreen("map");
+navButtons[1].onclick=()=>{showScreen("dispatch");syncDispatch()};
+navButtons.slice(2).forEach(b=>b.onclick=()=>setFooter("MODULE // "+b.textContent.trim()+" // SCREEN PLACEHOLDER"));
+const teams=[{id:"ECHO-2",crew:6,status:"AVAILABLE",note:"STANDARD RESPONSE"},{id:"ALPHA-1",crew:6,status:"AVAILABLE",note:"SENIOR RESPONSE"},{id:"DELTA-3",crew:5,status:"STANDBY",note:"SPECIALIST RESPONSE"},{id:"BRAVO-4",crew:6,status:"DEPLOYED",note:"CURRENTLY UNAVAILABLE"}];
+const vehicles=[{id:"ECTO-04",type:"ECTO RESPONSE",status:"READY"},{id:"ECTO-02",type:"ECTO RESPONSE",status:"READY"},{id:"ECTO-06",type:"UTILITY RESPONSE",status:"READY"},{id:"ECTO-01",type:"ECTO RESPONSE",status:"DEPLOYED"}];
+let selectedTeam=teams[0],selectedVehicle=vehicles[0];
+function renderChoices(){
+ document.getElementById("teamChoices").innerHTML=teams.map(t=>`<button class="choice ${t.id===selectedTeam.id?'selected':''}" data-team="${t.id}" ${t.status==='DEPLOYED'?'disabled':''}><div class="choice-name">${t.id}</div><div class="choice-meta">${t.note} // ${t.crew} OPERATORS</div><div class="choice-status">● ${t.status}</div></button>`).join('');
+ document.getElementById("vehicleChoices").innerHTML=vehicles.map(v=>`<button class="choice ${v.id===selectedVehicle.id?'selected':''}" data-vehicle="${v.id}" ${v.status==='DEPLOYED'?'disabled':''}><div class="choice-name">${v.id}</div><div class="choice-meta">${v.type}</div><div class="choice-status">● ${v.status}</div></button>`).join('');
+ document.querySelectorAll('[data-team]').forEach(b=>b.onclick=()=>{selectedTeam=teams.find(t=>t.id===b.dataset.team);syncDispatch()});
+ document.querySelectorAll('[data-vehicle]').forEach(b=>b.onclick=()=>{selectedVehicle=vehicles.find(v=>v.id===b.dataset.vehicle);syncDispatch()});
+}
+function syncDispatch(){
+ const c=cases.find(x=>x.locationId===selected.locationId)||cases[0];
+ document.getElementById('dCase').textContent=c.id; document.getElementById('dLocation').textContent=`${selected.shared.city}, ${selected.shared.adminRegion}`; document.getElementById('dSite').textContent=c.site; document.getElementById('dGrid').textContent=selected.ecto.gridReference; document.getElementById('dType').textContent=c.type;
+ document.getElementById('sumTeam').textContent=selectedTeam.id; document.getElementById('sumVehicle').textContent=selectedVehicle.id; document.getElementById('sumCrew').textContent=selectedTeam.crew+' OPERATORS';
+ document.getElementById('routeBox').innerHTML=`ROUTE // HQ → ${c.site.toUpperCase()}<br>MODE // ${selected.ecto.status==='ALERT'?'PRIORITY / ALERT':'RESPONSE / STANDARD'}`;
+ renderChoices();
+}
+document.getElementById('dispatch').onclick=()=>{showScreen('dispatch');syncDispatch();setFooter('DISPATCH // '+selected.locationId+' // ASSIGNMENT READY')};
+document.getElementById('backMap').onclick=()=>showScreen('map');
+document.getElementById('preflightBtn').onclick=()=>setFooter('PRE-FLIGHT // '+selectedTeam.id+' / '+selectedVehicle.id+' // HANDOFF READY');
+syncDispatch();
 function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("en-GB",{hour12:false})+" UTC";}
 setInterval(tick,1000);tick();renderMarkers();renderInfo();renderCases();
 </script>
