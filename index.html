@@ -69,6 +69,24 @@ h1{font-size:22px;font-weight:500;letter-spacing:.08em;margin:3px 0 4px}
 .team-table{width:100%;border-collapse:collapse;font-size:10px}.team-table th,.team-table td{border-bottom:1px solid #252b25;padding:9px 6px;text-align:left}.team-table th{color:var(--dim);font-size:8px;letter-spacing:.1em;font-weight:400}.team-actions{display:flex;gap:5px}.mini{padding:6px 8px;font-size:8px}
 .footer{height:32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 12px;font:9px var(--font-data);color:var(--dim)}
 hr{border:0;border-top:1px solid var(--line);margin:13px 0}
+.check{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;border-top:1px solid #252b25;padding:9px 0;font-family:var(--font-data);font-size:10px;color:var(--dim)}
+.check:first-child{border-top:0}
+.check .box{width:12px;height:12px;border:1px solid var(--line2);position:relative}
+.check.run{color:var(--yellow)}.check.run .box{border-color:var(--yellow);animation:flash 1s steps(2,end) infinite}
+.check.ok{color:var(--fg2)}.check.ok .box{border-color:var(--accent);background:var(--accent)}
+.check.fail{color:var(--red)}.check.fail .box{border-color:var(--red)}
+.bar{height:6px;border:1px solid var(--line);margin:10px 0 4px;background:#090c09}.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s steps(6,end)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;border-color:var(--line);color:var(--dim)}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(3,5,3,.82);display:flex;align-items:center;justify-content:center;padding:14px}
+.dialog{width:100%;max-width:440px;border:1px solid var(--accent);background:linear-gradient(135deg,var(--panel),var(--panel2));padding:14px;box-shadow:0 0 0 3px #070907}
+.dialog h2{font-size:11px;font-weight:500;letter-spacing:.1em;margin:0 0 12px;color:var(--accent)}
+.dialog .field{margin-bottom:10px}
+.dialog .err{border-left:2px solid var(--red);background:#140c0b;color:var(--red);font-size:10px;padding:8px 10px;margin-bottom:10px;line-height:1.5}
+.dialog .err[hidden]{display:none}
+.dialog .msg{font-family:var(--font-data);font-size:11px;line-height:1.6;color:var(--fg2);margin-bottom:4px}
+.btn-danger{border-color:var(--red);color:var(--red);background:#140c0b}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+@media(prefers-reduced-motion:reduce){.check.run .box{animation:none}}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.nav{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);gap:4px}.nav-title{grid-column:1/-1}.content{padding:10px}.grid{grid-template-columns:1fr}.map{height:390px}.profile-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.topbar{padding:0 10px}}
 @media(prefers-reduced-motion:reduce){.marker.alert{animation:none}}
 </style>
@@ -84,6 +102,7 @@ hr{border:0;border-top:1px solid var(--line);margin:13px 0}
   <div class="nav-title">ECTO FIELD TERMINAL</div>
   <button data-route="map">01 RESPONSE MAP</button>
   <button data-route="dispatch">02 ECTO DISPATCH</button>
+  <button data-route="preflight">03 PRE-FLIGHT</button>
   <button data-route="config">07 CONFIGURATION</button>
 </nav>
 <main class="content"><div id="screen"></div></main>
@@ -123,6 +142,8 @@ const locations=[
  {id:"LOC-UK-EDINBURGH",country:"United Kingdom",region:"Scotland",city:"Edinburgh",grid:"B1-C1",site:"Old Town Sector",status:"ALERT",risk:"CRITICAL",x:48,y:16}
 ];
 let selected=locations[0];
+let deployment=null;
+let pfTimer=null;
 
 function applyProfile(p){
  profile=p;
@@ -133,8 +154,9 @@ function applyProfile(p){
  render();
 }
 function setRoute(route){
+ clearTimeout(pfTimer);
  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
- ({map:renderMap,dispatch:renderDispatch,config:renderConfig}[route]||renderMap)();
+ ({map:renderMap,dispatch:renderDispatch,preflight:renderPreflight,config:renderConfig}[route]||renderMap)();
 }
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setRoute(b.dataset.route));
 
@@ -182,9 +204,82 @@ function renderDispatch(){
   <aside class="card"><h2>DEPLOYMENT SELECTION</h2>
    <div class="field"><label>RESPONSE TEAM</label><select id="teamSelect">${teams.map(t=>`<option value="${t.id}" ${t.status!=="AVAILABLE"?"disabled":""}>${t.id} // ${t.name} // ${t.status}</option>`).join("")}</select></div>
    <div class="field"><label>VEHICLE</label><select id="vehicleSelect"><option>ECTO-04 // AVAILABLE</option><option>ECTO-02 // AVAILABLE</option><option>ECTO-06 // STANDBY</option></select></div>
-   <button class="action btn-primary" style="width:100%;margin-top:10px" onclick="alert('Proceed to Pre-Flight // '+document.getElementById('teamSelect').value)">PROCEED TO PRE-FLIGHT</button>
+   <button class="action btn-primary" style="width:100%;margin-top:10px" onclick="proceedPreflight()">PROCEED TO PRE-FLIGHT</button>
   </aside>
  </div>`;
+}
+
+function proceedPreflight(){
+ const t=document.getElementById("teamSelect"),v=document.getElementById("vehicleSelect");
+ const team=teams.find(x=>x.id===t.value);
+ if(!team||team.status!=="AVAILABLE"){alert("NO AVAILABLE TEAM SELECTED");return}
+ deployment={team,vehicle:v.value.split(" // ")[0],vehicleStatus:v.value.split(" // ")[1]||"",location:selected};
+ setRoute("preflight");
+}
+
+const checks=[
+ ["CREW MANIFEST","ALL ABOARD"],
+ ["PROTON PACK CHARGE","NOMINAL"],
+ ["PARTICLE THROWER","NOMINAL"],
+ ["TRAP INVENTORY","4 OF 4 LOADED"],
+ ["PKE SCANNER","CALIBRATED"],
+ ["VEHICLE SYSTEMS","NOMINAL"],
+ ["COMMS LINK","ESTABLISHED"],
+ ["ROUTE TO SITE","LOADED"]
+];
+function renderPreflight(){
+ const screen=document.getElementById("screen");
+ if(!deployment){
+  screen.innerHTML=`<div class="screen-head"><div><div class="eyebrow">03 // OPERATIONS</div><h1>PRE-FLIGHT</h1><div class="sub">NO DEPLOYMENT LOADED</div></div></div>
+  <div class="notice">Select a response team and vehicle on Ecto Dispatch before starting pre-flight checks.</div>
+  <button class="action btn-primary" onclick="setRoute('dispatch')">GO TO ECTO DISPATCH</button>`;
+  return;
+ }
+ const d=deployment;
+ screen.innerHTML=`
+ <div class="screen-head"><div><div class="eyebrow">03 // OPERATIONS</div><h1>PRE-FLIGHT</h1><div class="sub">SYSTEMS CHECK → LAUNCH AUTHORISATION</div></div><div class="status"><i class="lamp warn" id="pfLamp"></i><span id="pfState">CHECKING</span></div></div>
+ <div class="grid">
+  <section class="card"><h2>SYSTEMS CHECK <span class="panel-code" id="pfCount">0 / ${checks.length}</span></h2>
+   <div class="bar"><i id="pfBar"></i></div>
+   <div id="pfList">${checks.map((c,i)=>`<div class="check" id="chk${i}"><i class="box"></i><span>${c[0]}</span><span class="res">WAITING</span></div>`).join("")}</div>
+  </section>
+  <aside>
+   <section class="card"><h2>DEPLOYMENT</h2><div class="readout">
+    <div class="kv"><span class="k">CASE</span><span class="v">SE-0261 // AWE</span></div>
+    <div class="kv"><span class="k">SITE</span><span class="v">${d.location.site}</span></div>
+    <div class="kv"><span class="k">CITY</span><span class="v">${d.location.city}, ${d.location.region}</span></div>
+    <div class="kv"><span class="k">ECTO GRID</span><span class="v">${d.location.grid}</span></div>
+    <div class="kv"><span class="k">TEAM</span><span class="v">${d.team.id} // ${d.team.name}</span></div>
+    <div class="kv"><span class="k">CREW</span><span class="v">${d.team.crew}</span></div>
+    <div class="kv"><span class="k">VEHICLE</span><span class="v">${d.vehicle} // ${d.vehicleStatus}</span></div>
+   </div>
+   <div class="btn-row"><button class="action" onclick="setRoute('dispatch')">BACK TO DISPATCH</button><button class="action btn-primary" id="launchBtn" disabled onclick="launch()">LAUNCH</button></div>
+   </section>
+   <section class="card" style="margin-top:12px" id="pfMsg"><h2>STATUS</h2><div class="readout">CHECKS IN PROGRESS. LAUNCH LOCKED.</div></section>
+  </aside>
+ </div>`;
+ let i=0;
+ const step=()=>{
+  if(i>0){const prev=document.getElementById("chk"+(i-1));prev.className="check ok";prev.querySelector(".res").textContent=checks[i-1][1];}
+  document.getElementById("pfBar").style.width=(i/checks.length*100)+"%";
+  document.getElementById("pfCount").textContent=i+" / "+checks.length;
+  if(i>=checks.length){
+   document.getElementById("pfLamp").className="lamp";
+   document.getElementById("pfState").textContent="READY";
+   document.getElementById("launchBtn").disabled=false;
+   document.querySelector("#pfMsg .readout").innerHTML="ALL SYSTEMS NOMINAL.<br>LAUNCH AUTHORISED.";
+   return;
+  }
+  const row=document.getElementById("chk"+i);
+  row.className="check run";row.querySelector(".res").textContent="CHECKING";
+  i++;pfTimer=setTimeout(step,450+Math.random()*350);
+ };
+ step();
+}
+function launch(){
+ document.getElementById("launchBtn").disabled=true;
+ document.getElementById("pfState").textContent="LAUNCHED";
+ document.querySelector("#pfMsg .readout").innerHTML="LAUNCH CONFIRMED // "+deployment.team.id+"<br>VEHICLE "+deployment.vehicle+" EN ROUTE TO "+deployment.location.city.toUpperCase()+"<br><br>NEXT SCREEN NOT YET BUILT.";
 }
 
 function renderConfig(){
@@ -215,22 +310,75 @@ function renderConfig(){
   </div></aside>
  </div>`;
 }
+const statuses=["AVAILABLE","STANDBY","DEPLOYED","EN ROUTE","INVESTIGATING","RETURNING","OFFLINE"];
+let lastFocus=null;
+function closeDialog(){
+ const m=document.getElementById("modal");if(m)m.remove();
+ document.removeEventListener("keydown",dialogKeys);
+ if(lastFocus&&document.contains(lastFocus))lastFocus.focus();
+}
+function dialogKeys(e){
+ if(e.key==="Escape"){closeDialog();return}
+ if(e.key!=="Tab")return;
+ const f=[...document.querySelectorAll("#modal input,#modal select,#modal button")].filter(x=>!x.disabled);
+ if(!f.length)return;
+ const first=f[0],last=f[f.length-1];
+ if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+ else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+}
+function openDialog(html){
+ closeDialog();
+ lastFocus=document.activeElement;
+ const m=document.createElement("div");
+ m.className="modal";m.id="modal";
+ m.innerHTML='<div class="dialog" role="dialog" aria-modal="true">'+html+'</div>';
+ m.addEventListener("mousedown",e=>{if(e.target===m)closeDialog()});
+ document.body.appendChild(m);
+ document.addEventListener("keydown",dialogKeys);
+ const first=m.querySelector("input,select,button");if(first)first.focus();
+}
 function newTeam(){editTeam(-1)}
 function editTeam(i){
  const t=i<0?{id:"",name:"",crew:6,status:"AVAILABLE"}:teams[i];
- const id=prompt("TEAM ID / CALLSIGN",t.id); if(id===null)return;
- const name=prompt("TEAM NAME",t.name); if(name===null)return;
- const crew=prompt("CREW SIZE",t.crew); if(crew===null)return;
- const status=prompt("STATUS (AVAILABLE / STANDBY / DEPLOYED / EN ROUTE / INVESTIGATING / RETURNING / OFFLINE)",t.status); if(status===null)return;
- if(!id.trim()||teams.some((x,n)=>n!==i&&x.id.toUpperCase()===id.trim().toUpperCase())){alert("TEAM ID MUST BE UNIQUE");return}
- const rec={id:id.trim().toUpperCase(),name:name.trim().toUpperCase(),crew:Math.max(1,parseInt(crew)||6),status:status.trim().toUpperCase()};
- if(i<0)teams.push(rec);else teams[i]=rec;saveTeams();renderConfig();
+ openDialog(`
+  <h2>${i<0?"NEW RESPONSE TEAM":"EDIT TEAM // "+t.id}</h2>
+  <div class="err" id="teamErr" role="alert" hidden></div>
+  <div class="field"><label for="tId">TEAM ID / CALLSIGN</label><input id="tId" maxlength="16" autocomplete="off" value="${t.id}"></div>
+  <div class="field"><label for="tName">TEAM NAME</label><input id="tName" maxlength="32" autocomplete="off" value="${t.name}"></div>
+  <div class="form-grid">
+   <div class="field"><label for="tCrew">CREW SIZE</label><input id="tCrew" type="number" min="1" max="99" value="${t.crew}"></div>
+   <div class="field"><label for="tStatus">STATUS</label><select id="tStatus">${statuses.map(x=>`<option ${x===t.status?"selected":""}>${x}</option>`).join("")}</select></div>
+  </div>
+  <div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-primary" onclick="saveTeam(${i})">SAVE TEAM</button></div>`);
+}
+function saveTeam(i){
+ const id=document.getElementById("tId").value.trim().toUpperCase();
+ const name=document.getElementById("tName").value.trim().toUpperCase();
+ const crew=parseInt(document.getElementById("tCrew").value);
+ const status=document.getElementById("tStatus").value;
+ const err=document.getElementById("teamErr");
+ const fail=m=>{err.textContent=m;err.hidden=false};
+ if(!id)return fail("TEAM ID IS REQUIRED.");
+ if(!name)return fail("TEAM NAME IS REQUIRED.");
+ if(!(crew>=1))return fail("CREW SIZE MUST BE AT LEAST 1.");
+ if(teams.some((x,n)=>n!==i&&x.id.toUpperCase()===id))return fail("TEAM ID "+id+" IS ALREADY IN USE.");
+ const rec={id,name,crew,status};
+ if(i<0)teams.push(rec);else teams[i]=rec;
+ saveTeams();closeDialog();renderConfig();
 }
 function deleteTeam(i){
- if(!["AVAILABLE","STANDBY","OFFLINE"].includes(teams[i].status)){alert("ACTIVE DEPLOYMENT CANNOT BE DELETED");return}
- if(confirm("DELETE "+teams[i].id+"?")){teams.splice(i,1);saveTeams();renderConfig()}
+ const t=teams[i];
+ if(!["AVAILABLE","STANDBY","OFFLINE"].includes(t.status)){
+  openDialog(`<h2>CANNOT DELETE // ${t.id}</h2><div class="msg">${t.id} IS ${t.status}.<br>ACTIVE DEPLOYMENTS CANNOT BE DELETED.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);
+  return;
+ }
+ openDialog(`<h2>DELETE TEAM // ${t.id}</h2><div class="msg">${t.id} // ${t.name}<br>THIS REMOVES THE TEAM FROM THE LOCAL REGISTER.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-danger" onclick="confirmDelete(${i})">DELETE TEAM</button></div>`);
+}
+function confirmDelete(i){
+ teams.splice(i,1);saveTeams();closeDialog();renderConfig();
 }
 function render(){document.getElementById("profileStatus").textContent=profiles[profile].label;document.getElementById("footerState").textContent="LOCAL DISPLAY PROFILE // "+profiles[profile].label;renderConfig()}
+Object.assign(window,{setRoute,renderMap,applyProfile,newTeam,editTeam,deleteTeam,saveTeam,confirmDelete,closeDialog,proceedPreflight,launch});
 setRoute("map");
 })();
 </script>
