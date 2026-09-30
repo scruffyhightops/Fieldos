@@ -47,13 +47,32 @@ h1{font-size:22px;font-weight:500;letter-spacing:.08em;margin:3px 0 4px}
 .status{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-data);font-size:10px}.lamp{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px color-mix(in srgb,var(--accent) 45%,transparent)}
 .lamp.warn{background:var(--yellow)}.lamp.red{background:var(--red)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.action{padding:10px;font-size:9px;letter-spacing:.08em}
-.map{height:470px;border:1px solid var(--line);position:relative;overflow:hidden;background:#0b0f0b}
+.map{height:520px;border:1px solid var(--line);position:relative;overflow:hidden;background:#0b0f0b;display:flex;justify-content:center}
+.mapframe{position:relative;height:100%;aspect-ratio:366/556}
+.mapframe svg{position:absolute;inset:0;width:100%;height:100%}
+.fr{position:absolute;z-index:3;width:20px;height:20px;transform:translate(-50%,-50%);padding:0;background:transparent;border:0}
+.fr.near{transform:translate(calc(-50% + 14px),-50%)}
+.fr i{display:block;width:9px;height:9px;margin:auto;border:1px solid var(--cyan);background:#0b0f0b;transform:rotate(45deg)}
+.fr:hover i,.fr.sel i{background:var(--cyan)}
+.fr .tag{display:none;position:absolute;left:50%;bottom:19px;transform:translateX(-50%);white-space:nowrap;font:9px var(--font-ui);letter-spacing:.06em;color:var(--cyan);background:#0b0f0b;border:1px solid var(--cyan);padding:2px 5px}
+.fr.sel .tag,.fr:hover .tag,.fr:focus-visible .tag{display:block}
+.fr.wide{width:34px;height:34px;border:1px dashed var(--cyan);border-radius:50%;background:rgba(105,200,200,.07);pointer-events:none}
+.fr.wide i{pointer-events:auto}
+.fr.dim{opacity:.25}
+.crumbs{font-size:9px;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;line-height:2}
+.crumb{border:0;background:none;padding:2px 3px;font-size:9px;letter-spacing:.08em;color:var(--cyan);text-decoration:underline}
+.frlist{display:grid;grid-template-columns:1fr;gap:5px;margin-top:8px}
+.frlist button{padding:8px;font-size:9px;letter-spacing:.06em;text-align:left;display:flex;justify-content:space-between;gap:8px}
+.frlist button small{color:var(--dim);font-size:8px}
+.frlist button.sel{border-color:var(--cyan);color:var(--cyan)}
+.frlist button:disabled{opacity:.35;cursor:not-allowed}
+.land{fill:#0f160f;stroke:var(--line2);stroke-width:.9;stroke-linejoin:round}
 .map:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(114,255,122,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(114,255,122,.03) 1px,transparent 1px);background-size:52px 52px}
 .map:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.32) 100%)}
 .mapline{position:absolute;border-top:1px solid #303930;transform-origin:left center;opacity:.7}
-.marker{position:absolute;z-index:2;background:transparent;border:0;width:80px;height:44px;transform:translate(-50%,-50%);padding:0}
-.marker .dot{width:10px;height:10px;border:1px solid currentColor;margin:auto;background:#0b0f0b}
-.marker .ring{position:absolute;left:50%;top:15px;width:26px;height:26px;border:1px solid currentColor;transform:translate(-50%,-50%);opacity:.35}
+.marker{position:absolute;z-index:2;background:transparent;border:0;width:80px;height:44px;transform:translate(-50%,-5px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.marker .dot{width:10px;height:10px;border:1px solid currentColor;margin:0;background:#0b0f0b}
+.marker .ring{position:absolute;left:50%;top:5px;width:26px;height:26px;border:1px solid currentColor;transform:translate(-50%,-50%);opacity:.35}
 .marker span{display:block;margin-top:3px;font:9px var(--font-ui);letter-spacing:.06em;white-space:nowrap}
 .marker.alert{color:var(--red);animation:flash 1.2s steps(2,end) infinite}
 .marker.monitor{color:var(--yellow)}.marker.active{color:var(--accent)}
@@ -87,11 +106,19 @@ hr{border:0;border-top:1px solid var(--line);margin:13px 0}
 .btn-danger{border-color:var(--red);color:var(--red);background:#140c0b}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
 @media(prefers-reduced-motion:reduce){.check.run .box{animation:none}}
+.boot{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:24px;font-family:var(--font-data);font-size:12px;color:var(--accent);cursor:pointer}
+.boot pre{margin:0 0 16px;white-space:pre-wrap;line-height:1.7;font:inherit}
+.boot .prompt{color:var(--fg2);animation:flash 1.2s steps(2,end) infinite}
+.boot.out{opacity:0;transition:opacity .4s steps(4,end)}
+#screen.enter{animation:scanin .28s steps(6,end)}
+@keyframes scanin{from{clip-path:inset(0 0 100% 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.boot .prompt,#screen.enter{animation:none}.boot.out{transition:none}}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.nav{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);gap:4px}.nav-title{grid-column:1/-1}.content{padding:10px}.grid{grid-template-columns:1fr}.map{height:390px}.profile-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.topbar{padding:0 10px}}
 @media(prefers-reduced-motion:reduce){.marker.alert{animation:none}}
 </style>
 </head>
 <body data-theme="cassette">
+<div class="boot" id="boot" role="button" tabindex="0" aria-label="Initialise ECTO OS"><pre id="bootText"></pre><div class="prompt" id="bootPrompt">TOUCH OR PRESS ANY KEY TO INITIALISE</div></div>
 <div class="app">
 <header class="topbar">
   <div class="brand">ECTO OS<small>FIELD OPERATIONS SYSTEM // CASSETTE FUTURISM</small></div>
@@ -107,13 +134,27 @@ hr{border:0;border-top:1px solid var(--line);margin:13px 0}
 </nav>
 <main class="content"><div id="screen"></div></main>
 </div>
-<footer class="footer"><span>ECTO OS // VISUAL FOUNDATION 001</span><span id="footerState">LOCAL DISPLAY PROFILE // CASSETTE FUTURISM</span></footer>
+<footer class="footer"><span>ECTO OS // VISUAL FOUNDATION 001</span><button class="mini" id="muteBtn" aria-pressed="false">SOUND // ON</button><span id="footerState">LOCAL DISPLAY PROFILE // CASSETTE FUTURISM</span></footer>
 </div>
 
 <script>
 (()=>{
 "use strict";
 const KEY="ectoDisplayProfile";
+let actx=null,muted=localStorage.getItem("ectoMuted")==="1";
+function ac(){if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==="suspended")actx.resume();return actx}
+function tone(f,t0,d,type,v,f2){const c=ac();if(!c||muted)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+t0;o.type=type||"square";o.frequency.setValueAtTime(f,s);if(f2)o.frequency.linearRampToValueAtTime(f2,s+d);g.gain.setValueAtTime(v||.04,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(c.destination);o.start(s);o.stop(s+d+.02)}
+const sfx={
+ click:()=>tone(1400,0,.03,"square",.03),
+ tick:()=>tone(900,0,.04,"square",.03),
+ confirm:()=>{tone(660,0,.07,"square",.04);tone(990,.08,.1,"square",.04)},
+ deny:()=>{tone(200,0,.12,"sawtooth",.05);tone(150,.13,.18,"sawtooth",.05)},
+ chirp:()=>{tone(1100,0,.08,"sine",.08,1300);tone(1650,.09,.14,"sine",.08,1900)}
+};
+function syncMute(){const b=document.getElementById("muteBtn");b.textContent="SOUND // "+(muted?"OFF":"ON");b.setAttribute("aria-pressed",muted)}
+document.getElementById("muteBtn").addEventListener("click",e=>{e.stopPropagation();muted=!muted;localStorage.setItem("ectoMuted",muted?"1":"0");syncMute();sfx.click()});
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b.id!=="muteBtn")sfx.click()});
+syncMute();
 const profiles={
  cassette:{label:"CASSETTE FUTURISM",theme:"cassette"},
  phosphor:{label:"PHOSPHOR GREEN",theme:"phosphor"},
@@ -134,13 +175,35 @@ let teams=JSON.parse(localStorage.getItem(teamsKey)||"null")||defaultTeams;
 function saveTeams(){localStorage.setItem(teamsKey,JSON.stringify(teams));}
 
 const locations=[
- {id:"LOC-UK-PORTSMOUTH",country:"United Kingdom",region:"Hampshire",city:"Portsmouth",grid:"C4-B2",site:"Portsmouth Harbour Sector",status:"ACTIVE",risk:"ELEVATED",x:54,y:66},
- {id:"LOC-UK-LONDON",country:"United Kingdom",region:"Greater London",city:"London",grid:"D4-A1",site:"Central London Sector",status:"ACTIVE",risk:"NORMAL",x:67,y:70},
- {id:"LOC-UK-BIRMINGHAM",country:"United Kingdom",region:"West Midlands",city:"Birmingham",grid:"C3-C2",site:"Midlands Sector",status:"MONITOR",risk:"ELEVATED",x:52,y:51},
- {id:"LOC-UK-MANCHESTER",country:"United Kingdom",region:"Greater Manchester",city:"Manchester",grid:"B3-B1",site:"Manchester Sector",status:"MONITOR",risk:"NORMAL",x:43,y:37},
- {id:"LOC-UK-BRISTOL",country:"United Kingdom",region:"South West",city:"Bristol",grid:"B4-A2",site:"Avon Sector",status:"ACTIVE",risk:"NORMAL",x:43,y:63},
- {id:"LOC-UK-EDINBURGH",country:"United Kingdom",region:"Scotland",city:"Edinburgh",grid:"B1-C1",site:"Old Town Sector",status:"ALERT",risk:"CRITICAL",x:48,y:16}
+ {id:"LOC-UK-PORTSMOUTH",country:"United Kingdom",region:"Hampshire",city:"Portsmouth",grid:"C4-B2",site:"Portsmouth Harbour Sector",status:"ACTIVE",risk:"ELEVATED",lat:50.8,lon:-1.09},
+ {id:"LOC-UK-LONDON",country:"United Kingdom",region:"Greater London",city:"London",grid:"D4-A1",site:"Central London Sector",status:"ACTIVE",risk:"NORMAL",lat:51.51,lon:-0.13},
+ {id:"LOC-UK-BIRMINGHAM",country:"United Kingdom",region:"West Midlands",city:"Birmingham",grid:"C3-C2",site:"Midlands Sector",status:"MONITOR",risk:"ELEVATED",lat:52.48,lon:-1.9},
+ {id:"LOC-UK-MANCHESTER",country:"United Kingdom",region:"Greater Manchester",city:"Manchester",grid:"B3-B1",site:"Manchester Sector",status:"MONITOR",risk:"NORMAL",lat:53.48,lon:-2.24},
+ {id:"LOC-UK-BRISTOL",country:"United Kingdom",region:"South West",city:"Bristol",grid:"B4-A2",site:"Avon Sector",status:"ACTIVE",risk:"NORMAL",lat:51.45,lon:-2.59},
+ {id:"LOC-UK-EDINBURGH",country:"United Kingdom",region:"Scotland",city:"Edinburgh",grid:"B1-C1",site:"Old Town Sector",status:"ALERT",risk:"CRITICAL",lat:55.95,lon:-3.19}
 ];
+const MAPW=366,MAPH=556;
+const proj=(lat,lon)=>[(lon+8.5)*34.8,(59-lat)*60];
+const poly=a=>"M"+a.map(([lo,la])=>proj(la,lo).map(n=>n.toFixed(1)).join(",")).join("L")+"Z";
+const GB=[[-5.71,50.07],[-5.2,49.96],[-5.07,50.15],[-4.2,50.35],[-3.64,50.22],[-3.41,50.62],[-2.45,50.52],[-1.95,50.70],[-1.40,50.80],[-1.05,50.80],[-0.78,50.72],[-0.14,50.82],[0.25,50.73],[0.58,50.85],[0.97,50.91],[1.35,51.13],[1.44,51.38],[0.85,51.45],[0.72,51.53],[1.15,51.79],[1.35,51.96],[1.75,52.48],[1.73,52.61],[1.30,52.93],[0.49,52.95],[0.38,52.78],[0.03,52.95],[0.35,53.15],[0.11,53.58],[-0.08,54.12],[-0.61,54.49],[-1.18,54.69],[-1.38,54.91],[-1.6,55.3],[-2.0,55.77],[-2.52,56.0],[-3.2,55.98],[-3.4,56.05],[-2.6,56.25],[-2.79,56.34],[-2.97,56.46],[-2.45,56.71],[-2.08,57.14],[-1.78,57.50],[-2.0,57.69],[-2.52,57.67],[-4.22,57.48],[-4.0,57.88],[-3.08,58.44],[-3.03,58.64],[-3.37,58.67],[-5.0,58.63],[-5.16,57.90],[-5.7,57.28],[-6.22,56.73],[-5.47,56.41],[-5.80,55.31],[-4.63,55.46],[-4.86,54.63],[-3.6,54.97],[-3.05,54.93],[-3.50,54.72],[-3.64,54.49],[-3.2,54.1],[-2.85,54.07],[-3.05,53.82],[-3.0,53.4],[-3.4,53.34],[-3.83,53.32],[-4.6,53.4],[-4.63,53.31],[-4.27,53.14],[-4.75,52.80],[-4.05,52.72],[-4.08,52.41],[-4.7,52.1],[-5.3,51.88],[-5.05,51.7],[-4.7,51.67],[-4.3,51.57],[-3.17,51.45],[-2.7,51.5],[-3.0,51.35],[-4.52,51.02],[-4.95,50.55],[-5.1,50.42],[-5.48,50.21]];
+const NI=[[-5.50,54.40],[-5.60,54.65],[-5.75,54.85],[-6.0,55.2],[-6.5,55.25],[-7.0,55.22],[-7.3,55.05],[-7.7,54.75],[-8.15,54.45],[-7.85,54.25],[-7.3,54.12],[-6.9,54.0],[-6.3,54.05],[-5.65,54.25]];
+const franchises=[
+ {name:"Frome",country:"England",county:"Somerset",lat:51.23,lon:-2.32},
+ {name:"Chorley",country:"England",county:"Lancashire",lat:53.65,lon:-2.63},
+ {name:"Greater Manchester",country:"England",county:"Greater Manchester",lat:53.52,lon:-2.30,wide:true},
+ {name:"Medway",country:"England",county:"Kent",lat:51.39,lon:0.54,wide:true},
+ {name:"Merseyside",country:"England",county:"Merseyside",lat:53.41,lon:-2.99,wide:true},
+ {name:"Norfolk",country:"England",county:"Norfolk",lat:52.66,lon:1.00,wide:true},
+ {name:"Penkridge",country:"England",county:"Staffordshire",lat:52.73,lon:-2.12},
+ {name:"Preston City",country:"England",county:"Lancashire",lat:53.76,lon:-2.70},
+ {name:"Southend-On-Sea",country:"England",county:"Essex",lat:51.55,lon:0.71},
+ {name:"Bristol",country:"England",county:"Bristol",lat:51.45,lon:-2.59},
+ {name:"Tyne Tees",country:"England",county:"North East",lat:54.78,lon:-1.50,wide:true},
+ {name:"Trecelyn",country:"Wales",county:"Caerphilly",lat:51.66,lon:-3.14}
+];
+const countries=["England","Scotland","Wales","Northern Ireland"];
+let fnd={country:null,county:null};
+let selFr=null;
 let selected=locations[0];
 let deployment=null;
 let pfTimer=null;
@@ -157,27 +220,40 @@ function setRoute(route){
  clearTimeout(pfTimer);
  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
  ({map:renderMap,dispatch:renderDispatch,preflight:renderPreflight,config:renderConfig}[route]||renderMap)();
+ const sc=document.getElementById("screen");sc.classList.remove("enter");void sc.offsetWidth;sc.classList.add("enter");
 }
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setRoute(b.dataset.route));
 
 function renderMap(){
  document.getElementById("screen").innerHTML=`
  <div class="screen-head"><div><div class="eyebrow">01 // FIELD OVERVIEW</div><h1>RESPONSE MAP</h1><div class="sub">COUNTRY → ADMINISTRATIVE REGION → CITY → ECTO GRID → INVESTIGATION SITE</div></div><div class="status"><i class="lamp"></i>LOCAL NETWORK // READY</div></div>
- <div class="notice">ECTO GRID REFERENCES are operational identifiers. The map is regional and does not represent street-level navigation.</div>
+ <div class="notice">ECTO GRID REFERENCES are operational identifiers. The map is regional and does not represent street-level navigation. Squares mark response sectors; diamonds mark UK franchises; dashed rings mark county-wide franchises with no exact location.</div>
  <div class="grid">
-  <section class="card"><h2>UK RESPONSE GRID <span class="panel-code">REGIONAL VIEW</span></h2><div class="map" id="map"></div></section>
+  <section class="card"><h2>UK RESPONSE GRID <span class="panel-code">REGIONAL VIEW</span></h2><div class="map" id="map"><div class="mapframe" id="mapframe"></div></div></section>
   <aside>
    <section class="card"><h2>SELECTED LOCATION</h2><div class="readout" id="loc"></div><div class="actions"><button class="action btn-primary" onclick="setRoute('dispatch')">ECTO DISPATCH</button><button class="action" onclick="renderMap()">VIEW SITES</button></div></section>
+   <section class="card" style="margin-top:12px"><h2>FRANCHISE FINDER <span class="panel-code">${franchises.length} LISTED</span></h2>${finderHTML()}</section>
    <section class="card" style="margin-top:12px"><h2>ACTIVE CASE</h2><div class="readout">CASE // SE-0261<br>TYPE // AWE<br>STATUS // ACTIVE INVESTIGATION<br>DATE // 24/09/2026</div></section>
   </aside>
  </div>`;
- const map=document.getElementById("map");
+ const map=document.getElementById("mapframe");
+ map.innerHTML='<svg viewBox="0 0 '+MAPW+" "+MAPH+'" aria-hidden="true"><path class="land" d="'+poly(GB)+'"/><path class="land" d="'+poly(NI)+'"/></svg>';
  locations.forEach(l=>{
    const b=document.createElement("button");
    b.className="marker "+(l.risk==="CRITICAL"?"alert":l.status==="MONITOR"?"monitor":"active");
-   b.style.left=l.x+"%";b.style.top=l.y+"%";
+   const [px,py]=proj(l.lat,l.lon);b.style.left=(px/MAPW*100)+"%";b.style.top=(py/MAPH*100)+"%";
    b.innerHTML='<div class="ring"></div><div class="dot"></div><span>'+l.city+'</span>';
    b.onclick=()=>{selected=l;renderMap()};
+   map.appendChild(b);
+ });
+ franchises.forEach((f,n)=>{
+   const b=document.createElement("button");
+   const near=locations.some(l=>Math.abs(l.lat-f.lat)<.12&&Math.abs(l.lon-f.lon)<.12);
+   b.className="fr"+(f.wide?" wide":"")+(near?" near":"")+(selFr===f?" sel":"")+(frMatch(f)?"":" dim");
+   const [px,py]=proj(f.lat,f.lon);b.style.left=(px/MAPW*100)+"%";b.style.top=(py/MAPH*100)+"%";
+   b.setAttribute("aria-label","Franchise: "+f.name+(f.wide?" (county-wide, approximate position)":""));
+   b.innerHTML='<i></i><span class="tag">'+f.name.toUpperCase()+(f.wide?" // COUNTY-WIDE":"")+'</span>';
+   b.onclick=()=>pickFranchise(n);
    map.appendChild(b);
  });
  document.getElementById("loc").innerHTML=
@@ -188,6 +264,29 @@ function renderMap(){
   <div class="kv"><span class="k">ECTO GRID</span><span class="v">${selected.grid}</span></div>
   <div class="kv"><span class="k">SITE</span><span class="v">${selected.site}</span></div>
   <div class="kv"><span class="k">RISK</span><span class="v">${selected.risk}</span></div>`;
+}
+
+const frMatch=f=>(!fnd.country||f.country===fnd.country)&&(!fnd.county||f.county===fnd.county);
+function pickFranchise(n){selFr=franchises[n];fnd={country:selFr.country,county:selFr.county};renderMap()}
+function frNav(level,val){
+ if(level===0){fnd={country:null,county:null};selFr=null}
+ else if(level===1){fnd={country:val||fnd.country,county:null};selFr=null}
+ else if(level===2){fnd.county=val||fnd.county;selFr=null}
+ renderMap();
+}
+function finderHTML(){
+ const crumbs='<div class="crumbs"><button class="crumb" onclick="frNav(0)">UK</button>'+(fnd.country?' › <button class="crumb" onclick="frNav(1)">'+fnd.country.toUpperCase()+'</button>':"")+(fnd.county?' › <button class="crumb" onclick="frNav(2)">'+fnd.county.toUpperCase()+'</button>':"")+'</div>';
+ let list,info="";
+ if(!fnd.country){
+  list=countries.map(c=>{const n=franchises.filter(f=>f.country===c).length;return `<button ${n?"":"disabled"} onclick="frNav(1,'${c}')">${c.toUpperCase()}<small>${n} ${n===1?"FRANCHISE":"FRANCHISES"}</small></button>`}).join("");
+ }else if(!fnd.county){
+  const cs=[...new Set(franchises.filter(f=>f.country===fnd.country).map(f=>f.county))].sort();
+  list=cs.map(c=>{const n=franchises.filter(f=>f.country===fnd.country&&f.county===c).length;return `<button onclick="frNav(2,'${c}')">${c.toUpperCase()}<small>${n}</small></button>`}).join("");
+ }else{
+  list=franchises.map((f,n)=>[f,n]).filter(([f])=>frMatch(f)).map(([f,n])=>`<button class="${selFr===f?"sel":""}" onclick="pickFranchise(${n})">${f.name.toUpperCase()}<small>${f.wide?"COUNTY-WIDE":"LOCAL"}</small></button>`).join("");
+ }
+ if(selFr)info=`<div class="readout"><div class="kv"><span class="k">FRANCHISE</span><span class="v">${selFr.name.toUpperCase()}</span></div><div class="kv"><span class="k">COUNTRY</span><span class="v">${selFr.country.toUpperCase()}</span></div><div class="kv"><span class="k">COUNTY</span><span class="v">${selFr.county.toUpperCase()}</span></div><div class="kv"><span class="k">COVERAGE</span><span class="v">${selFr.wide?"COUNTY-WIDE":"LOCAL"}</span></div><div class="kv"><span class="k">MAP POSITION</span><span class="v">${selFr.wide?"APPROX. CENTRE (RING)":"TOWN / CITY CENTRE"}</span></div></div>`;
+ return crumbs+info+'<div class="frlist">'+list+'</div>';
 }
 
 function renderDispatch(){
@@ -212,9 +311,9 @@ function renderDispatch(){
 function proceedPreflight(){
  const t=document.getElementById("teamSelect"),v=document.getElementById("vehicleSelect");
  const team=teams.find(x=>x.id===t.value);
- if(!team||team.status!=="AVAILABLE"){alert("NO AVAILABLE TEAM SELECTED");return}
+ if(!team||team.status!=="AVAILABLE"){sfx.deny();openDialog(`<h2>NO TEAM SELECTED</h2><div class="msg">SELECT AN AVAILABLE RESPONSE TEAM TO CONTINUE.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);return}
  deployment={team,vehicle:v.value.split(" // ")[0],vehicleStatus:v.value.split(" // ")[1]||"",location:selected};
- setRoute("preflight");
+ sfx.confirm();setRoute("preflight");
 }
 
 const checks=[
@@ -260,13 +359,13 @@ function renderPreflight(){
  </div>`;
  let i=0;
  const step=()=>{
-  if(i>0){const prev=document.getElementById("chk"+(i-1));prev.className="check ok";prev.querySelector(".res").textContent=checks[i-1][1];}
+  if(i>0){const prev=document.getElementById("chk"+(i-1));prev.className="check ok";prev.querySelector(".res").textContent=checks[i-1][1];sfx.tick();}
   document.getElementById("pfBar").style.width=(i/checks.length*100)+"%";
   document.getElementById("pfCount").textContent=i+" / "+checks.length;
   if(i>=checks.length){
    document.getElementById("pfLamp").className="lamp";
    document.getElementById("pfState").textContent="READY";
-   document.getElementById("launchBtn").disabled=false;
+   document.getElementById("launchBtn").disabled=false;sfx.confirm();
    document.querySelector("#pfMsg .readout").innerHTML="ALL SYSTEMS NOMINAL.<br>LAUNCH AUTHORISED.";
    return;
   }
@@ -277,6 +376,7 @@ function renderPreflight(){
  step();
 }
 function launch(){
+ sfx.chirp();
  document.getElementById("launchBtn").disabled=true;
  document.getElementById("pfState").textContent="LAUNCHED";
  document.querySelector("#pfMsg .readout").innerHTML="LAUNCH CONFIRMED // "+deployment.team.id+"<br>VEHICLE "+deployment.vehicle+" EN ROUTE TO "+deployment.location.city.toUpperCase()+"<br><br>NEXT SCREEN NOT YET BUILT.";
@@ -357,28 +457,48 @@ function saveTeam(i){
  const crew=parseInt(document.getElementById("tCrew").value);
  const status=document.getElementById("tStatus").value;
  const err=document.getElementById("teamErr");
- const fail=m=>{err.textContent=m;err.hidden=false};
+ const fail=m=>{sfx.deny();err.textContent=m;err.hidden=false};
  if(!id)return fail("TEAM ID IS REQUIRED.");
  if(!name)return fail("TEAM NAME IS REQUIRED.");
  if(!(crew>=1))return fail("CREW SIZE MUST BE AT LEAST 1.");
  if(teams.some((x,n)=>n!==i&&x.id.toUpperCase()===id))return fail("TEAM ID "+id+" IS ALREADY IN USE.");
  const rec={id,name,crew,status};
  if(i<0)teams.push(rec);else teams[i]=rec;
- saveTeams();closeDialog();renderConfig();
+ sfx.confirm();saveTeams();closeDialog();renderConfig();
 }
 function deleteTeam(i){
  const t=teams[i];
  if(!["AVAILABLE","STANDBY","OFFLINE"].includes(t.status)){
-  openDialog(`<h2>CANNOT DELETE // ${t.id}</h2><div class="msg">${t.id} IS ${t.status}.<br>ACTIVE DEPLOYMENTS CANNOT BE DELETED.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);
+  sfx.deny();openDialog(`<h2>CANNOT DELETE // ${t.id}</h2><div class="msg">${t.id} IS ${t.status}.<br>ACTIVE DEPLOYMENTS CANNOT BE DELETED.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);
   return;
  }
  openDialog(`<h2>DELETE TEAM // ${t.id}</h2><div class="msg">${t.id} // ${t.name}<br>THIS REMOVES THE TEAM FROM THE LOCAL REGISTER.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-danger" onclick="confirmDelete(${i})">DELETE TEAM</button></div>`);
 }
 function confirmDelete(i){
- teams.splice(i,1);saveTeams();closeDialog();renderConfig();
+ sfx.confirm();teams.splice(i,1);saveTeams();closeDialog();renderConfig();
 }
 function render(){document.getElementById("profileStatus").textContent=profiles[profile].label;document.getElementById("footerState").textContent="LOCAL DISPLAY PROFILE // "+profiles[profile].label;renderConfig()}
-Object.assign(window,{setRoute,renderMap,applyProfile,newTeam,editTeam,deleteTeam,saveTeam,confirmDelete,closeDialog,proceedPreflight,launch});
+function bootSequence(){
+ const boot=document.getElementById("boot"),txt=document.getElementById("bootText"),prompt=document.getElementById("bootPrompt");
+ const lines=["ECTO OS // FIELD OPERATIONS SYSTEM","MEMORY CHECK ............ OK","DISPLAY PROFILE ......... "+profiles[profile].label,"RESPONSE GRID ........... LOADED","TEAM REGISTER ........... "+teams.length+" TEAMS","LOCAL STORAGE ........... OK","","SYSTEM OPERATIONAL"];
+ const slow=!matchMedia("(prefers-reduced-motion:reduce)").matches;
+ let started=false,skip=false,done=false;
+ function finish(){if(done)return;done=true;document.removeEventListener("keydown",go);boot.removeEventListener("pointerdown",go);sfx.chirp();boot.classList.add("out");setTimeout(()=>boot.remove(),slow?450:0)}
+ function go(e){
+  if(started){skip=true;return}
+  started=true;ac();prompt.remove();
+  let n=0;
+  (function next(){
+   if(skip||n>=lines.length){txt.textContent=lines.join("\n");setTimeout(finish,skip?0:350);return}
+   txt.textContent=lines.slice(0,++n).join("\n");
+   if(lines[n-1])sfx.tick();
+   setTimeout(next,slow?230:30);
+  })();
+ }
+ document.addEventListener("keydown",go);boot.addEventListener("pointerdown",go);
+}
+bootSequence();
+Object.assign(window,{pickFranchise,frNav,setRoute,renderMap,applyProfile,newTeam,editTeam,deleteTeam,saveTeam,confirmDelete,closeDialog,proceedPreflight,launch});
 setRoute("map");
 })();
 </script>
