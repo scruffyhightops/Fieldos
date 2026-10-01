@@ -3,780 +3,100 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ECTO OS // Cassette Futurism 001</title>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#070907">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ECTO OS">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>ECTO OS // Cassette Futurism 002</title>
 <style>
-:root{
-  --bg:#070907;--bg2:#0a0d0a;--panel:#101410;--panel2:#151a15;
-  --line:#394039;--line2:#596059;--fg:#c4c9c0;--fg2:#9fa79e;--dim:#697069;
-  --green:#72ff7a;--green2:#4fc95b;--olive:#a79b45;--yellow:#d8c84f;
-  --cyan:#69c8c8;--blue:#4e9ed2;--red:#df5c52;
-  --accent:var(--green);--accent2:var(--green2);
-  --font-ui:Eurostile, 'Arial Narrow', Arial, sans-serif;
-  --font-data:'Courier New',Courier,monospace;
-}
-[data-theme="phosphor"]{--fg:#b8cdb8;--fg2:#8fa58f;--accent:#72ff7a;--accent2:#45d957;--olive:#9db85b;--yellow:#c9d85a;--cyan:#69c8a0}
-[data-theme="amber"]{--accent:#e4b85c;--accent2:#b98336;--olive:#c19a50;--yellow:#e8c86b;--cyan:#b8a16b}
-[data-theme="cyan"]{--accent:#69d4d0;--accent2:#3ba9a5;--olive:#9ab9b0;--yellow:#b7d7c8;--cyan:#69d4d0}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:var(--font-ui)}
-body{background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);background-size:24px 24px}
-button,input,select{font:inherit}
-button{color:var(--fg);background:#0c100c;border:1px solid var(--line);border-radius:0;cursor:pointer}
-button:hover{border-color:var(--line2);background:#111711}
-button.active,.btn-primary{border-color:var(--accent);color:var(--accent);background:#101810}
-input,select{width:100%;min-height:42px;background:#090c09;color:var(--fg);border:1px solid var(--line);border-radius:0;padding:9px 10px}
-.app{min-height:100vh;display:flex;flex-direction:column}
-.topbar{height:calc(64px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#090c09}
-.brand{font-size:22px;letter-spacing:.08em}.brand small{display:block;font-size:9px;color:var(--dim);letter-spacing:.14em;margin-top:3px}
-.topstatus{font-family:var(--font-data);font-size:10px;text-align:right;color:var(--fg2);line-height:1.5}
-.layout{display:grid;grid-template-columns:190px 1fr;min-height:calc(100vh - 96px);flex:1}
-.nav{border-right:1px solid var(--line);padding:12px;background:#090c09}
-.nav-title,.eyebrow,.label,.panel-code{font-size:9px;letter-spacing:.14em;color:var(--dim)}
-.nav-title{padding:4px 6px 10px}
-.nav button{display:block;width:100%;text-align:left;padding:11px 8px;margin:3px 0;font-size:10px;letter-spacing:.08em}
-.content{padding:18px;overflow:auto}
-.screen-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:14px}
-h1{font-size:22px;font-weight:500;letter-spacing:.08em;margin:3px 0 4px}
-.sub{font-size:10px;color:var(--fg2);letter-spacing:.05em}
-.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:12px}
-.card{border:1px solid var(--line);background:linear-gradient(135deg,var(--panel),var(--panel2));padding:12px}
-.card h2{font-size:11px;font-weight:500;letter-spacing:.1em;margin:0 0 10px;color:var(--fg2)}
-.readout{font-family:var(--font-data);font-size:11px;line-height:1.65}
-.kv{display:grid;grid-template-columns:120px 1fr;gap:5px;border-top:1px solid #252b25;padding:7px 0}
-.kv:first-child{border-top:0}.k{color:var(--dim);font-size:9px;letter-spacing:.08em}.v{color:var(--fg2);font-family:var(--font-data);font-size:10px}
-.status{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-data);font-size:10px}.lamp{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px color-mix(in srgb,var(--accent) 45%,transparent)}
-.lamp.warn{background:var(--yellow)}.lamp.red{background:var(--red)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.action{padding:10px;font-size:9px;letter-spacing:.08em}
-.map{height:520px;border:1px solid var(--line);position:relative;overflow:hidden;background:#0b0f0b;display:flex;justify-content:center}
-.mapframe{position:relative;height:100%;aspect-ratio:366/556}
-.mapframe svg{position:absolute;inset:0;width:100%;height:100%}
-.fr{position:absolute;z-index:3;width:20px;height:20px;transform:translate(calc(-50% + var(--dx,0px)),-50%);padding:0;background:transparent;border:0}
-.dialog{max-height:92vh;overflow:auto}
-.fr i{display:block;width:9px;height:9px;margin:auto;border:1px solid var(--cyan);background:#0b0f0b;transform:rotate(45deg)}
-.fr:hover i,.fr.sel i{background:var(--cyan)}
-.fr .tag{display:none;position:absolute;left:50%;bottom:19px;transform:translateX(-50%);white-space:nowrap;font:9px var(--font-ui);letter-spacing:.06em;color:var(--cyan);background:#0b0f0b;border:1px solid var(--cyan);padding:2px 5px}
-.fr.sel .tag,.fr:hover .tag,.fr:focus-visible .tag{display:block}
-.fr.wide{width:34px;height:34px;border:1px dashed var(--cyan);border-radius:50%;background:rgba(105,200,200,.07);pointer-events:none}
-.fr.wide i{pointer-events:auto}
-.fr.dim{opacity:.25}
-.cells{display:grid;grid-template-columns:repeat(20,1fr);gap:2px}.cells i{height:24px;background:#0c100c;border:1px solid var(--line)}.cells i.on{background:var(--accent);border-color:var(--accent)}.cells i.hi{background:var(--yellow);border-color:var(--yellow)}.cells i.crit{background:var(--red);border-color:var(--red)}
-.update{position:fixed;left:10px;right:10px;bottom:calc(42px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--accent);background:#0d120d;padding:9px 12px;font:10px var(--font-data);letter-spacing:.06em;color:var(--accent)}
-.frblock{border:1px solid #252b25;padding:6px 8px;margin-top:6px}
-.frhead{width:100%;display:flex;justify-content:space-between;gap:8px;padding:7px;font-size:9px;letter-spacing:.06em;margin-bottom:4px;text-align:left}
-.frhead small{color:var(--dim);font-size:8px}
-.frhead.sel{border-color:var(--cyan);color:var(--cyan)}
-textarea{width:100%;background:#090c09;color:var(--fg);border:1px solid var(--line);border-radius:0;padding:9px 10px;font:11px var(--font-data);resize:vertical}
-.crumbs{font-size:9px;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;line-height:2}
-.crumb{border:0;background:none;padding:2px 3px;font-size:9px;letter-spacing:.08em;color:var(--cyan);text-decoration:underline}
-.frlist{display:grid;grid-template-columns:1fr;gap:5px;margin-top:8px}
-.frlist button{padding:8px;font-size:9px;letter-spacing:.06em;text-align:left;display:flex;justify-content:space-between;gap:8px}
-.frlist button small{color:var(--dim);font-size:8px}
-.frlist button.sel{border-color:var(--cyan);color:var(--cyan)}
-.frlist button:disabled{opacity:.35;cursor:not-allowed}
-.land{fill:#0f160f;stroke:var(--line2);stroke-width:.9;stroke-linejoin:round}
-.map:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(114,255,122,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(114,255,122,.03) 1px,transparent 1px);background-size:52px 52px}
-.map:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.32) 100%)}
-.mapline{position:absolute;border-top:1px solid #303930;transform-origin:left center;opacity:.7}
-.marker{position:absolute;z-index:2;background:transparent;border:0;width:80px;height:44px;transform:translate(-50%,-5px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-.marker .dot{width:10px;height:10px;border:1px solid currentColor;margin:0;background:#0b0f0b}
-.marker .ring{position:absolute;left:50%;top:5px;width:26px;height:26px;border:1px solid currentColor;transform:translate(-50%,-50%);opacity:.35}
-.marker span{display:block;margin-top:3px;font:9px var(--font-ui);letter-spacing:.06em;white-space:nowrap}
-.marker.alert{color:var(--red);animation:flash 1.2s steps(2,end) infinite}
-.marker.monitor{color:var(--yellow)}.marker.active{color:var(--accent)}
-@keyframes flash{50%{opacity:.38}}
-.notice{border-left:2px solid var(--accent);background:#0d120d;padding:9px 10px;color:var(--fg2);font-size:10px;line-height:1.5;margin-bottom:12px}
-.profile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.profile{min-height:88px;text-align:left;padding:10px;position:relative}
-.profile strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:5px}.profile span{display:block;color:var(--dim);font-size:9px;line-height:1.4}
-.profile.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-.profile .sample{position:absolute;right:9px;top:10px;width:7px;height:7px;background:var(--sample)}
-.cassette{--sample:#72ff7a}.phosphor{--sample:#72ff7a}.amber{--sample:#e4b85c}.cyan{--sample:#69d4d0}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:var(--dim);font-size:9px;letter-spacing:.1em;margin-bottom:5px}
-.team-table{width:100%;border-collapse:collapse;font-size:10px}.team-table th,.team-table td{border-bottom:1px solid #252b25;padding:9px 6px;text-align:left}.team-table th{color:var(--dim);font-size:8px;letter-spacing:.1em;font-weight:400}.team-actions{display:flex;gap:5px}.mini{padding:6px 8px;font-size:8px}
-.footer{height:calc(32px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 12px;font:9px var(--font-data);color:var(--dim)}
-hr{border:0;border-top:1px solid var(--line);margin:13px 0}
-.check{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;border-top:1px solid #252b25;padding:9px 0;font-family:var(--font-data);font-size:10px;color:var(--dim)}
-.check:first-child{border-top:0}
-.check .box{width:12px;height:12px;border:1px solid var(--line2);position:relative}
-.check.run{color:var(--yellow)}.check.run .box{border-color:var(--yellow);animation:flash 1s steps(2,end) infinite}
-.check.ok{color:var(--fg2)}.check.ok .box{border-color:var(--accent);background:var(--accent)}
-.check.fail{color:var(--red)}.check.fail .box{border-color:var(--red)}
-.bar{height:6px;border:1px solid var(--line);margin:10px 0 4px;background:#090c09}.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s steps(6,end)}
-.btn-primary:disabled{opacity:.35;cursor:not-allowed;border-color:var(--line);color:var(--dim)}
-.modal{position:fixed;inset:0;z-index:50;background:rgba(3,5,3,.82);display:flex;align-items:center;justify-content:center;padding:14px}
-.dialog{width:100%;max-width:440px;border:1px solid var(--accent);background:linear-gradient(135deg,var(--panel),var(--panel2));padding:14px;box-shadow:0 0 0 3px #070907}
-.dialog h2{font-size:11px;font-weight:500;letter-spacing:.1em;margin:0 0 12px;color:var(--accent)}
-.dialog .field{margin-bottom:10px}
-.dialog .err{border-left:2px solid var(--red);background:#140c0b;color:var(--red);font-size:10px;padding:8px 10px;margin-bottom:10px;line-height:1.5}
-.dialog .err[hidden]{display:none}
-.dialog .msg{font-family:var(--font-data);font-size:11px;line-height:1.6;color:var(--fg2);margin-bottom:4px}
-.btn-danger{border-color:var(--red);color:var(--red);background:#140c0b}
-.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
-@media(prefers-reduced-motion:reduce){.check.run .box{animation:none}}
-.boot{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:24px;font-family:var(--font-data);font-size:12px;color:var(--accent);cursor:pointer}
-.boot pre{margin:0 0 16px;white-space:pre-wrap;line-height:1.7;font:inherit}
-.boot .prompt{color:var(--fg2);animation:flash 1.2s steps(2,end) infinite}
-.boot.out{opacity:0;transition:opacity .4s steps(4,end)}
-#screen.enter{animation:scanin .28s steps(6,end)}
-@keyframes scanin{from{clip-path:inset(0 0 100% 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
-@media(prefers-reduced-motion:reduce){.boot .prompt,#screen.enter{animation:none}.boot.out{transition:none}}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.nav{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);gap:4px}.nav-title{grid-column:1/-1}.content{padding:10px}.grid{grid-template-columns:1fr}.map{height:390px}.profile-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.topbar{padding:0 10px}}
-@media(prefers-reduced-motion:reduce){.marker.alert{animation:none}}
+:root{--bg:#070907;--bg2:#0a0d0a;--panel:#101410;--panel2:#151a15;--line:#394039;--line2:#596059;--fg:#c4c9c0;--fg2:#9fa79e;--dim:#697069;--green:#72ff7a;--green2:#4fc95b;--yellow:#d8c84f;--cyan:#69c8c8;--red:#df5c52;--accent:var(--green);--accent2:var(--green2);--font-ui:Eurostile,'Arial Narrow',Arial,sans-serif;--font-data:'Courier New',Courier,monospace}
+[data-theme="phosphor"]{--fg:#b8cdb8;--fg2:#8fa58f;--accent:#72ff7a;--accent2:#45d957;--yellow:#c9d85a}
+[data-theme="amber"]{--accent:#e4b85c;--accent2:#b98336;--yellow:#e8c86b;--cyan:#b8a16b}
+[data-theme="cyan"]{--accent:#69d4d0;--accent2:#3ba9a5;--yellow:#b7d7c8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:var(--font-ui)}body{background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);background-size:24px 24px}button,input,select{font:inherit}button{color:var(--fg);background:#0c100c;border:1px solid var(--line);border-radius:0;cursor:pointer}button:hover{border-color:var(--line2);background:#111711}button.active,.btn-primary{border-color:var(--accent);color:var(--accent);background:#101810}input,select{width:100%;min-height:40px;background:#090c09;color:var(--fg);border:1px solid var(--line);border-radius:0;padding:8px 10px}.app{min-height:100vh;display:flex;flex-direction:column}.topbar{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#090c09}.brand{font-size:22px;letter-spacing:.08em}.brand small{display:block;font-size:9px;color:var(--dim);letter-spacing:.14em;margin-top:3px}.topstatus{font:10px/1.5 var(--font-data);text-align:right;color:var(--fg2)}.layout{display:grid;grid-template-columns:190px 1fr;min-height:calc(100vh - 96px);flex:1}.nav{border-right:1px solid var(--line);padding:12px;background:#090c09}.nav-title,.eyebrow,.label,.panel-code{font-size:9px;letter-spacing:.14em;color:var(--dim)}.nav-title{padding:4px 6px 10px}.nav button{display:block;width:100%;text-align:left;padding:11px 8px;margin:3px 0;font-size:10px;letter-spacing:.08em}.content{padding:18px;overflow:auto}.screen-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:14px}h1{font-size:22px;font-weight:500;letter-spacing:.08em;margin:3px 0 4px}.sub{font-size:10px;color:var(--fg2);letter-spacing:.05em}.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:12px}.card{border:1px solid var(--line);background:linear-gradient(135deg,var(--panel),var(--panel2));padding:12px}.card h2{font-size:11px;font-weight:500;letter-spacing:.1em;margin:0 0 10px;color:var(--fg2)}.readout{font:11px/1.65 var(--font-data)}.kv{display:grid;grid-template-columns:145px 1fr;gap:5px;border-top:1px solid #252b25;padding:7px 0}.kv:first-child{border-top:0}.k{color:var(--dim);font-size:9px;letter-spacing:.08em}.v{color:var(--fg2);font:10px var(--font-data)}.status{display:inline-flex;align-items:center;gap:7px;font:10px var(--font-data)}.lamp{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent)}.lamp.warn{background:var(--yellow)}.lamp.red{background:var(--red)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.action{padding:10px;font-size:9px;letter-spacing:.08em}.notice{border-left:2px solid var(--accent);background:#0d120d;padding:9px 10px;color:var(--fg2);font-size:10px;line-height:1.5;margin-bottom:12px}.map{height:470px;border:1px solid var(--line);position:relative;overflow:hidden;background:#0b0f0b}.map:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(114,255,122,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(114,255,122,.03) 1px,transparent 1px);background-size:52px 52px}.map:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.32) 100%)}.mapline{position:absolute;border-top:1px solid #303930;transform-origin:left center;opacity:.7}.marker{position:absolute;z-index:2;background:transparent;border:0;width:90px;height:46px;transform:translate(-50%,-50%);padding:0}.marker .dot{width:10px;height:10px;border:1px solid currentColor;margin:auto;background:#0b0f0b}.marker .ring{position:absolute;left:50%;top:15px;width:26px;height:26px;border:1px solid currentColor;transform:translate(-50%,-50%);opacity:.35}.marker span{display:block;margin-top:3px;font:9px var(--font-ui);letter-spacing:.06em;white-space:nowrap}.marker.alert{color:var(--red);animation:flash 1.2s steps(2,end) infinite}.marker.monitor{color:var(--yellow)}.marker.active{color:var(--accent)}@keyframes flash{50%{opacity:.38}}.crumbs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}.crumb{padding:6px 8px;font:9px var(--font-data);color:var(--fg2)}.crumb.current{border-color:var(--accent);color:var(--accent)}.drill-list{display:grid;gap:5px}.drill-item{display:grid;grid-template-columns:1fr auto;gap:10px;text-align:left;padding:9px}.drill-item strong{display:block;font-size:10px;letter-spacing:.06em}.drill-item span{display:block;color:var(--dim);font:9px var(--font-data);margin-top:3px}.badge{font:8px var(--font-data);color:var(--accent);align-self:center}.profile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.profile{min-height:88px;text-align:left;padding:10px;position:relative}.profile strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:5px}.profile span{display:block;color:var(--dim);font-size:9px;line-height:1.4}.profile.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.profile .sample{position:absolute;right:9px;top:10px;width:7px;height:7px;background:var(--sample)}.cassette{--sample:#72ff7a}.phosphor{--sample:#72ff7a}.amber{--sample:#e4b85c}.cyan{--sample:#69d4d0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:var(--dim);font-size:9px;letter-spacing:.1em;margin-bottom:5px}.team-table{width:100%;border-collapse:collapse;font-size:10px}.team-table th,.team-table td{border-bottom:1px solid #252b25;padding:9px 6px;text-align:left}.team-table th{color:var(--dim);font-size:8px;letter-spacing:.1em;font-weight:400}.team-actions{display:flex;gap:5px}.mini{padding:6px 8px;font-size:8px}.footer{height:32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 12px;font:9px var(--font-data);color:var(--dim)}hr{border:0;border-top:1px solid var(--line);margin:13px 0}.back{margin-bottom:10px;padding:7px 9px;font-size:9px}.small-note{font:9px/1.5 var(--font-data);color:var(--dim)}@media(max-width:800px){.layout{grid-template-columns:1fr}.nav{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);gap:4px}.nav-title{grid-column:1/-1}.content{padding:10px}.grid{grid-template-columns:1fr}.map{height:390px}.profile-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.topbar{padding:0 10px}}@media(prefers-reduced-motion:reduce){.marker.alert{animation:none}}
 </style>
 </head>
 <body data-theme="cassette">
-<div class="boot" id="boot" role="button" tabindex="0" aria-label="Initialise ECTO OS"><pre id="bootText"></pre><div class="prompt" id="bootPrompt">TOUCH OR PRESS ANY KEY TO INITIALISE</div></div>
 <div class="app">
-<header class="topbar">
-  <div class="brand">ECTO OS<small>FIELD OPERATIONS SYSTEM // CASSETTE FUTURISM</small></div>
-  <div class="topstatus">SYSTEM // <b style="color:var(--accent)">OPERATIONAL</b><br>PROFILE // <span id="profileStatus">CASSETTE FUTURISM</span></div>
-</header>
-<div class="layout">
-<nav class="nav" id="nav">
-  <div class="nav-title">ECTO FIELD TERMINAL</div>
-  <button data-route="map">01 RESPONSE MAP</button>
-  <button data-route="dispatch">02 ECTO DISPATCH</button>
-  <button data-route="preflight">03 PRE-FLIGHT</button>
-  <button data-route="enroute">04 EN ROUTE</button>
-  <button data-route="onsite">05 ON SITE</button>
-  <button data-route="report">06 REPORT</button>
-  <button data-route="config">07 CONFIGURATION</button>
-</nav>
-<main class="content"><div id="screen"></div></main>
+<header class="topbar"><div class="brand">ECTO OS<small>FIELD OPERATIONS SYSTEM // CASSETTE FUTURISM</small></div><div class="topstatus">SYSTEM // <b style="color:var(--accent)">OPERATIONAL</b><br>PROFILE // <span id="profileStatus">CASSETTE FUTURISM</span></div></header>
+<div class="layout"><nav class="nav" id="nav"><div class="nav-title">ECTO FIELD TERMINAL</div><button data-route="map">01 RESPONSE MAP</button><button data-route="dispatch">02 ECTO DISPATCH</button><button data-route="config">07 CONFIGURATION</button></nav><main class="content"><div id="screen"></div></main></div>
+<footer class="footer"><span>ECTO OS // VISUAL FOUNDATION 002</span><span id="footerState">LOCAL DISPLAY PROFILE // CASSETTE FUTURISM</span></footer>
 </div>
-<footer class="footer"><span>ECTO OS // VISUAL FOUNDATION 001</span><button class="mini" id="installBtn" hidden>INSTALL APP</button><button class="mini" id="muteBtn" aria-pressed="false">SOUND // ON</button><span id="footerState">LOCAL DISPLAY PROFILE // CASSETTE FUTURISM</span></footer>
-</div>
-
 <script>
 (()=>{
 "use strict";
 const KEY="ectoDisplayProfile";
-let actx=null,muted=localStorage.getItem("ectoMuted")==="1";
-function ac(){if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==="suspended")actx.resume();return actx}
-function tone(f,t0,d,type,v,f2){const c=ac();if(!c||muted)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+t0;o.type=type||"square";o.frequency.setValueAtTime(f,s);if(f2)o.frequency.linearRampToValueAtTime(f2,s+d);g.gain.setValueAtTime(v||.04,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(c.destination);o.start(s);o.stop(s+d+.02)}
-const sfx={
- click:()=>tone(1400,0,.03,"square",.03),
- tick:()=>tone(900,0,.04,"square",.03),
- confirm:()=>{tone(660,0,.07,"square",.04);tone(990,.08,.1,"square",.04)},
- deny:()=>{tone(200,0,.12,"sawtooth",.05);tone(150,.13,.18,"sawtooth",.05)},
- chirp:()=>{tone(1100,0,.08,"sine",.08,1300);tone(1650,.09,.14,"sine",.08,1900)}
-};
-function syncMute(){const b=document.getElementById("muteBtn");b.textContent="SOUND // "+(muted?"OFF":"ON");b.setAttribute("aria-pressed",muted)}
-document.getElementById("muteBtn").addEventListener("click",e=>{e.stopPropagation();muted=!muted;localStorage.setItem("ectoMuted",muted?"1":"0");syncMute();sfx.click()});
-document.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b.id!=="muteBtn")sfx.click()});
-syncMute();
-const profiles={
- cassette:{label:"CASSETTE FUTURISM",theme:"cassette"},
- phosphor:{label:"PHOSPHOR GREEN",theme:"phosphor"},
- amber:{label:"AMBER",theme:"amber"},
- cyan:{label:"CYAN / TECHNICAL",theme:"cyan"}
-};
+const profiles={cassette:{label:"CASSETTE FUTURISM",theme:"cassette"},phosphor:{label:"PHOSPHOR GREEN",theme:"phosphor"},amber:{label:"AMBER",theme:"amber"},cyan:{label:"CYAN / TECHNICAL",theme:"cyan"}};
 let profile=localStorage.getItem(KEY)||"cassette";
-document.body.dataset.theme=profiles[profile]?.theme||"cassette";
-
 const teamsKey="ectoResponseTeams";
-const defaultTeams=[
- {id:"ECHO-2",name:"ECHO RESPONSE",crew:6,status:"AVAILABLE"},
- {id:"ALPHA-1",name:"ALPHA RESPONSE",crew:6,status:"AVAILABLE"},
- {id:"DELTA-3",name:"DELTA SPECIALIST",crew:5,status:"STANDBY"},
- {id:"BRAVO-4",name:"BRAVO RESPONSE",crew:6,status:"DEPLOYED"}
-];
+const defaultTeams=[{id:"ECHO-2",name:"ECHO RESPONSE",crew:6,status:"AVAILABLE"},{id:"ALPHA-1",name:"ALPHA RESPONSE",crew:6,status:"AVAILABLE"},{id:"DELTA-3",name:"DELTA SPECIALIST",crew:5,status:"STANDBY"},{id:"BRAVO-4",name:"BRAVO RESPONSE",crew:6,status:"DEPLOYED"}];
 let teams=JSON.parse(localStorage.getItem(teamsKey)||"null")||defaultTeams;
-function saveTeams(){localStorage.setItem(teamsKey,JSON.stringify(teams));}
-
-const locations=[
- {id:"LOC-UK-PORTSMOUTH",country:"United Kingdom",region:"Hampshire",city:"Portsmouth",grid:"C4-B2",site:"Portsmouth Harbour Sector",status:"ACTIVE",risk:"ELEVATED",lat:50.8,lon:-1.09},
- {id:"LOC-UK-LONDON",country:"United Kingdom",region:"Greater London",city:"London",grid:"D4-A1",site:"Central London Sector",status:"ACTIVE",risk:"NORMAL",lat:51.51,lon:-0.13},
- {id:"LOC-UK-BIRMINGHAM",country:"United Kingdom",region:"West Midlands",city:"Birmingham",grid:"C3-C2",site:"Midlands Sector",status:"MONITOR",risk:"ELEVATED",lat:52.48,lon:-1.9},
- {id:"LOC-UK-MANCHESTER",country:"United Kingdom",region:"Greater Manchester",city:"Manchester",grid:"B3-B1",site:"Manchester Sector",status:"MONITOR",risk:"NORMAL",lat:53.48,lon:-2.24},
- {id:"LOC-UK-BRISTOL",country:"United Kingdom",region:"South West",city:"Bristol",grid:"B4-A2",site:"Avon Sector",status:"ACTIVE",risk:"NORMAL",lat:51.45,lon:-2.59},
- {id:"LOC-UK-EDINBURGH",country:"United Kingdom",region:"Scotland",city:"Edinburgh",grid:"B1-C1",site:"Old Town Sector",status:"ALERT",risk:"CRITICAL",lat:55.95,lon:-3.19}
+function saveTeams(){localStorage.setItem(teamsKey,JSON.stringify(teams))}
+const geo={
+ countries:[
+  {id:"GB",name:"United Kingdom",label:"COUNTRY"},
+  {id:"US",name:"United States",label:"COUNTRY"}
+ ],
+ regions:[
+  {id:"GB-HAM",countryId:"GB",name:"Hampshire",type:"county",label:"COUNTY"},
+  {id:"GB-LON",countryId:"GB",name:"Greater London",type:"county",label:"REGION"},
+  {id:"GB-WMD",countryId:"GB",name:"West Midlands",type:"county",label:"REGION"},
+  {id:"GB-GMA",countryId:"GB",name:"Greater Manchester",type:"county",label:"REGION"},
+  {id:"GB-SOW",countryId:"GB",name:"South West",type:"region",label:"REGION"},
+  {id:"GB-SCT",countryId:"GB",name:"Scotland",type:"country-region",label:"NATION"},
+  {id:"US-ME",countryId:"US",name:"Maine",type:"state",label:"STATE"}
+ ],
+ localities:[
+  {id:"GB-HAM-POR",regionId:"GB-HAM",name:"Portsmouth",type:"city",x:54,y:66},
+  {id:"GB-HAM-WIN",regionId:"GB-HAM",name:"Winchester",type:"city",x:53,y:62},
+  {id:"GB-LON-LON",regionId:"GB-LON",name:"London",type:"city",x:67,y:70},
+  {id:"GB-WMD-BHM",regionId:"GB-WMD",name:"Birmingham",type:"city",x:52,y:51},
+  {id:"GB-GMA-MAN",regionId:"GB-GMA",name:"Manchester",type:"city",x:43,y:37},
+  {id:"GB-SOW-BRI",regionId:"GB-SOW",name:"Bristol",type:"city",x:43,y:63},
+  {id:"GB-SCT-EDI",regionId:"GB-SCT",name:"Edinburgh",type:"city",x:48,y:16},
+  {id:"US-ME-ORD",regionId:"US-ME",name:"Ordinary",type:"town",x:58,y:40}
+ ],
+ sites:[
+  {id:"SITE-0001",localityId:"GB-HAM-POR",name:"Historic Dockyard",grid:"C4-B-07",status:"ACTIVE",risk:"ELEVATED"},
+  {id:"SITE-0002",localityId:"GB-HAM-POR",name:"Portsmouth Harbour Sector",grid:"C4-B-08",status:"MONITOR",risk:"NORMAL"},
+  {id:"SITE-0003",localityId:"GB-HAM-WIN",name:"Winchester Sector",grid:"C4-C-03",status:"MONITOR",risk:"NORMAL"},
+  {id:"SITE-0004",localityId:"GB-LON-LON",name:"Central London Sector",grid:"D4-A-01",status:"ACTIVE",risk:"NORMAL"},
+  {id:"SITE-0005",localityId:"US-ME-ORD",name:"Ordinary Sector",grid:"US-ME-B-01",status:"MONITOR",risk:"ELEVATED"}
+ ]
+};
+const teamsByRegion={"GB-HAM":["TEAM-ECHO-2","TEAM-GB-HAM"],"GB-LON":["TEAM-ALPHA-1"],"US-ME":["TEAM-US-ME"]};
+const organisations=[
+ {id:"TEAM-ECHO-2",name:"ECHO-2",regionIds:["GB-HAM"]},
+ {id:"TEAM-GB-HAM",name:"GHOSTBUSTERS HAMPSHIRE",regionIds:["GB-HAM"]},
+ {id:"TEAM-ALPHA-1",name:"ALPHA-1",regionIds:["GB-LON"]},
+ {id:"TEAM-US-ME",name:"GHOSTBUSTERS MAINE",regionIds:["US-ME"]}
 ];
-const MAPW=366,MAPH=556;
-const proj=(lat,lon)=>[(lon+8.5)*34.8,(59-lat)*60];
-const poly=a=>"M"+a.map(([lo,la])=>proj(la,lo).map(n=>n.toFixed(1)).join(",")).join("L")+"Z";
-const GB=[[-5.71,50.07],[-5.2,49.96],[-5.07,50.15],[-4.2,50.35],[-3.64,50.22],[-3.41,50.62],[-2.45,50.52],[-1.95,50.70],[-1.40,50.80],[-1.05,50.80],[-0.78,50.72],[-0.14,50.82],[0.25,50.73],[0.58,50.85],[0.97,50.91],[1.35,51.13],[1.44,51.38],[0.85,51.45],[0.72,51.53],[1.15,51.79],[1.35,51.96],[1.75,52.48],[1.73,52.61],[1.30,52.93],[0.49,52.95],[0.38,52.78],[0.03,52.95],[0.35,53.15],[0.11,53.58],[-0.08,54.12],[-0.61,54.49],[-1.18,54.69],[-1.38,54.91],[-1.6,55.3],[-2.0,55.77],[-2.52,56.0],[-3.2,55.98],[-3.4,56.05],[-2.6,56.25],[-2.79,56.34],[-2.97,56.46],[-2.45,56.71],[-2.08,57.14],[-1.78,57.50],[-2.0,57.69],[-2.52,57.67],[-4.22,57.48],[-4.0,57.88],[-3.08,58.44],[-3.03,58.64],[-3.37,58.67],[-5.0,58.63],[-5.16,57.90],[-5.7,57.28],[-6.22,56.73],[-5.47,56.41],[-5.80,55.31],[-4.63,55.46],[-4.86,54.63],[-3.6,54.97],[-3.05,54.93],[-3.50,54.72],[-3.64,54.49],[-3.2,54.1],[-2.85,54.07],[-3.05,53.82],[-3.0,53.4],[-3.4,53.34],[-3.83,53.32],[-4.6,53.4],[-4.63,53.31],[-4.27,53.14],[-4.75,52.80],[-4.05,52.72],[-4.08,52.41],[-4.7,52.1],[-5.3,51.88],[-5.05,51.7],[-4.7,51.67],[-4.3,51.57],[-3.17,51.45],[-2.7,51.5],[-3.0,51.35],[-4.52,51.02],[-4.95,50.55],[-5.1,50.42],[-5.48,50.21]];
-const NI=[[-5.50,54.40],[-5.60,54.65],[-5.75,54.85],[-6.0,55.2],[-6.5,55.25],[-7.0,55.22],[-7.3,55.05],[-7.7,54.75],[-8.15,54.45],[-7.85,54.25],[-7.3,54.12],[-6.9,54.0],[-6.3,54.05],[-5.65,54.25]];
-const defaultFranchises=[
- {name:"Frome",country:"England",county:"Somerset",city:"Frome",lat:51.23,lon:-2.32,vehicles:[]},
- {name:"Chorley",country:"England",county:"Lancashire",city:"Chorley",lat:53.65,lon:-2.63,vehicles:[]},
- {name:"Greater Manchester",country:"England",county:"Greater Manchester",city:"",lat:53.52,lon:-2.30,wide:true,vehicles:[]},
- {name:"Medway",country:"England",county:"Kent",city:"",lat:51.39,lon:0.54,wide:true,vehicles:[]},
- {name:"Merseyside",country:"England",county:"Merseyside",city:"",lat:53.41,lon:-2.99,wide:true,vehicles:[]},
- {name:"Norfolk",country:"England",county:"Norfolk",city:"",lat:52.66,lon:1.00,wide:true,vehicles:[]},
- {name:"Penkridge",country:"England",county:"Staffordshire",city:"Penkridge",lat:52.73,lon:-2.12,vehicles:[]},
- {name:"Preston City",country:"England",county:"Lancashire",city:"Preston",lat:53.76,lon:-2.70,vehicles:[]},
- {name:"Southend-On-Sea",country:"England",county:"Essex",city:"Southend-on-Sea",lat:51.55,lon:0.71,vehicles:[]},
- {name:"Bristol",country:"England",county:"Bristol",city:"Bristol",lat:51.45,lon:-2.59,vehicles:[]},
- {name:"Tyne Tees",country:"England",county:"North East",city:"",lat:54.78,lon:-1.50,wide:true,vehicles:[]},
- {name:"Trecelyn",country:"Wales",county:"Caerphilly",city:"Trecelyn",lat:51.66,lon:-3.14,vehicles:[]},
- {name:"Portsmouth Ghostbusters",country:"England",county:"Hampshire",city:"Portsmouth",lat:50.80,lon:-1.09,vehicles:[]},
- {name:"South Coast Ghostbusters",country:"England",county:"Hampshire",city:"Portsmouth",lat:50.80,lon:-1.09,vehicles:[]},
- {name:"Banzai Buster",country:"England",county:"Hampshire",city:"Portsmouth",lat:50.80,lon:-1.09,vehicles:[{name:"",type:"Rapid Response Vehicle"}]},
- {name:"DOA",country:"England",county:"Wiltshire",city:"Devizes",lat:51.35,lon:-1.99,vehicles:[{name:"Ecto-19",type:"Mobile Containment Vehicle"}]}
-];
-let franchises=defaultFranchises;
-try{const st=JSON.parse(localStorage.getItem("ectoFranchises")||"null");if(Array.isArray(st)&&st.length)franchises=st}catch(e){}
-function saveFranchises(){try{localStorage.setItem("ectoFranchises",JSON.stringify(franchises))}catch(e){}}
-const countries=["England","Scotland","Wales","Northern Ireland"];
-let fnd={country:null,county:null};
-let selFr=null;
-let selected=locations[0];
-let deployment=null;
-let pfTimer=null,mTimer=null;
-
-function applyProfile(p){
- profile=p;
- document.body.dataset.theme=profiles[p].theme;
- localStorage.setItem(KEY,p);
- document.getElementById("profileStatus").textContent=profiles[p].label;
- document.getElementById("footerState").textContent="LOCAL DISPLAY PROFILE // "+profiles[p].label;
- render();
-}
-function setRoute(route){
- clearTimeout(pfTimer);clearInterval(mTimer);
- document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
- ({map:renderMap,dispatch:renderDispatch,preflight:renderPreflight,enroute:renderEnroute,onsite:renderOnsite,report:renderReport,config:renderConfig}[route]||renderMap)();
- const sc=document.getElementById("screen");sc.classList.remove("enter");void sc.offsetWidth;sc.classList.add("enter");
-}
+let mapState={level:"country",countryId:"GB",regionId:null,localityId:null,siteId:null};
+let selectedSite=geo.sites[0];
+function country(id){return geo.countries.find(x=>x.id===id)}
+function region(id){return geo.regions.find(x=>x.id===id)}
+function locality(id){return geo.localities.find(x=>x.id===id)}
+function sitesForLocality(id){return geo.sites.filter(x=>x.localityId===id)}
+function localitiesForRegion(id){return geo.localities.filter(x=>x.regionId===id)}
+function regionsForCountry(id){return geo.regions.filter(x=>x.countryId===id)}
+function teamsForRegion(id){return organisations.filter(x=>x.regionIds.includes(id))}
+function setProfile(p){profile=p;document.body.dataset.theme=profiles[p].theme;localStorage.setItem(KEY,p);updateChrome();renderConfig()}
+function updateChrome(){document.getElementById("profileStatus").textContent=profiles[profile].label;document.getElementById("footerState").textContent="LOCAL DISPLAY PROFILE // "+profiles[profile].label}
+function setRoute(route){document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===route));({map:renderMap,dispatch:renderDispatch,config:renderConfig}[route]||renderMap)()}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>setRoute(b.dataset.route));
-
+function setMapLevel(level,id){if(level==="country"){mapState={level,countryId:id,regionId:null,localityId:null,siteId:null}}if(level==="region"){mapState={level,countryId:region(id).countryId,regionId:id,localityId:null,siteId:null}}if(level==="locality"){const l=locality(id);mapState={level,countryId:region(l.regionId).countryId,regionId:l.regionId,localityId:id,siteId:null}}if(level==="site"){const s=geo.sites.find(x=>x.id===id),l=locality(s.localityId);mapState={level,countryId:region(l.regionId).countryId,regionId:l.regionId,localityId:l.id,siteId:s.id};selectedSite=s}renderMap()}
+function breadcrumbs(){const a=[`<button class="crumb ${mapState.level==='country'?'current':''}" onclick="setMapLevel('country','${mapState.countryId}')">${country(mapState.countryId).name}</button>`];if(mapState.regionId){const r=region(mapState.regionId);a.push(`<button class="crumb ${mapState.level==='region'?'current':''}" onclick="setMapLevel('region','${r.id}')">${r.name}</button>`)}if(mapState.localityId){const l=locality(mapState.localityId);a.push(`<button class="crumb ${mapState.level==='locality'?'current':''}" onclick="setMapLevel('locality','${l.id}')">${l.name}</button>`)}if(mapState.siteId){a.push(`<button class="crumb current">${selectedSite.name}</button>`)}return a.join("")}
 function renderMap(){
- document.getElementById("screen").innerHTML=`
- <div class="screen-head"><div><div class="eyebrow">01 // FIELD OVERVIEW</div><h1>RESPONSE MAP</h1><div class="sub">COUNTRY → ADMINISTRATIVE REGION → CITY → ECTO GRID → INVESTIGATION SITE</div></div><div class="status"><i class="lamp"></i>LOCAL NETWORK // READY</div></div>
- <div class="notice">ECTO GRID REFERENCES are operational identifiers. The map is regional and does not represent street-level navigation. Squares mark response sectors; diamonds mark UK franchises; dashed rings mark county-wide franchises with no exact location.</div>
- <div class="grid">
-  <section class="card"><h2>UK RESPONSE GRID <span class="panel-code">REGIONAL VIEW</span></h2><div class="map" id="map"><div class="mapframe" id="mapframe"></div></div></section>
-  <aside>
-   <section class="card"><h2>SELECTED LOCATION</h2><div class="readout" id="loc"></div><div class="actions"><button class="action btn-primary" onclick="setRoute('dispatch')">ECTO DISPATCH</button><button class="action" onclick="renderMap()">VIEW SITES</button></div></section>
-   <section class="card" style="margin-top:12px"><h2>GB TEAMS // ${selected.city.toUpperCase()}</h2>${cityTeamsHTML()}</section>
-   <section class="card" style="margin-top:12px"><h2>FRANCHISE FINDER <span class="panel-code">${franchises.length} LISTED</span></h2>${finderHTML()}</section>
-   <section class="card" style="margin-top:12px"><h2>ACTIVE CASE</h2><div class="readout">CASE // ${caseId()}<br>TYPE // AWE<br>STATUS // ${deployment?phaseLabel[deployment.phase]:"AWAITING DISPATCH"}<br>DATE // ${new Date().toLocaleDateString("en-GB")}</div></section>
-  </aside>
- </div>`;
- const map=document.getElementById("mapframe");
- map.innerHTML='<svg viewBox="0 0 '+MAPW+" "+MAPH+'" aria-hidden="true"><path class="land" d="'+poly(GB)+'"/><path class="land" d="'+poly(NI)+'"/></svg>';
- locations.forEach(l=>{
-   const b=document.createElement("button");
-   b.className="marker "+(l.risk==="CRITICAL"?"alert":l.status==="MONITOR"?"monitor":"active");
-   const [px,py]=proj(l.lat,l.lon);b.style.left=(px/MAPW*100)+"%";b.style.top=(py/MAPH*100)+"%";
-   b.innerHTML='<div class="ring"></div><div class="dot"></div><span>'+l.city+'</span>';
-   b.onclick=()=>{selected=l;renderMap()};
-   map.appendChild(b);
- });
- franchises.forEach((f,n)=>{
-   const b=document.createElement("button");
-   const near=locations.some(l=>Math.abs(l.lat-f.lat)<.12&&Math.abs(l.lon-f.lon)<.12);
-   const key=f.lat.toFixed(2)+","+f.lon.toFixed(2),grp=franchises.filter(x=>x.lat.toFixed(2)+","+x.lon.toFixed(2)===key),gi=grp.indexOf(f);
-   b.style.setProperty("--dx",((near?14:0)+(gi-(grp.length-1)/2)*13)+"px");
-   b.className="fr"+(f.wide?" wide":"")+(selFr===f?" sel":"")+(frMatch(f)?"":" dim");
-   const [px,py]=proj(f.lat,f.lon);b.style.left=(px/MAPW*100)+"%";b.style.top=(py/MAPH*100)+"%";
-   b.setAttribute("aria-label","Franchise: "+f.name+(f.wide?" (county-wide, approximate position)":""));
-   b.innerHTML='<i></i><span class="tag">'+esc(f.name.toUpperCase())+(f.wide?" // COUNTY-WIDE":"")+'</span>';
-   b.onclick=()=>pickFranchise(n);
-   map.appendChild(b);
- });
- document.getElementById("loc").innerHTML=
- `<div class="kv"><span class="k">LOCATION ID</span><span class="v">${selected.id}</span></div>
-  <div class="kv"><span class="k">COUNTRY</span><span class="v">${selected.country}</span></div>
-  <div class="kv"><span class="k">REGION</span><span class="v">${selected.region}</span></div>
-  <div class="kv"><span class="k">CITY</span><span class="v">${selected.city}</span></div>
-  <div class="kv"><span class="k">ECTO GRID</span><span class="v">${selected.grid}</span></div>
-  <div class="kv"><span class="k">SITE</span><span class="v">${selected.site}</span></div>
-  <div class="kv"><span class="k">RISK</span><span class="v">${selected.risk}</span></div>`;
+ const title=mapState.level==="country"?country(mapState.countryId).name:mapState.level==="region"?region(mapState.regionId).name:mapState.level==="locality"?locality(mapState.localityId).name:selectedSite.name;
+ const sub=mapState.level==="country"?"SELECT AN ADMINISTRATIVE REGION":mapState.level==="region"?"SELECT A CITY / TOWN":mapState.level==="locality"?"SELECT AN INVESTIGATION SITE":"SITE DATA / OPERATIONAL VIEW";
+ document.getElementById("screen").innerHTML=`<div class="screen-head"><div><div class="eyebrow">01 // FIELD OVERVIEW</div><h1>RESPONSE MAP // ${title.toUpperCase()}</h1><div class="sub">COUNTRY → ADMINISTRATIVE REGION → LOCALITY → INVESTIGATION SITE</div></div><div class="status"><i class="lamp"></i>LOCAL NETWORK // READY</div></div><div class="notice">GEOGRAPHIC NAVIGATION is separate from TEAM identity. County, state, province and other administrative terms are data-driven rather than hard-coded.</div><div class="crumbs">${breadcrumbs()}</div><div class="grid"><section class="card"><h2>RESPONSE MAP <span class="panel-code">${sub}</span></h2><div class="map" id="map"></div></section><aside><section class="card"><h2>${sub}</h2><div id="drill"></div></section><section class="card" style="margin-top:12px"><h2>SELECTED DATA</h2><div id="details" class="readout"></div></section></aside></div>`;
+ renderMapCanvas();renderDrill();renderDetails();
 }
-
-const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const miles=(a,b)=>{const r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lon-a.lon),h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 7918*Math.asin(Math.sqrt(h))};
-const vehicleLabel=v=>v.name&&v.type?v.name+" ("+v.type+")":(v.name||v.type||"Unnamed vehicle");
-const nationOf=l=>l.city==="Edinburgh"?"Scotland":"England";
-const franchisesHere=l=>franchises.filter(f=>(f.city&&f.city===l.city)||(f.wide&&f.county===l.region));
-const franchisesNear=(l,here)=>franchises.filter(f=>!here.includes(f)).map(f=>[f,miles(l,f)]).filter(([,d])=>d<=40).sort((a,b)=>a[1]-b[1]);
-function vehiclesHTML(f){
- const v=f.vehicles||[];
- return v.length?v.map(x=>`<div class="kv"><span class="k">${esc((x.name||"VEHICLE").toUpperCase())}</span><span class="v">${esc((x.type||"TYPE NOT RECORDED").toUpperCase())}</span></div>`).join(""):'<div class="kv"><span class="k">VEHICLES</span><span class="v">NONE RECORDED</span></div>';
-}
-function cityTeamsHTML(){
- const l=selected,here=franchisesHere(l),near=franchisesNear(l,here);
- const block=(f,tag)=>`<div class="frblock"><button class="frhead ${selFr===f?"sel":""}" onclick="pickFranchise(${franchises.indexOf(f)})">${esc(f.name.toUpperCase())}<small>${tag}</small></button><div class="readout">${vehiclesHTML(f)}</div></div>`;
- return `<div class="sub">IN ${l.city.toUpperCase()}</div>`+(here.length?here.map(f=>block(f,f.wide?"COUNTY-WIDE":"LOCAL")).join(""):'<div class="readout">NO FRANCHISES LISTED IN THIS CITY.</div>')+
-  `<button class="action" style="width:100%;margin-top:8px" onclick="addFranchiseHere()">+ ADD FRANCHISE IN ${l.city.toUpperCase()}</button>`+
-  `<hr><div class="sub">WITHIN 40 MILES</div>`+(near.length?near.map(([f,d])=>block(f,(f.wide?"~":"")+Math.round(d)+" MI")).join(""):'<div class="readout">NONE WITHIN 40 MILES.</div>');
-}
-function newFranchise(){franchiseForm(-1,{country:fnd.country||"England",county:fnd.county||""})}
-function addFranchiseHere(){const l=selected;franchiseForm(-1,{country:nationOf(l),county:l.region,city:l.city,lat:l.lat,lon:l.lon})}
-function editFranchise(){if(selFr)franchiseForm(franchises.indexOf(selFr))}
-function fillPlace(n){
- if(n==="")return;const l=locations[+n],set=(id,v,force)=>{const e=document.getElementById(id);if(force||!e.value.trim())e.value=v};
- set("fLat",l.lat,true);set("fLon",l.lon,true);set("fCity",l.city);set("fCounty",l.region);document.getElementById("fCountry").value=nationOf(l);
-}
-function franchiseForm(i,pre){
- const f=i>=0?franchises[i]:Object.assign({name:"",country:"England",county:"",city:"",lat:"",lon:"",wide:false,vehicles:[]},pre||{});
- const veh=(f.vehicles||[]).map(v=>v.name+" // "+v.type).join("\n");
- openDialog(`<h2>${i<0?"NEW FRANCHISE":"EDIT // "+esc(f.name.toUpperCase())}</h2>
-  <div class="err" id="frErr" role="alert" hidden></div>
-  <div class="field"><label for="fName">FRANCHISE NAME</label><input id="fName" maxlength="40" autocomplete="off" value="${esc(f.name)}"></div>
-  <div class="form-grid">
-   <div class="field"><label for="fCountry">COUNTRY</label><select id="fCountry">${countries.map(c=>`<option ${c===f.country?"selected":""}>${c}</option>`).join("")}</select></div>
-   <div class="field"><label for="fCounty">COUNTY</label><input id="fCounty" maxlength="40" autocomplete="off" value="${esc(f.county)}"></div>
-  </div>
-  <div class="field"><label for="fCity">CITY / TOWN (LEAVE BLANK IF COUNTY-WIDE)</label><input id="fCity" maxlength="40" autocomplete="off" value="${esc(f.city||"")}"></div>
-  <div class="field"><label for="fPlace">MAP POSITION</label><select id="fPlace" onchange="fillPlace(this.value)"><option value="">CUSTOM COORDINATES</option>${locations.map((l,n)=>`<option value="${n}">SAME AS ${l.city.toUpperCase()} SECTOR</option>`).join("")}</select></div>
-  <div class="form-grid">
-   <div class="field"><label for="fLat">LATITUDE</label><input id="fLat" inputmode="decimal" value="${f.lat}"></div>
-   <div class="field"><label for="fLon">LONGITUDE</label><input id="fLon" inputmode="decimal" value="${f.lon}"></div>
-  </div>
-  <div class="field"><label><input type="checkbox" id="fWide" ${f.wide?"checked":""} style="width:auto;min-height:0"> COUNTY-WIDE (POSITION IS APPROXIMATE)</label></div>
-  <div class="field"><label for="fVeh">VEHICLES: ONE PER LINE, NAME // TYPE</label><textarea id="fVeh" rows="4" spellcheck="false">${esc(veh)}</textarea></div>
-  <div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-primary" onclick="saveFranchise(${i})">SAVE FRANCHISE</button></div>`);
-}
-function saveFranchise(i){
- const v=id=>document.getElementById(id).value.trim(),err=document.getElementById("frErr");
- const fail=m=>{sfx.deny();err.textContent=m;err.hidden=false};
- const name=v("fName"),county=v("fCounty"),lat=parseFloat(v("fLat")),lon=parseFloat(v("fLon"));
- if(!name)return fail("FRANCHISE NAME IS REQUIRED.");
- if(franchises.some((x,n)=>n!==i&&x.name.toUpperCase()===name.toUpperCase()))return fail("A FRANCHISE NAMED "+name.toUpperCase()+" ALREADY EXISTS.");
- if(!county)return fail("COUNTY IS REQUIRED.");
- if(!(lat>=49.8&&lat<=59&&lon>=-8.5&&lon<=2))return fail("ENTER A UK LATITUDE AND LONGITUDE, E.G. 51.35 AND -1.99. OR PICK A SECTOR UNDER MAP POSITION.");
- const vehicles=v("fVeh").split("\n").map(x=>x.trim()).filter(Boolean).map(l=>{const k=l.indexOf("//");return k<0?{name:l,type:""}:{name:l.slice(0,k).trim(),type:l.slice(k+2).trim()}});
- const rec={name,country:v("fCountry"),county,city:v("fCity"),lat,lon,wide:document.getElementById("fWide").checked,vehicles};
- if(i<0)franchises.push(rec);else franchises[i]=rec;
- saveFranchises();selFr=rec;fnd={country:rec.country,county:rec.county};
- sfx.confirm();closeDialog();renderMap();
-}
-function deleteFranchise(){
- if(!selFr)return;const n=franchises.indexOf(selFr);
- openDialog(`<h2>DELETE FRANCHISE // ${esc(selFr.name.toUpperCase())}</h2><div class="msg">THIS REMOVES THE FRANCHISE AND ITS VEHICLES FROM THE LOCAL REGISTER.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-danger" onclick="confirmDeleteFr(${n})">DELETE FRANCHISE</button></div>`);
-}
-function confirmDeleteFr(n){franchises.splice(n,1);saveFranchises();selFr=null;sfx.confirm();closeDialog();renderMap()}
-const frMatch=f=>(!fnd.country||f.country===fnd.country)&&(!fnd.county||f.county===fnd.county);
-function pickFranchise(n){selFr=franchises[n];fnd={country:selFr.country,county:selFr.county};renderMap()}
-function frNav(level,val){
- if(level===0){fnd={country:null,county:null};selFr=null}
- else if(level===1){fnd={country:val||fnd.country,county:null};selFr=null}
- else if(level===2){fnd.county=val||fnd.county;selFr=null}
- renderMap();
-}
-function finderHTML(){
- const crumbs='<div class="crumbs"><button class="crumb" onclick="frNav(0)">UK</button>'+(fnd.country?' › <button class="crumb" onclick="frNav(1)">'+fnd.country.toUpperCase()+'</button>':"")+(fnd.county?' › <button class="crumb" onclick="frNav(2)">'+fnd.county.toUpperCase()+'</button>':"")+'</div>';
- let list,info="";
- if(!fnd.country){
-  list=countries.map(c=>{const n=franchises.filter(f=>f.country===c).length;return `<button ${n?"":"disabled"} onclick="frNav(1,'${c}')">${c.toUpperCase()}<small>${n} ${n===1?"FRANCHISE":"FRANCHISES"}</small></button>`}).join("");
- }else if(!fnd.county){
-  const cs=[...new Set(franchises.filter(f=>f.country===fnd.country).map(f=>f.county))].sort();
-  list=cs.map(c=>{const n=franchises.filter(f=>f.country===fnd.country&&f.county===c).length;return `<button onclick="frNav(2,'${c}')">${c.toUpperCase()}<small>${n}</small></button>`}).join("");
- }else{
-  list=franchises.map((f,n)=>[f,n]).filter(([f])=>frMatch(f)).map(([f,n])=>`<button class="${selFr===f?"sel":""}" onclick="pickFranchise(${n})">${esc(f.name.toUpperCase())}<small>${f.wide?"COUNTY-WIDE":"LOCAL"}</small></button>`).join("");
- }
- if(selFr)info=`<div class="readout"><div class="kv"><span class="k">FRANCHISE</span><span class="v">${selFr.name.toUpperCase()}</span></div><div class="kv"><span class="k">COUNTRY</span><span class="v">${selFr.country.toUpperCase()}</span></div><div class="kv"><span class="k">COUNTY</span><span class="v">${selFr.county.toUpperCase()}</span></div><div class="kv"><span class="k">COVERAGE</span><span class="v">${selFr.wide?"COUNTY-WIDE":"LOCAL"}</span></div><div class="kv"><span class="k">MAP POSITION</span><span class="v">${selFr.wide?"APPROX. CENTRE (RING)":"TOWN / CITY CENTRE"}</span></div>${selFr.city?`<div class="kv"><span class="k">CITY / TOWN</span><span class="v">${esc(selFr.city.toUpperCase())}</span></div>`:""}${vehiclesHTML(selFr)}</div><div class="btn-row"><button class="action" onclick="editFranchise()">EDIT FRANCHISE</button><button class="action btn-danger" onclick="deleteFranchise()">DELETE</button></div>`;
- return crumbs+info+'<div class="frlist">'+list+'</div><button class="action btn-primary" style="width:100%;margin-top:8px" onclick="newFranchise()">+ NEW FRANCHISE</button>';
-}
-
-let vehOpts=[];
-function vehOptsHTML(){
- const l=selected,here=franchisesHere(l),near=franchisesNear(l,here).map(x=>x[0]);
- vehOpts=[];
- [...here,...near].forEach(f=>(f.vehicles||[]).forEach(v=>vehOpts.push({fr:f.name,label:vehicleLabel(v),status:""})));
- if(!vehOpts.length)vehOpts=[{fr:"",label:"ECTO-04",status:"AVAILABLE"},{fr:"",label:"ECTO-02",status:"AVAILABLE"},{fr:"",label:"ECTO-06",status:"STANDBY"}];
- return vehOpts.map((o,n)=>`<option value="${n}">${esc((o.fr?o.fr.toUpperCase()+" // ":"")+o.label.toUpperCase())}${o.status?" // "+o.status:""}</option>`).join("");
-}
-
-function renderDispatch(){
- document.getElementById("screen").innerHTML=`
- <div class="screen-head"><div><div class="eyebrow">02 // OPERATIONS</div><h1>ECTO DISPATCH</h1><div class="sub">SELECT TEAM → SELECT VEHICLE → PROCEED TO PRE-FLIGHT</div></div></div>
- <div class="grid">
-  <section class="card"><h2>INCOMING CASE</h2><div class="readout">
-   <div class="kv"><span class="k">CASE</span><span class="v">${caseId()}</span></div>
-   <div class="kv"><span class="k">LOCATION</span><span class="v">${selected.city}, ${selected.region}</span></div>
-   <div class="kv"><span class="k">SITE</span><span class="v">${selected.site}</span></div>
-   <div class="kv"><span class="k">ECTO GRID</span><span class="v">${selected.grid}</span></div>
-   <div class="kv"><span class="k">TYPE</span><span class="v">AWE</span></div>
-  </div></section>
-  <aside class="card"><h2>DEPLOYMENT SELECTION</h2>
-   <div class="field"><label>RESPONSE TEAM</label><select id="teamSelect">${teams.map(t=>`<option value="${t.id}" ${t.status!=="AVAILABLE"?"disabled":""}>${t.id} // ${t.name} // ${t.status}</option>`).join("")}</select></div>
-   <div class="field"><label>VEHICLE</label><select id="vehicleSelect">${vehOptsHTML()}</select></div>
-   <button class="action btn-primary" style="width:100%;margin-top:10px" onclick="proceedPreflight()">PROCEED TO PRE-FLIGHT</button>
-  </aside>
- </div>`;
-}
-
-function proceedPreflight(){
- if(deployment&&deployment.phase!=="PREFLIGHT"){sfx.deny();openDialog(`<h2>MISSION IN PROGRESS</h2><div class="msg">${deployment.team.id} IS ${phaseLabel[deployment.phase]}.<br>CLOSE OR ABORT THE ACTIVE MISSION FIRST.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CLOSE</button><button class="action btn-primary" onclick="closeDialog();setRoute('${phaseRoute[deployment.phase]}')">GO TO MISSION</button></div>`);return}
- const t=document.getElementById("teamSelect"),v=document.getElementById("vehicleSelect");
- const team=teams.find(x=>x.id===t.value);
- if(!team||team.status!=="AVAILABLE"){sfx.deny();openDialog(`<h2>NO TEAM SELECTED</h2><div class="msg">SELECT AN AVAILABLE RESPONSE TEAM TO CONTINUE.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);return}
- const vo=vehOpts[parseInt(v.value)]||{fr:"",label:"UNASSIGNED",status:""};
- deployment={phase:"PREFLIGHT",team,vehicle:(vo.fr?vo.fr.toUpperCase()+" // ":"")+vo.label.toUpperCase(),vehicleStatus:vo.status,location:selected};
- sfx.confirm();setRoute("preflight");
-}
-
-const checks=[
- ["CREW MANIFEST","ALL ABOARD"],
- ["PROTON PACK CHARGE","NOMINAL"],
- ["PARTICLE THROWER","NOMINAL"],
- ["TRAP INVENTORY","4 OF 4 LOADED"],
- ["PKE SCANNER","CALIBRATED"],
- ["VEHICLE SYSTEMS","NOMINAL"],
- ["COMMS LINK","ESTABLISHED"],
- ["ROUTE TO SITE","LOADED"]
-];
-function renderPreflight(){
- const screen=document.getElementById("screen");
- if(!gate("PREFLIGHT","03","PRE-FLIGHT"))return;
- const d=deployment;
- screen.innerHTML=`
- <div class="screen-head"><div><div class="eyebrow">03 // OPERATIONS</div><h1>PRE-FLIGHT</h1><div class="sub">SYSTEMS CHECK → LAUNCH AUTHORISATION</div></div><div class="status"><i class="lamp warn" id="pfLamp"></i><span id="pfState">CHECKING</span></div></div>
- <div class="grid">
-  <section class="card"><h2>SYSTEMS CHECK <span class="panel-code" id="pfCount">0 / ${checks.length}</span></h2>
-   <div class="bar"><i id="pfBar"></i></div>
-   <div id="pfList">${checks.map((c,i)=>`<div class="check" id="chk${i}"><i class="box"></i><span>${c[0]}</span><span class="res">WAITING</span></div>`).join("")}</div>
-  </section>
-  <aside>
-   <section class="card"><h2>DEPLOYMENT</h2><div class="readout">
-    <div class="kv"><span class="k">CASE</span><span class="v">${caseId()} // AWE</span></div>
-    <div class="kv"><span class="k">SITE</span><span class="v">${d.location.site}</span></div>
-    <div class="kv"><span class="k">CITY</span><span class="v">${d.location.city}, ${d.location.region}</span></div>
-    <div class="kv"><span class="k">ECTO GRID</span><span class="v">${d.location.grid}</span></div>
-    <div class="kv"><span class="k">TEAM</span><span class="v">${d.team.id} // ${d.team.name}</span></div>
-    <div class="kv"><span class="k">CREW</span><span class="v">${d.team.crew}</span></div>
-    <div class="kv"><span class="k">VEHICLE</span><span class="v">${esc(d.vehicle)}${d.vehicleStatus?" // "+d.vehicleStatus:""}</span></div>
-   </div>
-   <div class="btn-row"><button class="action" onclick="setRoute('dispatch')">BACK TO DISPATCH</button><button class="action btn-primary" id="launchBtn" disabled onclick="launch()">LAUNCH</button></div>
-   </section>
-   <section class="card" style="margin-top:12px" id="pfMsg"><h2>STATUS</h2><div class="readout">CHECKS IN PROGRESS. LAUNCH LOCKED.</div></section>
-  </aside>
- </div>`;
- let i=0;
- const step=()=>{
-  if(i>0){const prev=document.getElementById("chk"+(i-1));prev.className="check ok";prev.querySelector(".res").textContent=checks[i-1][1];sfx.tick();}
-  document.getElementById("pfBar").style.width=(i/checks.length*100)+"%";
-  document.getElementById("pfCount").textContent=i+" / "+checks.length;
-  if(i>=checks.length){
-   document.getElementById("pfLamp").className="lamp";
-   document.getElementById("pfState").textContent="READY";
-   document.getElementById("launchBtn").disabled=false;sfx.confirm();
-   document.querySelector("#pfMsg .readout").innerHTML="ALL SYSTEMS NOMINAL.<br>LAUNCH AUTHORISED.";
-   return;
-  }
-  const row=document.getElementById("chk"+i);
-  row.className="check run";row.querySelector(".res").textContent="CHECKING";
-  i++;pfTimer=setTimeout(step,450+Math.random()*350);
- };
- step();
-}
-function launch(){
- const d=deployment;if(!d||d.phase!=="PREFLIGHT")return;
- sfx.chirp();
- Object.assign(d,{phase:"ENROUTE",caseId:caseId(),enrouteStart:Date.now(),log:[],stats:{traps:0,scans:0,backup:false,peak:0,contained:false},pke:20+Math.random()*10,arrived:false});
- setTeamStatus("EN ROUTE");
- setRoute("enroute");
-}
-
-const ENROUTE_MS=30000,RETURN_MS=10000;
-const phaseRoute={PREFLIGHT:"preflight",ENROUTE:"enroute",ONSITE:"onsite",REPORT:"report"};
-const phaseLabel={PREFLIGHT:"PRE-FLIGHT",ENROUTE:"EN ROUTE",ONSITE:"ON SITE",REPORT:"RETURNING"};
-const caseNo=()=>parseInt(localStorage.getItem("ectoCaseNo")||"261");
-const caseId=()=>"SE-"+String(caseNo()).padStart(4,"0");
-const fmt=ms=>{const s=Math.max(0,Math.round(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
-const caseLog=()=>{try{return JSON.parse(localStorage.getItem("ectoCaseLog")||"[]")}catch(e){return[]}};
-const hdr=(n,t,sub,right)=>`<div class="screen-head"><div><div class="eyebrow">${n} // OPERATIONS</div><h1>${t}</h1><div class="sub">${sub}</div></div>${right||""}</div>`;
-const missionKV=d=>[["CASE",d.caseId||caseId()],["SITE",d.location.site],["GRID",d.location.grid],["TEAM",d.team.id+" // "+d.team.name],["VEHICLE",d.vehicle]].map(([k,v])=>`<div class="kv"><span class="k">${k}</span><span class="v">${esc(v)}</span></div>`).join("");
-function gate(phase,n,title){
- if(deployment&&deployment.phase===phase)return true;
- const cur=deployment?phaseRoute[deployment.phase]:"dispatch";
- document.getElementById("screen").innerHTML=hdr(n,title,deployment?"MISSION IN ANOTHER PHASE":"NO ACTIVE MISSION")+`<div class="notice">${deployment?"The active mission is at "+phaseLabel[deployment.phase]+".":"Select a response team and vehicle on Ecto Dispatch to start a mission."}</div><button class="action btn-primary" onclick="setRoute('${cur}')">${deployment?"GO TO "+phaseLabel[deployment.phase]:"GO TO ECTO DISPATCH"}</button>`;
- return false;
-}
-function setTeamStatus(st){if(!deployment)return;const t=teams.find(x=>x.id===deployment.team.id);if(t){t.status=st;saveTeams()}}
-function addLog(msg){const d=deployment;d.log.push({t:Date.now()-(d.onsiteStart||d.enrouteStart),msg})}
-
-/* 04 EN ROUTE */
-function renderEnroute(){
- if(!gate("ENROUTE","04","EN ROUTE"))return;
- const d=deployment;
- document.getElementById("screen").innerHTML=hdr("04","EN ROUTE","TRAVEL TO SITE → ARRIVAL",'<div class="status"><i class="lamp warn" id="enLamp"></i><span id="enState">IN TRANSIT</span></div>')+`
- <div class="grid"><section class="card"><h2>JOURNEY <span class="panel-code">SIMULATED</span></h2>
-  <div class="readout" style="font-size:30px;letter-spacing:.12em" id="etaBig">--:--</div><div class="sub">TIME TO ARRIVAL</div>
-  <div class="bar"><i id="enBar"></i></div><div class="readout" id="enPct">0%</div><hr><div class="readout" id="enLog"></div></section>
- <aside><section class="card"><h2>MISSION</h2><div class="readout">${missionKV(d)}</div>
-  <div class="btn-row"><button class="action" onclick="abortMission()">ABORT</button><button class="action btn-primary" id="beginBtn" disabled onclick="beginInvestigation()">BEGIN</button></div>
-  <button class="action" style="width:100%;margin-top:7px" onclick="skipTravel()">SKIP TO ARRIVAL</button></section></aside></div>`;
- const steps=[[0,"VEHICLE DEPARTED BASE"],[.25,"ROUTE CLEAR // PKE TELEMETRY RELAYED"],[.5,"HALFWAY // COMMS NOMINAL"],[.8,"APPROACHING ECTO GRID "+d.location.grid],[1,"ARRIVED // "+d.location.site.toUpperCase()]];
- let shown=0;
- const tick=quiet=>{
-  const el=Date.now()-d.enrouteStart,p=Math.min(1,el/ENROUTE_MS);
-  document.getElementById("enBar").style.width=(p*100)+"%";
-  document.getElementById("enPct").textContent=Math.round(p*100)+"%";
-  document.getElementById("etaBig").textContent=fmt(ENROUTE_MS-el);
-  const due=steps.filter(x=>p>=x[0]);
-  if(due.length>shown){
-   document.getElementById("enLog").innerHTML=due.map(x=>`<div>${fmt(x[0]*ENROUTE_MS)} // ${x[1]}</div>`).reverse().join("");
-   if(!quiet)sfx.tick();shown=due.length;
-  }
-  if(p>=1){
-   clearInterval(mTimer);
-   if(!d.arrived){d.arrived=true;if(!quiet)sfx.chirp()}
-   document.getElementById("enLamp").className="lamp";document.getElementById("enState").textContent="ARRIVED";
-   document.getElementById("beginBtn").disabled=false;
-  }
- };
- d.tickEn=()=>tick(false);
- tick(true);mTimer=setInterval(()=>tick(false),250);
-}
-function skipTravel(){if(deployment&&deployment.phase==="ENROUTE"){deployment.enrouteStart=Date.now()-ENROUTE_MS;deployment.tickEn&&deployment.tickEn()}}
-function abortMission(){
- const d=deployment;if(!d)return;
- openDialog(`<h2>ABORT MISSION // ${esc(d.caseId||caseId())}</h2><div class="msg">${esc(d.team.id)} RETURNS TO AVAILABLE.<br>NO CASE RECORD IS SAVED.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-danger" onclick="confirmAbort()">ABORT MISSION</button></div>`);
-}
-function confirmAbort(){setTeamStatus("AVAILABLE");deployment=null;sfx.deny();closeDialog();setRoute("dispatch")}
-function beginInvestigation(){
- const d=deployment;if(!d||d.phase!=="ENROUTE")return;
- d.travelMs=Math.min(Date.now()-d.enrouteStart,ENROUTE_MS);
- d.phase="ONSITE";d.onsiteStart=Date.now();d.log=[];
- addLog("TEAM ON SITE // INVESTIGATION STARTED");
- setTeamStatus("INVESTIGATING");sfx.confirm();setRoute("onsite");
-}
-
-/* 05 ON SITE */
-const pkeLevel=v=>v<15?"CLEAR":v<35?"LOW":v<60?"MODERATE":v<80?"HIGH":"CRITICAL";
-function renderOnsite(){
- if(!gate("ONSITE","05","ON SITE"))return;
- const d=deployment;
- document.getElementById("screen").innerHTML=hdr("05","ON SITE","SCAN → TRAP → CONCLUDE",'<div class="status"><i class="lamp warn" id="osLamp"></i><span id="osState">INVESTIGATING</span></div>')+`
- <div class="grid"><section class="card"><h2>PKE READING <span class="panel-code" id="pkeLvl"></span></h2>
-  <div class="cells" id="pkeCells">${"<i></i>".repeat(20)}</div><div class="readout" id="pkeVal" style="margin-top:6px"></div>
-  <div class="actions"><button class="action" onclick="scanArea()">SCAN AREA</button><button class="action" id="trapBtn" onclick="deployTrap()"></button><button class="action" id="bkBtn" onclick="requestBackup()">REQUEST BACKUP</button><button class="action btn-primary" onclick="concludeInvestigation()">CONCLUDE</button></div>
-  <hr><div class="readout" id="osLog"></div></section>
- <aside><section class="card"><h2>MISSION</h2><div class="readout">${missionKV(d)}<div class="kv"><span class="k">ENTITY</span><span class="v" id="osEnt"></span></div><div class="kv"><span class="k">SCANS</span><span class="v" id="osScans"></span></div></div></section></aside></div>`;
- refreshOnsite();
- mTimer=setInterval(()=>{
-  if(d.stats.contained)d.pke=Math.max(2,d.pke*.75);else d.pke=Math.min(100,Math.max(5,d.pke+(Math.random()-.45)*9));
-  d.stats.peak=Math.max(d.stats.peak,Math.round(d.pke));refreshOnsite();
- },600);
-}
-function refreshOnsite(){
- const d=deployment;if(!d||d.phase!=="ONSITE"||!document.getElementById("pkeCells"))return;
- const v=Math.round(d.pke),on=Math.round(v/5);
- document.querySelectorAll("#pkeCells i").forEach((c,i)=>{c.className=i<on?(i>=14?"on crit":i>=9?"on hi":"on"):""});
- document.getElementById("pkeVal").textContent="PKE // "+v+" // "+pkeLevel(v);
- document.getElementById("pkeLvl").textContent=pkeLevel(v);
- const left=4-d.stats.traps,tb=document.getElementById("trapBtn");
- tb.textContent="DEPLOY TRAP ("+left+" LEFT)";tb.disabled=left<=0;
- document.getElementById("bkBtn").disabled=d.stats.backup;
- document.getElementById("osEnt").textContent=d.stats.contained?"CONTAINED":"ACTIVE";
- document.getElementById("osScans").textContent=d.stats.scans;
- document.getElementById("osState").textContent=d.stats.contained?"ENTITY CONTAINED":"INVESTIGATING";
- document.getElementById("osLamp").className="lamp"+(d.stats.contained?"":" warn");
- document.getElementById("osLog").innerHTML=d.log.slice(-8).reverse().map(l=>`<div>${fmt(l.t)} // ${esc(l.msg)}</div>`).join("");
-}
-function scanArea(){const d=deployment;d.stats.scans++;addLog("SCAN COMPLETE // PKE "+Math.round(d.pke)+" // "+pkeLevel(d.pke));sfx.tick();refreshOnsite()}
-function deployTrap(){
- const d=deployment,st=d.stats;if(st.traps>=4){sfx.deny();return}
- st.traps++;
- if(st.contained){addLog("TRAP DEPLOYED // NO ACTIVE ENTITY");sfx.tick()}
- else if(d.pke<35){addLog("TRAP DEPLOYED // READING TOO LOW TO CAPTURE");sfx.deny()}
- else if(Math.random()<(st.backup?.9:.75)){st.contained=true;addLog("ENTITY CAPTURED // TRAP CLOSED");sfx.chirp()}
- else{d.pke=Math.min(100,d.pke+10);addLog("TRAP MISSED // ENTITY EVASIVE");sfx.deny()}
- refreshOnsite();
-}
-function requestBackup(){const d=deployment;if(d.stats.backup)return;d.stats.backup=true;addLog("BACKUP REQUESTED // IMPROVES CAPTURE ODDS");sfx.confirm();refreshOnsite()}
-function concludeInvestigation(){
- if(deployment.stats.contained)return confirmConclude();
- openDialog(`<h2>CONCLUDE INVESTIGATION</h2><div class="msg">THE ENTITY IS NOT CONTAINED.<br>THE CASE WILL BE RECORDED AS UNRESOLVED.</div><div class="btn-row"><button class="action" onclick="closeDialog()">KEEP WORKING</button><button class="action btn-primary" onclick="confirmConclude()">CONCLUDE</button></div>`);
-}
-function confirmConclude(){
- const d=deployment;if(!d||d.phase!=="ONSITE")return;
- closeDialog();d.onsiteMs=Date.now()-d.onsiteStart;d.phase="REPORT";d.reportStart=Date.now();
- setTeamStatus("RETURNING");sfx.confirm();setRoute("report");
-}
-
-/* 06 REPORT */
-function renderReport(){
- const d=deployment,screen=document.getElementById("screen");
- if(!d||d.phase!=="REPORT"){
-  const log=caseLog();
-  screen.innerHTML=hdr("06","CASE REPORT",d?"MISSION STILL IN PROGRESS":"CASE HISTORY")+(d?`<div class="notice">The active mission is at ${phaseLabel[d.phase]}.</div><button class="action btn-primary" onclick="setRoute('${phaseRoute[d.phase]}')">GO TO ${phaseLabel[d.phase]}</button>`:
-   `<section class="card"><h2>CLOSED CASES <span class="panel-code">LAST ${log.length}</span></h2>${log.length?`<table class="team-table"><thead><tr><th>CASE</th><th>DATE</th><th>SITE</th><th>TEAM</th><th>OUTCOME</th></tr></thead><tbody>${log.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.date)}</td><td>${esc(r.site)}</td><td>${esc(r.team)}</td><td>${esc(r.outcome)}</td></tr>`).join("")}</tbody></table>`:'<div class="readout">NO CASES CLOSED YET. FINISH A MISSION TO SEE IT HERE.</div>'}</section>`);
-  return;
- }
- const s=d.stats;
- screen.innerHTML=hdr("06","CASE REPORT","RETURN TO BASE → CLOSE CASE",'<div class="status"><i class="lamp warn" id="rtLamp"></i><span id="rtState">RETURNING</span></div>')+`
- <div class="grid"><section class="card"><h2>${esc(d.caseId)} // SUMMARY</h2><div class="readout">${missionKV(d)}
-  <div class="kv"><span class="k">OUTCOME</span><span class="v">${s.contained?"ENTITY CONTAINED":"UNRESOLVED"}</span></div>
-  <div class="kv"><span class="k">TRAPS USED</span><span class="v">${s.traps} OF 4</span></div>
-  <div class="kv"><span class="k">SCANS</span><span class="v">${s.scans}</span></div>
-  <div class="kv"><span class="k">PEAK PKE</span><span class="v">${s.peak} // ${pkeLevel(s.peak)}</span></div>
-  <div class="kv"><span class="k">BACKUP</span><span class="v">${s.backup?"REQUESTED":"NOT REQUESTED"}</span></div>
-  <div class="kv"><span class="k">TRAVEL TIME</span><span class="v">${fmt(d.travelMs)}</span></div>
-  <div class="kv"><span class="k">ON-SITE TIME</span><span class="v">${fmt(d.onsiteMs)}</span></div></div></section>
- <aside><section class="card"><h2>RETURN TO BASE</h2><div class="bar"><i id="rtBar"></i></div><div class="readout" id="rtPct">0%</div>
-  <button class="action btn-primary" id="closeBtn" style="width:100%;margin-top:10px" disabled onclick="closeCase()">CLOSE CASE</button></section></aside></div>`;
- const tick=()=>{
-  const p=Math.min(1,(Date.now()-d.reportStart)/RETURN_MS);
-  document.getElementById("rtBar").style.width=(p*100)+"%";document.getElementById("rtPct").textContent=Math.round(p*100)+"%";
-  if(p>=1){clearInterval(mTimer);document.getElementById("rtLamp").className="lamp";document.getElementById("rtState").textContent="AT BASE";document.getElementById("closeBtn").disabled=false}
- };
- tick();mTimer=setInterval(tick,250);
-}
-function closeCase(){
- const d=deployment;if(!d||d.phase!=="REPORT")return;
- const rec={id:d.caseId,date:new Date().toLocaleDateString("en-GB"),site:d.location.site,team:d.team.id,outcome:d.stats.contained?"CONTAINED":"UNRESOLVED"};
- try{localStorage.setItem("ectoCaseLog",JSON.stringify([rec,...caseLog()].slice(0,20)));localStorage.setItem("ectoCaseNo",String(caseNo()+1))}catch(e){}
- setTeamStatus("AVAILABLE");deployment=null;sfx.chirp();setRoute("report");
-}
-
-function renderConfig(){
- const p=profile;
- document.getElementById("screen").innerHTML=`
- <div class="screen-head"><div><div class="eyebrow">07 // SYSTEM CONTROL</div><h1>CONFIGURATION</h1><div class="sub">DISPLAY PROFILE // OPERATIONAL RESOURCES // LOCAL SETTINGS</div></div></div>
- <section class="card">
-  <h2>DISPLAY PROFILE <span class="panel-code">PRIMARY INTERFACE LANGUAGE</span></h2>
-  <div class="notice"><b>CASSETTE FUTURISM</b> is the ECTO OS primary visual identity. Alternate profiles change presentation only; they do not replace the core ECTO interface language.</div>
-  <div class="profile-grid">
-   ${Object.entries(profiles).map(([id,x])=>`<button class="profile ${id} ${p===id?'selected':''}" onclick="applyProfile('${id}')"><i class="sample"></i><strong>${x.label}</strong><span>${id==="cassette"?"PRIMARY // RETROACTIVE MODERNISM":id==="phosphor"?"GREEN CRT // OPTIONAL":"OPTIONAL DISPLAY PROFILE"}</span></button>`).join("")}
-  </div>
- </section>
- <div class="grid" style="margin-top:12px">
-  <section class="card"><h2>RESPONSE TEAM MANAGEMENT <span class="panel-code">LOCAL REGISTER</span></h2>
-   <table class="team-table"><thead><tr><th>ID</th><th>NAME</th><th>CREW</th><th>STATUS</th><th></th></tr></thead><tbody>
-   ${teams.map((t,i)=>`<tr><td>${t.id}</td><td>${t.name}</td><td>${t.crew}</td><td>${t.status}</td><td><div class="team-actions"><button class="mini" onclick="editTeam(${i})">EDIT</button><button class="mini" onclick="deleteTeam(${i})">DELETE</button></div></td></tr>`).join("")}
-   </tbody></table>
-   <hr><button class="action btn-primary" onclick="newTeam()">+ NEW TEAM</button>
-  </section>
-  <aside class="card"><h2>DISPLAY STATE</h2><div class="readout">
-   ACTIVE PROFILE // ${profiles[p].label}<br>
-   STORAGE // LOCAL<br>
-   UI LANGUAGE // EUROSTILE<br>
-   DATA / TELEMETRY // COURIER<br>
-   CRT EFFECT // RESTRAINED<br>
-   VISUAL NOISE // LOW
-  </div></aside>
- </div>`;
-}
-const statuses=["AVAILABLE","STANDBY","DEPLOYED","EN ROUTE","INVESTIGATING","RETURNING","OFFLINE"];
-let lastFocus=null;
-function closeDialog(){
- const m=document.getElementById("modal");if(m)m.remove();
- document.removeEventListener("keydown",dialogKeys);
- if(lastFocus&&document.contains(lastFocus))lastFocus.focus();
-}
-function dialogKeys(e){
- if(e.key==="Escape"){closeDialog();return}
- if(e.key!=="Tab")return;
- const f=[...document.querySelectorAll("#modal input,#modal select,#modal textarea,#modal button")].filter(x=>!x.disabled);
- if(!f.length)return;
- const first=f[0],last=f[f.length-1];
- if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
- else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
-}
-function openDialog(html){
- closeDialog();
- lastFocus=document.activeElement;
- const m=document.createElement("div");
- m.className="modal";m.id="modal";
- m.innerHTML='<div class="dialog" role="dialog" aria-modal="true">'+html+'</div>';
- m.addEventListener("mousedown",e=>{if(e.target===m)closeDialog()});
- document.body.appendChild(m);
- document.addEventListener("keydown",dialogKeys);
- const first=m.querySelector("input,select,textarea,button");if(first)first.focus();
-}
-function newTeam(){editTeam(-1)}
-function editTeam(i){
- const t=i<0?{id:"",name:"",crew:6,status:"AVAILABLE"}:teams[i];
- openDialog(`
-  <h2>${i<0?"NEW RESPONSE TEAM":"EDIT TEAM // "+t.id}</h2>
-  <div class="err" id="teamErr" role="alert" hidden></div>
-  <div class="field"><label for="tId">TEAM ID / CALLSIGN</label><input id="tId" maxlength="16" autocomplete="off" value="${t.id}"></div>
-  <div class="field"><label for="tName">TEAM NAME</label><input id="tName" maxlength="32" autocomplete="off" value="${t.name}"></div>
-  <div class="form-grid">
-   <div class="field"><label for="tCrew">CREW SIZE</label><input id="tCrew" type="number" min="1" max="99" value="${t.crew}"></div>
-   <div class="field"><label for="tStatus">STATUS</label><select id="tStatus">${statuses.map(x=>`<option ${x===t.status?"selected":""}>${x}</option>`).join("")}</select></div>
-  </div>
-  <div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-primary" onclick="saveTeam(${i})">SAVE TEAM</button></div>`);
-}
-function saveTeam(i){
- const id=document.getElementById("tId").value.trim().toUpperCase();
- const name=document.getElementById("tName").value.trim().toUpperCase();
- const crew=parseInt(document.getElementById("tCrew").value);
- const status=document.getElementById("tStatus").value;
- const err=document.getElementById("teamErr");
- const fail=m=>{sfx.deny();err.textContent=m;err.hidden=false};
- if(!id)return fail("TEAM ID IS REQUIRED.");
- if(!name)return fail("TEAM NAME IS REQUIRED.");
- if(!(crew>=1))return fail("CREW SIZE MUST BE AT LEAST 1.");
- if(teams.some((x,n)=>n!==i&&x.id.toUpperCase()===id))return fail("TEAM ID "+id+" IS ALREADY IN USE.");
- const rec={id,name,crew,status};
- if(i<0)teams.push(rec);else teams[i]=rec;
- sfx.confirm();saveTeams();closeDialog();renderConfig();
-}
-function deleteTeam(i){
- const t=teams[i];
- if(!["AVAILABLE","STANDBY","OFFLINE"].includes(t.status)){
-  sfx.deny();openDialog(`<h2>CANNOT DELETE // ${t.id}</h2><div class="msg">${t.id} IS ${t.status}.<br>ACTIVE DEPLOYMENTS CANNOT BE DELETED.</div><div class="btn-row"><button class="action btn-primary" onclick="closeDialog()">OK</button></div>`);
-  return;
- }
- openDialog(`<h2>DELETE TEAM // ${t.id}</h2><div class="msg">${t.id} // ${t.name}<br>THIS REMOVES THE TEAM FROM THE LOCAL REGISTER.</div><div class="btn-row"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action btn-danger" onclick="confirmDelete(${i})">DELETE TEAM</button></div>`);
-}
-function confirmDelete(i){
- sfx.confirm();teams.splice(i,1);saveTeams();closeDialog();renderConfig();
-}
-function render(){document.getElementById("profileStatus").textContent=profiles[profile].label;document.getElementById("footerState").textContent="LOCAL DISPLAY PROFILE // "+profiles[profile].label;renderConfig()}
-function bootSequence(){
- const boot=document.getElementById("boot"),txt=document.getElementById("bootText"),prompt=document.getElementById("bootPrompt");
- const lines=["ECTO OS // FIELD OPERATIONS SYSTEM","MEMORY CHECK ............ OK","DISPLAY PROFILE ......... "+profiles[profile].label,"RESPONSE GRID ........... LOADED","TEAM REGISTER ........... "+teams.length+" TEAMS","LOCAL STORAGE ........... OK","","SYSTEM OPERATIONAL"];
- const slow=!matchMedia("(prefers-reduced-motion:reduce)").matches;
- let started=false,skip=false,done=false;
- function finish(){if(done)return;done=true;document.removeEventListener("keydown",go);boot.removeEventListener("pointerdown",go);sfx.chirp();boot.classList.add("out");setTimeout(()=>boot.remove(),slow?450:0)}
- function go(e){
-  if(started){skip=true;return}
-  started=true;ac();prompt.remove();
-  let n=0;
-  (function next(){
-   if(skip||n>=lines.length){txt.textContent=lines.join("\n");setTimeout(finish,skip?0:350);return}
-   txt.textContent=lines.slice(0,++n).join("\n");
-   if(lines[n-1])sfx.tick();
-   setTimeout(next,slow?230:30);
-  })();
- }
- document.addEventListener("keydown",go);boot.addEventListener("pointerdown",go);
-}
-bootSequence();
-
-/* PWA: install button + update prompt */
-let installEv=null;
-const instBtn=document.getElementById("installBtn");
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEv=e;instBtn.hidden=false});
-window.addEventListener("appinstalled",()=>{instBtn.hidden=true});
-instBtn.addEventListener("click",()=>{if(!installEv)return;installEv.prompt();installEv.userChoice.finally(()=>{installEv=null;instBtn.hidden=true})});
-function showUpdate(w){
- if(document.getElementById("updBar"))return;
- const bar=document.createElement("div");bar.className="update";bar.id="updBar";bar.setAttribute("role","status");
- bar.innerHTML="<span>UPDATE READY"+(deployment?" // MISSION IN PROGRESS, RELOADING ENDS IT":"")+"</span><button class=\"mini\" id=\"updBtn\">RELOAD</button>";
- document.body.appendChild(bar);sfx.confirm();
- document.getElementById("updBtn").onclick=()=>w.postMessage("SKIP_WAITING");
-}
-if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){
- const hadController=!!navigator.serviceWorker.controller;
- let reloading=false;
- navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!hadController||reloading)return;reloading=true;location.reload()});
- window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{
-   if(reg.waiting&&navigator.serviceWorker.controller)showUpdate(reg.waiting);
-   reg.addEventListener("updatefound",()=>{const w=reg.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)showUpdate(w)})});
-   document.addEventListener("visibilitychange",()=>{if(!document.hidden)reg.update()});
-  }).catch(()=>{});
- });
-}
-Object.assign(window,{skipTravel,abortMission,confirmAbort,beginInvestigation,scanArea,deployTrap,requestBackup,concludeInvestigation,confirmConclude,closeCase,newFranchise,addFranchiseHere,editFranchise,deleteFranchise,confirmDeleteFr,saveFranchise,fillPlace,pickFranchise,frNav,setRoute,renderMap,applyProfile,newTeam,editTeam,deleteTeam,saveTeam,confirmDelete,closeDialog,proceedPreflight,launch});
-setRoute("map");
+function renderMapCanvas(){const map=document.getElementById("map");if(!map)return;let points=[];if(mapState.level==="country")points=localitiesForRegion(regionsForCountry(mapState.countryId)[0].id).concat(...regionsForCountry(mapState.countryId).slice(1).map(r=>localitiesForRegion(r.id)));else if(mapState.level==="region")points=localitiesForRegion(mapState.regionId);else if(mapState.level==="locality"){const l=locality(mapState.localityId);points=[l]}else return;points.forEach(l=>{const b=document.createElement("button");const st=sitesForLocality(l.id);const critical=st.some(s=>s.risk==="CRITICAL");b.className="marker "+(critical?"alert":st.some(s=>s.status==="ACTIVE")?"active":"monitor");b.style.left=l.x+"%";b.style.top=l.y+"%";b.innerHTML=`<div class="ring"></div><div class="dot"></div><span>${l.name}</span>`;b.onclick=()=>setMapLevel("locality",l.id);map.appendChild(b)})}
+function renderDrill(){const d=document.getElementById("drill");if(!d)return;let html="";if(mapState.level==="country"){regionsForCountry(mapState.countryId).forEach(r=>html+=`<button class="drill-item" onclick="setMapLevel('region','${r.id}')"><span><strong>${r.name}</strong><span>${r.label} // ${localitiesForRegion(r.id).length} LOCALITIES</span></span><b class="badge">OPEN</b></button>`)}else if(mapState.level==="region"){localitiesForRegion(mapState.regionId).forEach(l=>html+=`<button class="drill-item" onclick="setMapLevel('locality','${l.id}')"><span><strong>${l.name}</strong><span>${l.type.toUpperCase()} // ${sitesForLocality(l.id).length} SITES</span></span><b class="badge">OPEN</b></button>`)}else if(mapState.level==="locality"){sitesForLocality(mapState.localityId).forEach(s=>html+=`<button class="drill-item" onclick="setMapLevel('site','${s.id}')"><span><strong>${s.name}</strong><span>${s.grid} // ${s.status}</span></span><b class="badge">${s.risk}</b></button>`)}else{html=`<div class="readout"><div class="kv"><span class="k">SITE ID</span><span class="v">${selectedSite.id}</span></div><div class="kv"><span class="k">GRID</span><span class="v">${selectedSite.grid}</span></div><div class="kv"><span class="k">STATUS</span><span class="v">${selectedSite.status}</span></div></div><div class="actions"><button class="action btn-primary" onclick="setRoute('dispatch')">ECTO DISPATCH</button><button class="action" onclick="setMapLevel('locality','${mapState.localityId}')">BACK TO SITES</button></div>`}d.innerHTML=html}
+function renderDetails(){const d=document.getElementById("details");if(!d)return;if(mapState.level==="country"){d.innerHTML=`<div class="kv"><span class="k">COUNTRY</span><span class="v">${country(mapState.countryId).name}</span></div><div class="kv"><span class="k">REGIONS</span><span class="v">${regionsForCountry(mapState.countryId).length}</span></div><div class="kv"><span class="k">MODEL</span><span class="v">INTERNATIONAL READY</span></div>`}else if(mapState.level==="region"){const r=region(mapState.regionId);d.innerHTML=`<div class="kv"><span class="k">REGION</span><span class="v">${r.name}</span></div><div class="kv"><span class="k">REGION TYPE</span><span class="v">${r.label}</span></div><div class="kv"><span class="k">LOCALITIES</span><span class="v">${localitiesForRegion(r.id).length}</span></div><div class="kv"><span class="k">REGISTERED TEAMS</span><span class="v">${teamsForRegion(r.id).length}</span></div>`}else if(mapState.level==="locality"){const l=locality(mapState.localityId),r=region(l.regionId);d.innerHTML=`<div class="kv"><span class="k">COUNTRY</span><span class="v">${country(r.countryId).name}</span></div><div class="kv"><span class="k">${r.label}</span><span class="v">${r.name}</span></div><div class="kv"><span class="k">LOCALITY</span><span class="v">${l.name}</span></div><div class="kv"><span class="k">TYPE</span><span class="v">${l.type.toUpperCase()}</span></div><div class="kv"><span class="k">SITES</span><span class="v">${sitesForLocality(l.id).length}</span></div><hr><div class="small-note">TEAM / ORGANISATION DATA IS INTENTIONALLY SEPARATE FROM GEOGRAPHY.</div>`}else{const l=locality(mapState.localityId),r=region(l.regionId);d.innerHTML=`<div class="kv"><span class="k">COUNTRY</span><span class="v">${country(r.countryId).name}</span></div><div class="kv"><span class="k">${r.label}</span><span class="v">${r.name}</span></div><div class="kv"><span class="k">LOCALITY</span><span class="v">${l.name}</span></div><div class="kv"><span class="k">SITE</span><span class="v">${selectedSite.name}</span></div><div class="kv"><span class="k">ECTO GRID</span><span class="v">${selectedSite.grid}</span></div><div class="kv"><span class="k">STATUS</span><span class="v">${selectedSite.status}</span></div><div class="kv"><span class="k">RISK</span><span class="v">${selectedSite.risk}</span></div>`}}
+function renderDispatch(){document.getElementById("screen").innerHTML=`<div class="screen-head"><div><div class="eyebrow">02 // OPERATIONS</div><h1>ECTO DISPATCH</h1><div class="sub">SELECT TEAM → SELECT VEHICLE → PROCEED TO PRE-FLIGHT</div></div></div><div class="grid"><section class="card"><h2>INCOMING CASE</h2><div class="readout"><div class="kv"><span class="k">CASE</span><span class="v">SE-0261</span></div><div class="kv"><span class="k">LOCATION</span><span class="v">${locality(selectedSite.localityId).name}, ${region(locality(selectedSite.localityId).regionId).name}</span></div><div class="kv"><span class="k">SITE</span><span class="v">${selectedSite.name}</span></div><div class="kv"><span class="k">ECTO GRID</span><span class="v">${selectedSite.grid}</span></div><div class="kv"><span class="k">TYPE</span><span class="v">AWE</span></div></div></section><aside class="card"><h2>DEPLOYMENT SELECTION</h2><div class="field"><label>RESPONSE TEAM</label><select id="teamSelect">${teams.map(t=>`<option value="${t.id}" ${t.status!=="AVAILABLE"?"disabled":""}>${t.id} // ${t.name} // ${t.status}</option>`).join("")}</select></div><div class="field" style="margin-top:10px"><label>VEHICLE</label><select id="vehicleSelect"><option>ECTO-04 // AVAILABLE</option><option>ECTO-02 // AVAILABLE</option><option>ECTO-06 // STANDBY</option></select></div><button class="action btn-primary" style="width:100%;margin-top:10px" onclick="alert('Proceed to Pre-Flight // '+document.getElementById('teamSelect').value)">PROCEED TO PRE-FLIGHT</button></aside></div>`}
+function renderConfig(){document.getElementById("screen").innerHTML=`<div class="screen-head"><div><div class="eyebrow">07 // SYSTEM CONTROL</div><h1>CONFIGURATION</h1><div class="sub">DISPLAY PROFILE // LOCATION ARCHITECTURE // RESPONSE RESOURCES</div></div></div><section class="card"><h2>DISPLAY PROFILE <span class="panel-code">PRIMARY INTERFACE LANGUAGE</span></h2><div class="notice"><b>CASSETTE FUTURISM</b> remains the primary visual identity. Display profiles change presentation only.</div><div class="profile-grid">${Object.entries(profiles).map(([id,x])=>`<button class="profile ${id} ${profile===id?'selected':''}" onclick="setProfile('${id}')"><i class="sample"></i><strong>${x.label}</strong><span>${id==='cassette'?'PRIMARY // RETROACTIVE MODERNISM':id==='phosphor'?'GREEN CRT // OPTIONAL':'OPTIONAL DISPLAY PROFILE'}</span></button>`).join("")}</div></section><div class="grid" style="margin-top:12px"><section class="card"><h2>RESPONSE TEAM MANAGEMENT <span class="panel-code">LOCAL REGISTER</span></h2><table class="team-table"><thead><tr><th>ID</th><th>NAME</th><th>CREW</th><th>STATUS</th><th></th></tr></thead><tbody>${teams.map((t,i)=>`<tr><td>${t.id}</td><td>${t.name}</td><td>${t.crew}</td><td>${t.status}</td><td><div class="team-actions"><button class="mini" onclick="editTeam(${i})">EDIT</button><button class="mini" onclick="deleteTeam(${i})">DELETE</button></div></td></tr>`).join("")}</tbody></table><hr><button class="action btn-primary" onclick="editTeam(-1)">+ NEW TEAM</button></section><aside class="card"><h2>GEOGRAPHIC ARCHITECTURE</h2><div class="readout"><div class="kv"><span class="k">LEVEL 01</span><span class="v">COUNTRY</span></div><div class="kv"><span class="k">LEVEL 02</span><span class="v">ADMINISTRATIVE REGION</span></div><div class="kv"><span class="k">LEVEL 03</span><span class="v">LOCALITY</span></div><div class="kv"><span class="k">LEVEL 04</span><span class="v">INVESTIGATION SITE</span></div><div class="kv"><span class="k">TEAM DATA</span><span class="v">SEPARATE / LINKED BY ID</span></div></div><hr><div class="small-note">COUNTY / STATE / PROVINCE / REGION IS STORED AS DATA, NOT AS A FIXED UI ASSUMPTION.</div></aside></div>`}
+function editTeam(i){const t=i<0?{id:"",name:"",crew:6,status:"AVAILABLE"}:teams[i];const id=prompt("TEAM ID / CALLSIGN",t.id);if(id===null)return;const name=prompt("TEAM NAME",t.name);if(name===null)return;const crew=prompt("CREW SIZE",t.crew);if(crew===null)return;const status=prompt("STATUS",t.status);if(status===null)return;if(!id.trim()||teams.some((x,n)=>n!==i&&x.id.toUpperCase()===id.trim().toUpperCase())){alert("TEAM ID MUST BE UNIQUE");return}const rec={id:id.trim().toUpperCase(),name:name.trim().toUpperCase(),crew:Math.max(1,parseInt(crew)||6),status:status.trim().toUpperCase()};if(i<0)teams.push(rec);else teams[i]=rec;saveTeams();renderConfig()}
+function deleteTeam(i){if(!["AVAILABLE","STANDBY","OFFLINE"].includes(teams[i].status)){alert("ACTIVE DEPLOYMENT CANNOT BE DELETED");return}if(confirm("DELETE "+teams[i].id+"?")){teams.splice(i,1);saveTeams();renderConfig()}}
+window.setMapLevel=setMapLevel;window.setRoute=setRoute;window.setProfile=setProfile;window.editTeam=editTeam;window.deleteTeam=deleteTeam;
+document.body.dataset.theme=profiles[profile].theme;updateChrome();setRoute("map");
 })();
 </script>
 </body>
