@@ -1,50 +1,122 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Field Operations Prototype 001</title>
-<style>
-:root{--bg:#101410;--p:#1b211c;--p2:#151a16;--l:#566156;--t:#d6ddd2;--m:#8f9a8d;--g:#a8d28b;--a:#d2bd72;--c:#7ebfc1;--r:#d47f76}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:Arial,sans-serif;letter-spacing:.04em}.app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}
-aside{border-right:1px solid var(--l);padding:18px 14px;background:#121712;display:flex;flex-direction:column}.brand{color:var(--g);font-weight:bold;letter-spacing:.14em}.sub,.meta,.label,footer{font:11px Courier,monospace;color:var(--m)}nav{margin-top:26px;display:grid;gap:7px}button{font:inherit;cursor:pointer}nav button,.action{background:var(--p2);border:1px solid var(--l);color:var(--t);padding:11px;text-align:left}nav button.active,.primary{border-color:var(--g);color:var(--g);background:#1b251c}.side{margin-top:auto;border-top:1px solid var(--l);padding-top:14px;font:11px Courier,monospace}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--g);margin-right:6px}
-main{padding:20px;overflow:auto}header{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid var(--l);padding-bottom:14px;margin-bottom:16px}h1{margin:0;font-size:22px;letter-spacing:.1em}h2{font-size:13px;color:var(--g);letter-spacing:.12em;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.card{background:var(--p);border:1px solid var(--l);padding:14px}.s4{grid-column:span 4}.s6{grid-column:span 6}.s8{grid-column:span 8}.s12{grid-column:span 12}.kpi{font:22px Courier,monospace;margin:8px 0}.row{display:flex;justify-content:space-between;border-bottom:1px dotted #3c463d;padding:8px 0;font:12px Courier,monospace}.ok{color:var(--g)}.warn{color:var(--a)}.danger{color:var(--r)}.cyan{color:var(--c)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.map{height:390px;position:relative;background:linear-gradient(#7e967e14 1px,transparent 1px),linear-gradient(90deg,#7e967e14 1px,transparent 1px),#111611;background-size:40px 40px;overflow:hidden}.marker{position:absolute;width:15px;height:15px;border:2px solid var(--g);border-radius:50%;animation:pulse 2s infinite}.marker.r{border-color:var(--r);animation:alert 1s infinite}.marker:after{content:"";position:absolute;inset:-7px;border:1px solid currentColor;border-radius:50%;opacity:.3}.tag{position:absolute;background:#101510e8;border:1px solid #3c463d;padding:4px 6px;font:10px Courier,monospace;transform:translate(12px,-4px);white-space:nowrap}@keyframes pulse{50%{box-shadow:0 0 0 8px #a8d28b08}}@keyframes alert{50%{box-shadow:0 0 0 12px #d47f7610}}
-select,input{width:100%;background:#101510;color:var(--t);border:1px solid var(--l);padding:10px}.check{display:block;border-bottom:1px dotted #3c463d;padding:9px;font:12px Courier,monospace}.check input{width:auto;margin-right:8px}.step{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.step span{border:1px solid var(--l);padding:7px;font:10px Courier,monospace}.step .active{border-color:var(--g);color:var(--g)}.log{height:160px;background:#0c100d;border:1px solid #333d34;padding:9px;overflow:auto;white-space:pre-wrap;font:10px Courier,monospace}.hidden{display:none!important}
-@media(max-width:800px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--l)}nav{grid-template-columns:repeat(3,1fr)}.s4,.s6,.s8{grid-column:span 12}}
-</style></head><body><div class="app">
-<aside><div class="brand">FIELD OPERATIONS</div><div class="sub">PROTOTYPE 001</div>
-<nav><button data-p="home" class="active">01 / HOME</button><button data-p="map">02 / RESPONSE MAP</button><button data-p="dispatch">03 / DISPATCH</button><button data-p="preflight">04 / PRE-FLIGHT</button><button data-p="field">05 / FIELD OPS</button></nav>
-<div class="side"><span class="dot"></span>SYSTEM NOMINAL<br><br>LOCAL DATA STORE<br>OFFLINE CAPABLE</div></aside>
-<main>
-<section id="home"><header><div><h1>TEAM OPERATIONS</h1><div class="meta">ECHO-2 / HAMPSHIRE RESPONSE AREA</div></div><div class="meta" id="clock"></div></header>
-<div class="grid"><div class="card s4"><h2>TEAM</h2><div class="label">CALLSIGN</div><div class="kpi">ECHO-2</div><div class="row"><span>CREW</span><span>6 / 6 READY</span></div><div class="row"><span>STATUS</span><span class="ok" id="teamStatus">AVAILABLE</span></div></div>
-<div class="card s4"><h2>VEHICLE</h2><div class="kpi">ECTO RESPONSE</div><div class="row"><span>POWER</span><span class="ok">NOMINAL</span></div><div class="row"><span>COMMS</span><span class="ok">READY</span></div></div>
-<div class="card s4"><h2>ASSIGNMENT</h2><div class="kpi" id="assignment">NONE</div><div class="row"><span>LOCATION</span><span id="homeLoc">—</span></div></div>
-<div class="card s8"><h2>OPERATIONAL READINESS</h2><div class="row"><span>TEAM SYSTEMS</span><span class="ok">READY</span></div><div class="row"><span>VEHICLE SYSTEMS</span><span class="ok">READY</span></div><div class="row"><span>FIELD EQUIPMENT</span><span class="ok">READY</span></div><div class="row"><span>CONTAINMENT</span><span class="ok">STANDBY</span></div><div class="actions"><button class="action primary" onclick="go('dispatch')">OPEN DISPATCH</button><button class="action" onclick="go('map')">RESPONSE MAP</button></div></div>
-<div class="card s4"><h2>SYSTEM LOG</h2><div id="log" class="log"></div></div></div></section>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Field Operations Prototype 004</title>
+<style>:root{--b:#0b0e0c;--p:#182019;--l:#526052;--t:#c8d0c5;--g:#9fc76b;--y:#c7b65d;--r:#c66b62}*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font:14px "Courier New",monospace}.s{max-width:1200px;margin:auto;padding:16px}header{border-bottom:1px solid var(--l);padding:10px 0;font-family:Arial,sans-serif;letter-spacing:.15em}nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}button,input,select{font:inherit}.b{background:#182019;color:var(--t);border:1px solid var(--l);padding:9px;cursor:pointer}.b:hover,.b.on{color:var(--g);border-color:var(--g)}.page{display:none}.page.on{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.card{grid-column:span 4;background:var(--p);border:1px solid var(--l);padding:13px}.wide{grid-column:span 8}.full{grid-column:span 12}h2,h3{font-family:Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}.read{font-size:23px;color:var(--g)}.kv{display:grid;grid-template-columns:1fr auto;border-top:1px solid #354036;padding:7px}.ok{color:var(--g)}.map{height:350px;position:relative;overflow:hidden;border:1px solid var(--l);background:linear-gradient(rgba(159,199,107,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(159,199,107,.07) 1px,transparent 1px),#101612;background-size:45px 45px}.m{position:absolute;width:14px;height:14px;border:2px solid var(--g);border-radius:50%;background:#111}.m:after{content:"";position:absolute;inset:-7px;border:1px solid var(--g);border-radius:50%;animation:p 2s infinite}.m.busy,.m.busy:after{border-color:var(--y)}.m.alert,.m.alert:after{border-color:var(--r)}@keyframes p{to{transform:scale(2);opacity:0}}.term{white-space:pre-wrap;background:#090c09;border:1px solid #3a453b;padding:10px;min-height:180px}.row{border:1px solid #414d42;padding:9px;margin:6px 0;cursor:pointer}.row:hover{border-color:var(--g)}label{display:block;margin:8px 0;color:#89958a}input,select{width:100%;padding:8px;background:#0c110d;color:var(--t);border:1px solid var(--l)}.checks input{width:auto}.checks label{color:var(--t);border-bottom:1px solid #354036;padding:6px}.route{height:18px;border:1px solid var(--l);background:#0c110d;margin:8px 0;position:relative;overflow:hidden}.route i{display:block;height:100%;background:var(--g);width:0;transition:width .35s}.statusgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.statusbox{border:1px solid #414d42;padding:10px}.bigstatus{font-size:18px;color:var(--g)}.source{border-left:3px solid var(--g);padding-left:10px}.pending{color:var(--y)}.rx{font-size:11px;color:#89958a;letter-spacing:.05em}@media(max-width:760px){.card,.wide{grid-column:span 12}}</style></head>
+<body><div class="s"><header>FIELD OPERATIONS // PROTOTYPE 004<br><small>FIELD OPERATIONS TERMINAL — INTERSYSTEM EXCHANGE ONLINE</small></header>
+<nav><button class="b on" data-p="home">Operations</button><button class="b" data-p="map">Response Map</button><button class="b" data-p="dispatch">Dispatch</button><button class="b" data-p="vehicles">Vehicle Systems</button><button class="b" data-p="teams">Team Network</button><button class="b" data-p="navsys">Navigation</button><button class="b" data-p="equipment">Field Diagnostics</button><button class="b" data-p="exchange">System Exchange</button><button class="b" data-p="field">Field Ops</button></nav>
+<section id="home" class="page on"><div class="grid"><div class="card"><h3>Home Team</h3><div class="read">ECHO-2</div><div class="kv"><span>Area</span><b>HAMPSHIRE</b></div><div class="kv"><span>Crew</span><b class="ok">6/6 READY</b></div></div><div class="card"><h3>Primary Ectomobile</h3><div class="read" id="hv">UNASSIGNED</div><div class="kv"><span>Power</span><b class="ok">NOMINAL</b></div><div class="kv"><span>Comms</span><b class="ok">READY</b></div></div><div class="card"><h3>Assignment</h3><div class="read" id="ha">NONE</div><div class="kv"><span>Status</span><b id="hs">READY</b></div></div><div class="card wide"><h2>Operational Overview</h2><div class="map" id="map1"></div></div><div class="card"><h2>Vehicle Status</h2><div id="sys1"></div></div></div></section>
+<section id="map" class="page"><div class="grid"><div class="card wide"><h2>Response Map</h2><div class="map" id="map2"></div></div><div class="card"><h2>Selected Team</h2><div class="term" id="mi">SELECT MARKER</div></div></div></section>
+<section id="dispatch" class="page"><div class="grid"><div class="card wide"><h2>Dispatch</h2><label>Case / Incident<input id="cid" value="SE-0261"></label><label>Location<input id="loc" value="Portsmouth, Hampshire"></label><label>Site<input id="site" value="Portsmouth Harbour Sector"></label><label>Response Team<select id="dt"></select></label><label>Assigned Ectomobile<select id="dv"></select></label><button class="b" id="prep">Prepare Pre-Flight</button></div><div class="card"><h2>Pre-Flight</h2><div class="checks" id="checks"></div><button class="b" id="auth">Authorise Deployment</button><p id="msg">INTERLOCK ACTIVE</p></div></div></section>
+<section id="vehicles" class="page"><div class="grid"><div class="card"><h2>Team Ectomobiles</h2><div id="vl"></div><button class="b" id="add">Register Ectomobile</button></div><div class="card wide"><h2>Vehicle Systems</h2><div id="vd"></div><button class="b" id="diagb">Run Full Diagnostic</button><div class="term" id="diag">DIAGNOSTIC BUS READY.</div></div></div></section>
+<section id="teams" class="page"><div class="grid"><div class="card"><h2>Team Network</h2><div id="tl"></div></div><div class="card wide"><h2>Network Detail</h2><div class="term" id="ti">SELECT TEAM RECORD.</div></div></div></section>
+<section id="navsys" class="page"><div class="grid">
+<div class="card wide"><h2>Specialist Navigation</h2>
+<div class="read" id="navTarget">NO ACTIVE ROUTE</div>
+<div class="kv"><span>Destination</span><b id="navDest">—</b></div>
+<div class="kv"><span>Grid Reference</span><b id="gridRef">C4-B2</b></div>
+<div class="kv"><span>Route State</span><b id="routeState">STANDBY</b></div>
+<div class="route"><i id="routeBar"></i></div>
+<button class="b" id="routeStart">Begin Route</button> <button class="b" id="routeAdvance">Advance Route</button>
+</div>
+<div class="card"><h2>Navigation Telemetry</h2><div class="term" id="navLog">NAVIGATION LINK READY.</div></div>
+</div></section>
 
-<section id="map" class="hidden"><header><div><h1>RESPONSE MAP</h1><div class="meta">OPERATIONAL OVERVIEW / SIMULATION</div></div></header>
-<div class="card"><div class="map"><i class="marker" style="left:30%;top:55%"></i><span class="tag" style="left:30%;top:55%">PORTSMOUTH / C4-B2</span><i class="marker" style="left:50%;top:34%"></i><span class="tag" style="left:50%;top:34%">SOUTHAMPTON / C4-B1</span><i class="marker r" style="left:68%;top:61%"></i><span class="tag" style="left:68%;top:61%">BRIGHTON / C5-A3</span></div>
-<div class="actions"><button class="action primary" onclick="mapInfo('Portsmouth','Hampshire','C4-B2','NORMAL')">SELECT PORTSMOUTH</button><button class="action" onclick="mapInfo('Southampton','Hampshire','C4-B1','ELEVATED')">SELECT SOUTHAMPTON</button><button class="action" onclick="mapInfo('Brighton','East Sussex','C5-A3','CRITICAL')">SELECT ALERT</button></div><div class="card" style="margin-top:12px"><h2>SELECTED LOCATION</h2><div id="mapInfo" class="meta">No location selected.</div></div></div></section>
-
-<section id="dispatch" class="hidden"><header><div><h1>DISPATCH</h1><div class="meta">CREATE / PREPARE OPERATION</div></div></header><div class="card"><div class="step"><span class="active">CASE / INCIDENT</span><span>LOCATION</span><span>SITE</span><span>TEAM</span><span>VEHICLE</span><span>PRE-FLIGHT</span></div><div class="grid">
-<div class="card s6"><h2>ASSIGNMENT</h2><div class="label">CASE / INCIDENT</div><input id="case" value="SE-0261"><br><br><div class="label">LOCATION</div><select id="loc"><option>Portsmouth</option><option>Southampton</option><option>Brighton</option><option>Manchester</option></select><br><br><div class="label">SITE</div><select id="site"><option>Portsmouth Harbour Sector</option><option>Historic Dockyard</option><option>Southampton Waterfront</option><option>Regional Search Area</option></select></div>
-<div class="card s6"><h2>TEAM / VEHICLE</h2><div class="label">RESPONSE TEAM</div><select id="team"><option>ECHO-2 — Hampshire</option><option>ALPHA-1 — London</option><option>DELTA-3 — South Coast</option></select><br><br><div class="label">VEHICLE</div><select id="vehicle"><option>ECTO RESPONSE</option><option>ECTO RESPONSE 02</option></select><div class="actions"><button class="action primary" onclick="prepare()">PREPARE OPERATION</button></div></div></div></div></section>
-
-<section id="preflight" class="hidden"><header><div><h1>PRE-FLIGHT</h1><div class="meta">DEPLOYMENT READINESS CHECK</div></div><div class="meta" id="pf">NO ASSIGNMENT</div></header><div class="grid"><div class="card s8"><h2>READINESS CHECK</h2>
-<label class="check"><input type="checkbox" checked>TEAM / CREW READY</label><label class="check"><input type="checkbox" checked>VEHICLE SYSTEMS</label><label class="check"><input type="checkbox" checked>PROTON PACKS</label><label class="check"><input type="checkbox" checked>PKE METRE</label><label class="check"><input type="checkbox" checked>ECTO-GOGGLES</label><label class="check"><input type="checkbox" checked>TRAP</label><label class="check"><input type="checkbox" checked>CONTAINMENT UNIT</label><label class="check"><input type="checkbox" checked>NAVIGATION / COMMS</label>
-<div class="actions"><button class="action primary" onclick="authorise()">AUTHORISE DEPLOYMENT</button></div></div><div class="card s4"><h2>SYSTEMS</h2><div class="row"><span>POWER</span><span class="ok">NOMINAL</span></div><div class="row"><span>COMMS</span><span class="ok">READY</span></div><div class="row"><span>CONTAINMENT</span><span class="ok">STANDBY</span></div></div></div></section>
-
-<section id="field" class="hidden"><header><div><h1>FIELD OPERATIONS</h1><div class="meta" id="fm">NO ACTIVE DEPLOYMENT</div></div><div class="meta" id="fs">STANDBY</div></header><div class="card"><div class="step" id="steps"><span class="active">READY</span><span>EN ROUTE</span><span>ON SITE</span><span>INVESTIGATING</span><span>DETECTED</span><span>CONTAINMENT</span><span>RETURNING</span><span>COMPLETE</span></div><div class="grid"><div class="card s6"><h2>OPERATION</h2><div class="kpi" id="oid">—</div><div class="row"><span>LOCATION</span><span id="oloc">—</span></div><div class="row"><span>SITE</span><span id="osite">—</span></div><div class="row"><span>TEAM</span><span id="oteam">—</span></div></div><div class="card s6"><h2>FIELD SYSTEMS</h2><div class="row"><span>PROTON PACK</span><span class="ok">CONNECTED</span></div><div class="row"><span>PKE INTERFACE</span><span class="cyan">STANDBY</span></div><div class="row"><span>CONTAINMENT</span><span class="ok">READY</span></div><div class="row"><span>NAVIGATION</span><span class="ok">ACTIVE</span></div></div></div><div class="actions"><button class="action primary" onclick="advance()" id="adv">ADVANCE OPERATION</button><button class="action" onclick="resetOp()">RESET TEST</button></div></div></section>
-<footer>FIELD OPERATIONS PROTOTYPE 001 / CASSSETTE FUTURISM / LOCAL TEST</footer>
-</main></div>
-<script>
-let s=JSON.parse(localStorage.getItem('fop001')||'null')||{o:null,log:[]};const names=['READY','EN ROUTE','ON SITE','INVESTIGATING','DETECTED','CONTAINMENT','RETURNING','COMPLETE'];
-function save(){localStorage.setItem('fop001',JSON.stringify(s));render()}function go(p){document.querySelectorAll('main>section').forEach(x=>x.classList.toggle('hidden',x.id!==p));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.p===p))}
-function add(x){s.log.unshift(new Date().toLocaleTimeString('en-GB')+'  '+x);s.log=s.log.slice(0,12)}
-function prepare(){s.o={id:document.getElementById('case').value||'LOCAL-0001',location:document.getElementById('loc').value,site:document.getElementById('site').value,team:document.getElementById('team').value.split(' — ')[0],vehicle:document.getElementById('vehicle').value,step:0};add('OPERATION '+s.o.id+' PREPARED');save();go('preflight')}
-function authorise(){if(!s.o){prepare();return}s.o.step=1;add('DEPLOYMENT AUTHORISED / '+s.o.id);save();go('field')}
-function advance(){if(!s.o)return;if(s.o.step<7){s.o.step++;add(s.o.id+' → '+names[s.o.step]);save()}}
-function resetOp(){s.o=null;add('TEST OPERATION RESET');save();go('home')}
-function mapInfo(a,b,c,d){document.getElementById('mapInfo').innerHTML='<b>'+a+'</b><br><br>REGION: '+b+'<br>ECTO GRID: '+c+'<br>STATUS: <span class="'+(d==='CRITICAL'?'danger':'ok')+'">'+d+'</span>'}
-function render(){document.getElementById('log').textContent=s.log.join('\n')||'NO EVENTS';let o=s.o;document.getElementById('assignment').textContent=o?o.id:'NONE';document.getElementById('homeLoc').textContent=o?o.location:'—';document.getElementById('teamStatus').textContent=o?names[o.step]:'AVAILABLE';document.getElementById('pf').textContent=o?o.id+' / '+o.location:'NO ASSIGNMENT';document.getElementById('fm').textContent=o?o.id+' / '+o.location+' / '+o.site:'NO ACTIVE DEPLOYMENT';document.getElementById('fs').textContent=o?names[o.step]:'STANDBY';document.getElementById('oid').textContent=o?o.id:'—';document.getElementById('oloc').textContent=o?o.location:'—';document.getElementById('osite').textContent=o?o.site:'—';document.getElementById('oteam').textContent=o?o.team:'—';document.querySelectorAll('#steps span').forEach((x,i)=>x.classList.toggle('active',!!o&&i===o.step));document.getElementById('adv').textContent=o&&o.step===7?'OPERATION COMPLETE':'ADVANCE OPERATION'}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString('en-GB'),1000);render();
+<section id="equipment" class="page"><div class="grid">
+<div class="card"><h2>Portable Equipment</h2><div id="equipList"></div></div>
+<div class="card wide"><h2>Field Diagnostic</h2><div id="equipDetail"></div>
+<button class="b" id="equipDiag">Run Equipment Diagnostic</button>
+<div class="term" id="equipTerm">FIELD DIAGNOSTIC BUS READY.</div></div>
+</div></section>
+<section id="exchange" class="page"><div class="grid">
+<div class="card"><h2>Connected Systems</h2>
+<div class="kv"><span>SER</span><b class="ok">LINK READY</b></div>
+<div class="kv"><span>SAR</span><b class="ok">LINK READY</b></div>
+<div class="kv"><span>PKE</span><b class="ok">FIELD LINK READY</b></div>
+<div class="kv"><span>Field Operations</span><b class="ok">LOCAL</b></div>
+<p class="rx">Each system retains ownership of its specialist records. Exchange records are referenced, not absorbed.</p>
+</div>
+<div class="card wide"><h2>Received Operational Data</h2><div id="inbox"></div>
+<button class="b" id="rxSer">Receive SER Case</button>
+<button class="b" id="rxSar">Receive SAR Location</button>
+<button class="b" id="rxPke">Receive PKE Reading</button>
+</div>
+<div class="card wide"><h2>Selected Exchange Record</h2><div class="term" id="exchangeDetail">NO EXCHANGE RECORD SELECTED.</div></div>
+<div class="card"><h2>Operational Action</h2>
+<button class="b" id="useRecord">Use Selected Record</button>
+<p id="exchangeMsg">AWAITING RECEIVED DATA</p>
+</div>
+<div class="card full"><h2>Exchange Log</h2><div class="term" id="exchangeLog">NO INTERSYSTEM TRAFFIC.</div></div>
+</div></section>
+<section id="field" class="page"><div class="grid">
+<div class="card"><h2>Operation State</h2><div class="read" id="life">READY</div><button class="b" id="next">Advance Operation</button><button class="b" id="reset">Reset</button></div>
+<div class="card"><h2>Live Systems</h2><div class="kv"><span>Ectomobile</span><b id="liveVeh" class="ok">STANDBY</b></div><div class="kv"><span>Containment Unit</span><b id="liveContain" class="ok">READY</b></div><div class="kv"><span>Navigation</span><b id="liveNav">STANDBY</b></div><div class="kv"><span>Field Link</span><b class="ok">ACTIVE</b></div></div>
+<div class="card"><h2>Backup Coordination</h2><label>Available Team<select id="backupTeam"></select></label><button class="b" id="backupReq">Request Backup</button><p id="backupMsg">NO BACKUP REQUESTED</p></div>
+<div class="card full"><h2>Operational Log</h2><div class="term" id="log"></div></div>
+</div></section>
+</div><script>
+const K='FOP004';const D={teams:[{id:'ECHO-2',name:'Portsmouth Ghostbusters',area:'Hampshire',status:'AVAILABLE',x:25,y:68},{id:'ALPHA-1',name:'London Ghostbusters',area:'Greater London',status:'AVAILABLE',x:54,y:27},{id:'DELTA-3',name:'South Coast Ghostbusters',area:'South Coast',status:'EN ROUTE',x:62,y:73},{id:'BRAVO-4',name:'Midlands Ghostbusters',area:'Midlands',status:'INVESTIGATING',x:38,y:14}],vehicles:[{id:'VEH-E2-01',team:'ECHO-2',designation:'ECTO RESPONSE',role:'PRIMARY RESPONSE',status:'AVAILABLE',systems:{'POWER BUS':'NOMINAL','AUXILIARY POWER':'NOMINAL','COMMUNICATIONS':'READY','NAVIGATION':'READY','PKE INTERFACE':'STANDBY','CONTAINMENT INTERFACE':'READY','THERMAL CONTROL':'NOMINAL'}}],assignment:null,step:0,log:[],route:{progress:0,state:'STANDBY'},backup:null,
+exchange:[],selectedExchange:null,exchangeLog:[],equipment:[
+{id:'PACK-01',name:'Proton Pack 01',type:'PROTON PACK',status:'READY',power:'98%',thermal:'NOMINAL',link:'ACTIVE'},
+{id:'PKE-01',name:'PKE Metre 01',type:'PKE METRE',status:'READY',power:'91%',thermal:'NOMINAL',link:'LOCAL'},
+{id:'TRAP-01',name:'Ghost Trap 01',type:'TRAP',status:'READY',power:'94%',thermal:'NOMINAL',link:'ACTIVE'},
+{id:'CU-01',name:'Portable Containment Unit 01',type:'CONTAINMENT UNIT',status:'READY',power:'100%',thermal:'NOMINAL',link:'ACTIVE'}
+]};let S=JSON.parse(localStorage.getItem(K)||'null')||D,sel=null;
+if(!S.route)S.route={progress:0,state:'STANDBY'};
+if(!S.equipment)S.equipment=JSON.parse(JSON.stringify(D.equipment));
+if(S.backup===undefined)S.backup=null;if(!S.exchange)S.exchange=[];if(!S.exchangeLog)S.exchangeLog=[];if(S.selectedExchange===undefined)S.selectedExchange=null;const life=['READY','EN ROUTE','ON SITE','INVESTIGATING','ENTITY DETECTED','CONTAINMENT','RETURNING','COMPLETE'];function save(){localStorage.setItem(K,JSON.stringify(S))}
+document.querySelectorAll('nav .b').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p));document.querySelectorAll('nav .b').forEach(x=>x.classList.toggle('on',x==b))});
+function sy(v){return Object.entries(v?.systems||{}).map(([a,b])=>`<div class=kv><span>${a}</span><b class=ok>${b}</b></div>`).join('')}
+function maps(e){e.innerHTML='';S.teams.forEach(t=>{let b=document.createElement('button');b.className='m '+(t.status==='INVESTIGATING'?'alert':t.status==='EN ROUTE'?'busy':'');b.style.left=t.x+'%';b.style.top=t.y+'%';b.title=t.id+' '+t.name;b.onclick=()=>mi.textContent=`TEAM: ${t.id}\nFRANCHISE: ${t.name}\nAREA: ${t.area}\nSTATUS: ${t.status}\nNETWORK LINK: ACTIVE`;e.appendChild(b)})}
+function opts(){let id=dt.value||S.teams[0].id;dv.innerHTML=S.vehicles.filter(v=>v.team==id).map(v=>`<option value="${v.id}">${v.designation}</option>`).join('')||'<option value="">NO VEHICLE REGISTERED</option>'}
+function renderEquipment(){
+ equipList.innerHTML=S.equipment.map(e=>`<div class=row data-e="${e.id}"><b>${e.name}</b><br>${e.type} // ${e.status}</div>`).join('');
+ document.querySelectorAll('[data-e]').forEach(r=>r.onclick=()=>showEquip(r.dataset.e));
+ if(!window.eqsel)window.eqsel=S.equipment[0]?.id;showEquip(window.eqsel);
+}
+function showEquip(id){window.eqsel=id;let e=S.equipment.find(x=>x.id==id);if(!e)return;
+ equipDetail.innerHTML=`<div class=read>${e.name}</div><div class=kv><span>Equipment ID</span><b>${e.id}</b></div><div class=kv><span>Type</span><b>${e.type}</b></div><div class=kv><span>Status</span><b class=ok>${e.status}</b></div><div class=kv><span>Power</span><b>${e.power}</b></div><div class=kv><span>Thermal</span><b>${e.thermal}</b></div><div class=kv><span>Field Link</span><b>${e.link}</b></div>`;
+}
+function renderNav(){
+ navDest.textContent=S.assignment?.site||S.assignment?.location||'—';
+ navTarget.textContent=S.assignment?'ROUTE // '+(S.assignment.site||S.assignment.location):'NO ACTIVE ROUTE';
+ routeState.textContent=S.route.state;routeBar.style.width=S.route.progress+'%';
+ liveNav.textContent=S.route.state;
+}
+function renderBackup(){
+ backupTeam.innerHTML=S.teams.filter(t=>t.id!==(S.assignment?.team||'ECHO-2')).map(t=>`<option value="${t.id}">${t.id} — ${t.name} — ${t.status}</option>`).join('');
+ backupMsg.textContent=S.backup?`BACKUP REQUEST ACTIVE // ${S.backup}`:'NO BACKUP REQUESTED';
+}
+function addExchange(rec){
+ S.exchange.unshift(rec);S.selectedExchange=rec.id;
+ S.exchangeLog.unshift(new Date().toLocaleString('en-GB')+' // '+rec.source+' // '+rec.id+' RECEIVED');
+ save();render();
+}
+function renderExchange(){
+ inbox.innerHTML=S.exchange.length?S.exchange.map(r=>`<div class="row source" data-x="${r.id}"><b>${r.source} // ${r.id}</b><br>${r.title}<br><span class="rx">${r.kind} // ${r.status}</span></div>`).join(''):'NO RECEIVED RECORDS.';
+ document.querySelectorAll('[data-x]').forEach(x=>x.onclick=()=>{S.selectedExchange=x.dataset.x;save();renderExchange()});
+ let r=S.exchange.find(x=>x.id===S.selectedExchange);
+ exchangeDetail.textContent=r?`SOURCE: ${r.source}\nRECORD: ${r.id}\nTYPE: ${r.kind}\nSTATUS: ${r.status}\n\n${r.body}\n\nPROVENANCE: ${r.provenance}`:'NO EXCHANGE RECORD SELECTED.';
+ exchangeLog.textContent=S.exchangeLog.join('\n')||'NO INTERSYSTEM TRAFFIC.';
+ exchangeMsg.textContent=r?'RECORD AVAILABLE FOR OPERATIONAL REFERENCE':'AWAITING RECEIVED DATA';
+}
+function render(){maps(map1);maps(map2);dt.innerHTML=S.teams.map(t=>`<option>${t.id}</option>`).join('');opts();dt.onchange=opts;tl.innerHTML=S.teams.map(t=>`<div class=row data-t="${t.id}"><b>${t.id}</b> — ${t.name}<br>${t.area} // ${t.status}</div>`).join('');document.querySelectorAll('[data-t]').forEach(r=>r.onclick=()=>{let t=S.teams.find(x=>x.id==r.dataset.t);ti.textContent=`TEAM ${t.id}\n${t.name.toUpperCase()}\nAREA: ${t.area}\nSTATUS: ${t.status}\n\nOWNED ECTOMOBILES:\n`+S.vehicles.filter(v=>v.team==t.id).map(v=>'• '+v.designation).join('\n')});vl.innerHTML=S.vehicles.map(v=>`<div class=row data-v="${v.id}"><b>${v.designation}</b><br>${v.team} // ${v.status}</div>`).join('');document.querySelectorAll('[data-v]').forEach(r=>r.onclick=()=>showv(r.dataset.v));if(!sel)sel=S.vehicles[0]?.id;showv(sel);let h=S.vehicles.find(v=>v.team==='ECHO-2');hv.textContent=h?.designation||'UNASSIGNED';sys1.innerHTML=sy(h);ha.textContent=S.assignment?.case||'NONE';hs.textContent=S.assignment?.status||'READY';lifeEl();log.textContent=S.log.join('\n')||'NO ACTIVE OPERATION.'}
+function showv(id){sel=id;let v=S.vehicles.find(x=>x.id==id);vd.innerHTML=v?`<div class=read>${v.designation}</div><div class=kv><span>Vehicle ID</span><b>${v.id}</b></div><div class=kv><span>Owning Team</span><b>${v.team}</b></div><div class=kv><span>Role</span><b>${v.role}</b></div>${sy(v)}`:'NO VEHICLE SELECTED'}
+['TEAM / CREW','VEHICLE','PROTON PACKS','PKE METRE','ECTO-GOGGLES','TRAP','CONTAINMENT UNIT','NAVIGATION / COMMS'].forEach(x=>checks.innerHTML+=`<label><input type=checkbox class=pf> ${x}</label>`);
+prep.onclick=()=>{S.assignment={case:cid.value,location:loc.value,site:site.value,team:dt.value,vehicle:dv.value,status:'PRE-FLIGHT'};save();render();msg.textContent='VERIFY ALL SYSTEMS'};
+auth.onclick=()=>{if(!S.assignment)return msg.textContent='NO ASSIGNMENT';if([...document.querySelectorAll('.pf')].some(x=>!x.checked))return msg.textContent='INTERLOCK: PRE-FLIGHT INCOMPLETE';S.assignment.status='AUTHORISED';S.step=1;S.log=[new Date().toLocaleTimeString('en-GB')+' DEPLOYMENT AUTHORISED'];save();render();msg.textContent='DEPLOYMENT AUTHORISED'};
+add.onclick=()=>{let d=prompt('ECTOMOBILE NAME / DESIGNATION');if(!d)return;let t=prompt('OWNING TEAM ID','ECHO-2');if(!S.teams.some(x=>x.id==t))return alert('TEAM NOT FOUND');S.vehicles.push({id:'VEH-'+Date.now().toString().slice(-6),team:t,designation:d,role:'RESPONSE',status:'AVAILABLE',systems:{'POWER BUS':'NOMINAL','AUXILIARY POWER':'NOMINAL','COMMUNICATIONS':'READY','NAVIGATION':'READY','PKE INTERFACE':'STANDBY','CONTAINMENT INTERFACE':'READY','THERMAL CONTROL':'NOMINAL'}});save();render()};
+diagb.onclick=()=>{let v=S.vehicles.find(x=>x.id==sel);if(!v)return;diag.textContent=`> ${v.designation} FULL DIAGNOSTIC\n`+Object.entries(v.systems).map(([a,b])=>`> ${a.padEnd(23,'.')} ${b}`).join('\n')+'\n> FAULT REGISTER ........ CLEAR\n> VEHICLE READY'};
+function lifeEl(){life.textContent=window.life?life[S.step]:document.getElementById('life').textContent;document.getElementById('life').textContent=life[S.step]}
+rxSer.onclick=()=>addExchange({id:'SE-0261',source:'SER',kind:'CASE REFERENCE',status:'ACTIVE INVESTIGATION',title:'Portsmouth Harbour Sector',body:'LOCATION: Portsmouth, Hampshire\nSITE: Portsmouth Harbour Sector\nCLASSIFICATION: AWE\nINITIAL OBSERVATION: Abnormal spectral activity recorded within harbour sector.',provenance:'SER // RESEARCH RECORD // READ-ONLY'});
+rxSar.onclick=()=>addExchange({id:'SAR-LOC-0041',source:'SAR',kind:'LOCATION PROPOSAL',status:'RECEIVED',title:'Harbour Access Point',body:'LOCATION: Portsmouth, Hampshire\nSITE PROPOSAL: Harbour Access Point\nGRID: C4-B2\nREPORT: Search & Response team supplied an operational access location for review.',provenance:'SAR REPORT // LOCATION PROPOSAL // REQUIRES OPERATIONAL ACCEPTANCE'});
+rxPke.onclick=()=>addExchange({id:'PKE-RX-'+Date.now().toString().slice(-5),source:'PKE',kind:'FIELD READING',status:'LIVE REFERENCE',title:'Portable PKE Reading',body:'SPD: 642\nSPV: ASCENDING\nSDR: UNSTABLE\nCLASS: ELEVATED\nLINK: LOCAL FIELD INSTRUMENT',provenance:'PKE // PORTABLE INSTRUMENT // FIELD REFERENCE'});
+useRecord.onclick=()=>{let r=S.exchange.find(x=>x.id===S.selectedExchange);if(!r)return exchangeMsg.textContent='NO RECORD SELECTED';
+ if(r.source==='SER'){S.assignment={case:r.id,location:'Portsmouth, Hampshire',site:'Portsmouth Harbour Sector',team:'ECHO-2',vehicle:S.vehicles.find(v=>v.team==='ECHO-2')?.id||'',status:'PRE-FLIGHT'};exchangeMsg.textContent='SER CASE REFERENCED BY ACTIVE ASSIGNMENT';}
+ else if(r.source==='SAR'){if(S.assignment){S.assignment.location='Portsmouth, Hampshire';S.assignment.site='Harbour Access Point';exchangeMsg.textContent='SAR LOCATION ACCEPTED FOR ACTIVE OPERATION';}else exchangeMsg.textContent='CREATE OR RECEIVE AN ASSIGNMENT BEFORE ACCEPTING LOCATION';}
+ else {exchangeMsg.textContent='PKE READING ATTACHED AS FIELD REFERENCE';}
+ S.exchangeLog.unshift(new Date().toLocaleString('en-GB')+' // '+r.source+' // '+r.id+' REFERENCED BY FIELD OPERATIONS');save();render();
+};
+routeStart.onclick=()=>{if(!S.assignment)return navLog.textContent='NO ACTIVE ASSIGNMENT. ROUTE NOT GENERATED.';S.route={progress:10,state:'ROUTE ACTIVE'};S.log.push(new Date().toLocaleTimeString('en-GB')+' NAVIGATION ROUTE ACTIVE');save();render();navLog.textContent=`DESTINATION: ${S.assignment.site}\nLOCATION: ${S.assignment.location}\nGRID: C4-B2\nROUTE GUIDANCE ACTIVE.`};
+routeAdvance.onclick=()=>{if(S.route.state==='STANDBY')return;S.route.progress=Math.min(100,S.route.progress+30);if(S.route.progress>=100)S.route.state='ARRIVED';save();render();navLog.textContent=`ROUTE PROGRESS: ${S.route.progress}%\nSTATE: ${S.route.state}`};
+equipDiag.onclick=()=>{let e=S.equipment.find(x=>x.id==window.eqsel);if(!e)return;equipTerm.textContent=`> FIELD DIAGNOSTIC // ${e.name}\n> POWER .................. ${e.power}\n> THERMAL ................ ${e.thermal}\n> FIELD LINK ............. ${e.link}\n> CONTROL BUS ............ OK\n> FAULT REGISTER ......... CLEAR\n> EQUIPMENT READY`};
+backupReq.onclick=()=>{if(!S.assignment)return backupMsg.textContent='NO ACTIVE OPERATION';let t=S.teams.find(x=>x.id==backupTeam.value);if(!t)return;S.backup=t.id;S.log.push(new Date().toLocaleTimeString('en-GB')+' BACKUP REQUEST // '+t.id+' '+t.name);save();render()};
+next.onclick=()=>{if(S.step<7)S.step++;S.log.push(new Date().toLocaleTimeString('en-GB')+' '+life[S.step]);if(S.assignment)S.assignment.status=life[S.step];save();render()};reset.onclick=()=>{S.step=0;S.assignment=null;S.log=[];S.route={progress:0,state:'STANDBY'};S.backup=null;save();render()};render();
 </script></body></html>
