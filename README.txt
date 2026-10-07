@@ -1,11 +1,20 @@
-ECTO Containment Concept 006.1 — transfer repair
+ECTO Containment Concept 007 — Living Containment
 
-Fixes:
-- Transfer completion is guarded so it completes exactly once.
-- Field Hold resumes correctly after operator intervention.
-- Sector Reject reroutes and then resumes to completion.
-- Reset clears all temporary transfer/popup/sector animation state.
-- Transfer-route pulse, selected-grid pulse and trap-scan animation restored.
-- Existing Concept 006 localStorage data remains in use (ecto_containment_006).
+Adds:
+- Persistent sector inventory using the existing trap-transfer analysis data
+- Sector contents/history visible from SECTORS
+- History-aware autonomous events retained
+- Expanded persistent system log
+- Long-term CU-01 statistics
+- Event session summary and print action
+- Export / import full CU-01 backup as JSON
+- Richer computer-interface button sounds
+- Separate UI AUDIO and ALERT AUDIO controls
+- Existing 006.1 transfer reliability and animations retained
+- No machinery sound effects
+- No prop I/O in this build
 
-This is a repair build of 006, not a new feature phase.
+DATA
+Primary localStorage key: ecto_containment_007
+On first use it imports Concept 006 data where available.
+Export Unit Data is recommended for archival backups.
