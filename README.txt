@@ -1,1 +1,1 @@
-ECTO 007A.2 transfer watchdog repair. Retains 007A localStorage data. Transfer start/tick error diagnostics, stalled-transfer watchdog and retry. No new features.
+007A.3 repair: watchdog no longer times out during sector scanning; watchdog pauses during authorised holds. Retains existing 007A data.

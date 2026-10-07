@@ -175,7 +175,7 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
   }
   function run(){
     if(timer)clearInterval(timer);timer=null;
-    try{transferStarted=true;lastProgress=Date.now();tick();if(!finished)timer=setInterval(()=>{try{tick()}catch(e){fault('PROGRESS ERROR: '+e.message)}},activeCue==='RAPID ACQUIRE'?75:105)}
+    try{transferStarted=true;lastProgress=Date.now();if(watchdog)clearInterval(watchdog);watchdog=setInterval(()=>{if(finished||step!==4){clearInterval(watchdog);watchdog=null;return}if(timer&&Date.now()-lastProgress>3500)fault('PROGRESS STALLED')},500);tick();if(!finished)timer=setInterval(()=>{try{tick()}catch(e){fault('PROGRESS ERROR: '+e.message)}},activeCue==='RAPID ACQUIRE'?75:105)}
     catch(e){fault('START ERROR: '+e.message)}
   }
   function reroute(){
@@ -193,7 +193,7 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
 
   $('#prompt').textContent='SCANNING SECTORS // 0%';$('#gridNode').innerHTML='GRID<br>SCAN';
   $('#terminal').textContent='SECTOR COMPATIBILITY SCAN\nEVALUATING FIELD LOAD...\nSEARCHING AVAILABLE GRID';
-  watchdog=setInterval(()=>{if(finished||step!==4){clearInterval(watchdog);watchdog=null;return}if(Date.now()-lastProgress>3500){fault(transferStarted?'PROGRESS STALLED':'START TIMEOUT')}},500);
+  // Watchdog starts only when the actual progress timer starts, never during sector scanning.
   scanSectors(order.slice(0,Math.min(5,order.length)),chosen=>{
     idx=chosen; sectorState(idx,'target');
     $('#gridNode').innerHTML='SEC '+String(idx+1).padStart(2,'0')+'<br>TARGET';
@@ -205,7 +205,7 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
       let watcher=setInterval(()=>{
         if(finished||step!==4){clearInterval(watcher);return}
         if(activeCue==='SECTOR REJECT'&&!rejected&&p>=32){
-          rejected=true; clearInterval(timer); timer=null;
+          rejected=true; clearInterval(timer); timer=null;if(watchdog)clearInterval(watchdog);watchdog=null;
           sectorState(idx,'reject');
           $('#gridNode').innerHTML='SEC '+String(idx+1).padStart(2,'0')+'<br>REJECT';
           $('#fieldPill').className='pill bad'; $('#fieldPill').textContent='ROUTE REJECTED';
@@ -213,7 +213,7 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
           popup('SECTOR REJECTION','PRIMARY TARGET: SECTOR '+String(idx+1).padStart(2,'0')+'\nFIELD COMPATIBILITY: FAILED\nTRANSFER HELD AT '+p+'%\n\nOPERATOR AUTHORISATION REQUIRED',
             [{label:'AUTHORISE REROUTE',run:reroute}],true,'SEC-REJ');
         }else if(activeCue==='FIELD HOLD'&&!held&&p>=64){
-          held=true; clearInterval(timer); timer=null;
+          held=true; clearInterval(timer); timer=null;if(watchdog)clearInterval(watchdog);watchdog=null;
           sectorState(idx,'reject');
           $('#fieldPill').className='pill bad'; $('#fieldPill').textContent='BRIDGE UNSTABLE';
           $('#terminal').textContent='FIELD BRIDGE OSCILLATION DETECTED\nAUTO COMPENSATION ATTEMPT 1 ... FAILED\nAUTO COMPENSATION ATTEMPT 2 ... FAILED';
