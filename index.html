@@ -144,24 +144,27 @@ function clock(){let x=new Date();$('#date').textContent=x.toLocaleDateString('e
  let b=document.createElement('span');b.textContent=(r.classification||'UNRESOLVED')+' / E '+(r.energy??'--');
  line.append(a,b);root.append(line)})
 }
-function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTOR '+String(sel+1).padStart(2,'0')+' // '+(x.stability>91?'STABLE':'ELEVATED');$('#sectorTitle').textContent='SECTOR '+String(sel+1).padStart(2,'0');$('#sectorDetail').innerHTML='OCCUPANCY ........ '+x.occ.toFixed(1)+'%<br>FIELD STABILITY .. '+x.stability+'%<br>SPECTRAL ACTIVITY  '+x.activity+'%<br>STATUS ........... '+(x.stability>91?'<span class="ok">STABLE</span>':'<span class="warn">COMPENSATING</span>');renderSectorInventory()}function show(n){$$('.mode').forEach(x=>x.classList.remove('on'));$('#'+n+'Mode').classList.add('on');$$('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.mode===n))}$$('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.mode));function setDeposit(p,ds,bt){$('#prompt').textContent=p;$('#desc').textContent=ds;$('#primary').textContent=bt;$('#name').style.display=step===0?'block':'none'}function reset(){if(timer)clearInterval(timer);timer=null;closePopup();clearSectorStates();$('#routeFill').classList.remove('transfer-live');$('#gridNode').classList.remove('transfer-live');$('#trapNode').classList.remove('scan-live');step=0;operator='';$('#name').value='';$('#portState').textContent='READY';$('#trapNode').innerHTML='TRAP<br>WAITING';$('#gridNode').innerHTML='GRID<br>STANDBY';$('#routeFill').style.width='0';setDeposit('OPERATOR IDENTIFICATION','Enter the operator name to create a permanent containment record.','CONFIRM OPERATOR');$('#terminal').textContent='CU-01 READY\nDeposit chamber interlock: SAFE\nTrap interface: WAITING';$('#primary').disabled=false;scopeMode='normal';activeCue='ROUTINE';interventionPending=false}$('#cancel').onclick=reset;$('#primary').onclick=()=>{if(interventionPending)return resumeTransfer();if(step===0){operator=$('#name').value.trim();if(!operator)return $('#name').focus();step=1;$('#portState').textContent='UNLOCK';scopeMode='scan';setDeposit('OPEN DEPOSIT PORT','Interlocks are releasing. Insert the loaded trap when the bay indicates READY.','CONFIRM TRAP INSERTED');$('#terminal').textContent='OPERATOR: '+operator.toUpperCase()+'\nINTERLOCK A .... RELEASED\nINTERLOCK B .... RELEASED\nDEPOSIT BAY .... OPEN';$('#trapNode').innerHTML='PORT<br>OPEN'}else if(step===1){step=2;$('#trapNode').classList.add('scan-live');setDeposit('TRAP DETECTED','Run spectral analysis before transfer.','RUN TRAP ANALYSIS');$('#trapNode').innerHTML='TRAP<br>SCAN';$('#terminal').textContent='TRAP LATCH .... ENGAGED\nCHAMBER SEAL ... VERIFIED\nPKE SENSOR ..... ACQUIRING'}else if(step===2){step=3;$('#trapNode').classList.remove('scan-live');activeCue=chooseCue();recordCue(activeCue);let energy=activeCue==='HIGH ENERGY'||activeCue==='FIELD HOLD'?82+Math.floor(Math.random()*12):35+Math.floor(Math.random()*50);let cls=activeCue==='MULTIPLE SIG'?'MULTIPLE SIGNATURE':['CLASS III','CLASS IV','CLASS V','VAPOUR FORM'][Math.floor(Math.random()*4)];d.pending={energy,cls,cue:activeCue};scopeMode='active';tone(activeCue==='ROUTINE'?620:390,.12,'square',.035);setDeposit('ANALYSIS COMPLETE',d.pending.cls+' // ENERGY INDEX '+energy+' // ECTO recommends the lowest-load compatible sector.','BEGIN TRANSFER');$('#terminal').textContent='SPECTRAL CLASS ... '+d.pending.cls+'\nENERGY INDEX ..... '+energy+'\nCONTAINMENT DEMAND '+(energy>70?'HIGH':'MODERATE')+'\nDIRECTOR PROFILE .. '+activeCue+'\nTRANSFER READY'}else if(step===3)transfer();else reset()};function transfer(){
+function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTOR '+String(sel+1).padStart(2,'0')+' // '+(x.stability>91?'STABLE':'ELEVATED');$('#sectorTitle').textContent='SECTOR '+String(sel+1).padStart(2,'0');$('#sectorDetail').innerHTML='OCCUPANCY ........ '+x.occ.toFixed(1)+'%<br>FIELD STABILITY .. '+x.stability+'%<br>SPECTRAL ACTIVITY  '+x.activity+'%<br>STATUS ........... '+(x.stability>91?'<span class="ok">STABLE</span>':'<span class="warn">COMPENSATING</span>');renderSectorInventory()}function show(n){$$('.mode').forEach(x=>x.classList.remove('on'));$('#'+n+'Mode').classList.add('on');$$('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.mode===n))}$$('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.mode));function setDeposit(p,ds,bt){$('#prompt').textContent=p;$('#desc').textContent=ds;$('#primary').textContent=bt;$('#name').style.display=step===0?'block':'none'}function reset(){if(timer)clearInterval(timer);timer=null;closePopup();clearSectorStates();$('#routeFill').classList.remove('transfer-live');$('#gridNode').classList.remove('transfer-live');$('#trapNode').classList.remove('scan-live');step=0;operator='';$('#name').value='';$('#portState').textContent='READY';$('#trapNode').innerHTML='TRAP<br>WAITING';$('#gridNode').innerHTML='GRID<br>STANDBY';$('#routeFill').style.width='0';setDeposit('OPERATOR IDENTIFICATION','Enter the operator name to create a permanent containment record.','CONFIRM OPERATOR');$('#terminal').textContent='CU-01 READY\nDeposit chamber interlock: SAFE\nTrap interface: WAITING';$('#primary').disabled=false;scopeMode='normal';activeCue='ROUTINE';interventionPending=false}$('#cancel').onclick=reset;$('#primary').onclick=()=>{if(interventionPending)return resumeTransfer();if(step===0){operator=$('#name').value.trim();if(!operator)return $('#name').focus();step=1;$('#portState').textContent='UNLOCK';scopeMode='scan';setDeposit('OPEN DEPOSIT PORT','Interlocks are releasing. Insert the loaded trap when the bay indicates READY.','CONFIRM TRAP INSERTED');$('#terminal').textContent='OPERATOR: '+operator.toUpperCase()+'\nINTERLOCK A .... RELEASED\nINTERLOCK B .... RELEASED\nDEPOSIT BAY .... OPEN';$('#trapNode').innerHTML='PORT<br>OPEN'}else if(step===1){step=2;$('#trapNode').classList.add('scan-live');setDeposit('TRAP DETECTED','Run spectral analysis before transfer.','RUN TRAP ANALYSIS');$('#trapNode').innerHTML='TRAP<br>SCAN';$('#terminal').textContent='TRAP LATCH .... ENGAGED\nCHAMBER SEAL ... VERIFIED\nPKE SENSOR ..... ACQUIRING'}else if(step===2){step=3;$('#trapNode').classList.remove('scan-live');activeCue=chooseCue();recordCue(activeCue);let energy=activeCue==='HIGH ENERGY'||activeCue==='FIELD HOLD'?82+Math.floor(Math.random()*12):35+Math.floor(Math.random()*50);let cls=activeCue==='MULTIPLE SIG'?'MULTIPLE SIGNATURE':['CLASS III','CLASS IV','CLASS V','VAPOUR FORM'][Math.floor(Math.random()*4)];d.pending={energy,cls,cue:activeCue};scopeMode='active';tone(activeCue==='ROUTINE'?620:390,.12,'square',.035);setDeposit('ANALYSIS COMPLETE',d.pending.cls+' // ENERGY INDEX '+energy+' // ECTO recommends the lowest-load compatible sector.','BEGIN TRANSFER');$('#terminal').textContent='SPECTRAL CLASS ... '+d.pending.cls+'\nENERGY INDEX ..... '+energy+'\nCONTAINMENT DEMAND '+(energy>70?'HIGH':'MODERATE')+'\nDIRECTOR PROFILE .. '+activeCue+'\nTRANSFER READY'}else if(step===3)transfer();else reset()};window.addEventListener('error',e=>{let el=document.querySelector('#terminal');if(el&&step===4)el.textContent='TRANSFER ERROR // '+e.message+'\nRESTART TRANSFER IF REQUIRED'});function transfer(){
   step=4; $('#primary').disabled=true; $('#portState').textContent='LOCKED'; scopeMode='transfer';
   $('#routeFill').classList.add('transfer-live'); $('#gridNode').classList.add('transfer-live');
   tone(180,.18,'sawtooth',.035); setCurrentEvent(activeCue);
   let p=0, held=false, rejected=false, finished=false;
+  let lastProgress=Date.now(), transferStarted=false, watchdog=null;
+  const diagnostic=(msg)=>{let el=$('#terminal');if(el)el.textContent='TRANSFER DIAGNOSTIC // '+msg+'\nSECTOR '+String(idx+1).padStart(2,'0')+'\nPROGRESS '+p+'%';};
+  const fault=(msg)=>{if(finished||step!==4)return; if(timer)clearInterval(timer);timer=null;if(watchdog)clearInterval(watchdog);watchdog=null;$('#primary').disabled=false;$('#primary').textContent='RETRY TRANSFER';step=3;diagnostic('FAULT: '+msg+' // RETRY AVAILABLE');$('#fieldPill').textContent='TRANSFER FAULT';};
   let gain=+(0.8+d.pending.energy/55).toFixed(1);
   let order=d.sectors.map((x,i)=>[x.occ,i]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
   let idx=order[0];
 
   function finish(){
     if(finished)return; finished=true;
-    if(timer)clearInterval(timer); timer=null;
+    if(timer)clearInterval(timer); timer=null;if(watchdog)clearInterval(watchdog);watchdog=null;
     $('#routeFill').style.width='100%';
     $('#prompt').textContent='SPECTRAL TRANSFER // 100%';
     setTimeout(()=>completeTransfer(idx,gain),220);
   }
   function tick(){
-    p=Math.min(100,p+(activeCue==='RAPID ACQUIRE'?8:4));
+    lastProgress=Date.now();p=Math.min(100,p+(activeCue==='RAPID ACQUIRE'?8:4));
     $('#routeFill').style.width=p+'%';
     $('#prompt').textContent='SPECTRAL TRANSFER // '+p+'%';
     $('#loadVal').textContent=Math.min(94,27+Math.round(p*.55))+'%';
@@ -170,7 +173,11 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
     if(activeCue==='MULTIPLE SIG'&&p>=40&&p<44)toast('SECONDARY SPECTRAL SIGNATURE DETECTED','warn');
     if(p>=100)finish();
   }
-  function run(){if(timer)clearInterval(timer);tick();if(!finished)timer=setInterval(tick,activeCue==='RAPID ACQUIRE'?75:105)}
+  function run(){
+    if(timer)clearInterval(timer);timer=null;
+    try{transferStarted=true;lastProgress=Date.now();tick();if(!finished)timer=setInterval(()=>{try{tick()}catch(e){fault('PROGRESS ERROR: '+e.message)}},activeCue==='RAPID ACQUIRE'?75:105)}
+    catch(e){fault('START ERROR: '+e.message)}
+  }
   function reroute(){
     let old=idx; sectorVisual[old]='inhibit'; refreshSectorVisual();
     $('#terminal').textContent='SECTOR '+String(old+1).padStart(2,'0')+' INHIBITED\nSCANNING ALTERNATE GRID ROUTE...';
@@ -184,15 +191,16 @@ function renderSector(){let x=d.sectors[sel];$('#sectorInfo').textContent='SECTO
     });
   }
 
-  $('#gridNode').innerHTML='GRID<br>SCAN';
+  $('#prompt').textContent='SCANNING SECTORS // 0%';$('#gridNode').innerHTML='GRID<br>SCAN';
   $('#terminal').textContent='SECTOR COMPATIBILITY SCAN\nEVALUATING FIELD LOAD...\nSEARCHING AVAILABLE GRID';
+  watchdog=setInterval(()=>{if(finished||step!==4){clearInterval(watchdog);watchdog=null;return}if(Date.now()-lastProgress>3500){fault(transferStarted?'PROGRESS STALLED':'START TIMEOUT')}},500);
   scanSectors(order.slice(0,Math.min(5,order.length)),chosen=>{
     idx=chosen; sectorState(idx,'target');
     $('#gridNode').innerHTML='SEC '+String(idx+1).padStart(2,'0')+'<br>TARGET';
     toast('SECTOR '+String(idx+1).padStart(2,'0')+' SELECTED // FIELD ROUTE READY');
     logEvent('SECTOR '+String(idx+1).padStart(2,'0')+' SELECTED');
     setTimeout(()=>{
-      sectorState(idx,'transfer'); run();
+      try{sectorState(idx,'transfer');run()}catch(e){fault('HANDOFF ERROR: '+e.message)}
 
       let watcher=setInterval(()=>{
         if(finished||step!==4){clearInterval(watcher);return}
