@@ -1,20 +1,9 @@
-ECTO Containment Concept 007 — Living Containment
+ECTO CONTAINMENT // CONCEPT 007A
 
-Adds:
-- Persistent sector inventory using the existing trap-transfer analysis data
-- Sector contents/history visible from SECTORS
-- History-aware autonomous events retained
-- Expanded persistent system log
-- Long-term CU-01 statistics
-- Event session summary and print action
-- Export / import full CU-01 backup as JSON
-- Richer computer-interface button sounds
-- Separate UI AUDIO and ALERT AUDIO controls
-- Existing 006.1 transfer reliability and animations retained
-- No machinery sound effects
-- No prop I/O in this build
+Built from 006.1, not the experimental 007.
+Adds a read-only inventory list to F2 SECTORS using existing transfer records.
+Does not alter the trap-transfer, animation, or Event Director logic.
+Stores state under ecto_containment_007a and imports 006 data on first load.
+Original 006 state is not overwritten.
 
-DATA
-Primary localStorage key: ecto_containment_007
-On first use it imports Concept 006 data where available.
-Export Unit Data is recommended for archival backups.
+TEST: routine transfer, F2 sector inventory, Field Hold transfer, Sector Reject transfer, refresh and verify records.
