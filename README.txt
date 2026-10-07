@@ -1,6 +1,5 @@
-ECTO 007B — Spectral Identification and Sector Inventory
+ECTO 007C — Living Containment / CRT Identification
 
-Based on working 007A.4 four-stage transfer.
-AUTO generates a unique spectral profile once per trap. MANUAL lets operator specify class, type, behaviour, energy and signature. Profile is stored on successful transfer record. F2 shows records per sector; F4 shows details. Existing 007A.4 state imported when available. No external data files needed.
+Built on working 007B. New class-dependent entity types in AUTO and MANUAL identification, and native iOS select controls replaced with custom CRT menus. Existing transfer controller is unchanged. Existing 007B records imported on first use; original data retained. Existing autonomous containment events remain enabled.
 
-Test routine AUTO and MANUAL transfers, refresh persistence, and sector inventory.
+TEST: AUTO transfer, MANUAL class change, transfer completion, sector inventory, refresh persistence.
