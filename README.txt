@@ -1,7 +1,6 @@
-ECTO 007A.4 — Simplified four-stage trap transfer.
-Built from 006.1, not the broken 007A branch.
-1 Confirm Trap Entry  2 Set Entry Grid  3 Neutralise the Field  4 Transfer.
-A single timer drives progress; sector scan occurs before transfer.
-The archive is the canonical inventory.
-This test build deliberately disables scripted transfer holds and reroutes; these can be reintroduced after basic reliability is verified.
-Uses separate storage key ecto_containment_007a4 and imports 006 data on first run.
+ECTO 007B — Spectral Identification and Sector Inventory
+
+Based on working 007A.4 four-stage transfer.
+AUTO generates a unique spectral profile once per trap. MANUAL lets operator specify class, type, behaviour, energy and signature. Profile is stored on successful transfer record. F2 shows records per sector; F4 shows details. Existing 007A.4 state imported when available. No external data files needed.
+
+Test routine AUTO and MANUAL transfers, refresh persistence, and sector inventory.
