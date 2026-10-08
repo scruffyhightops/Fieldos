@@ -1,12 +1,9 @@
-ECTO 007E — Containment Operations
+ECTO 007F — Containment Archive & System Memory
 
-Built from 007D.1. Adds behaviour-dependent incident selection:
-AGGRESSIVE: field instability / grid surge
-ERRATIC: sector variance / activity spike
-DORMANT: signature transient / sector variance
-STABLE: mostly signature transients.
-Automatic events may be quiet or dramatic. Field instability requires operator acknowledgement and reinforcement. Manual Engineering controls now use the same event controller. TEST EVENT exercises operator intervention. Computer-only tones retained; no machinery sounds.
+Built from working 007E. Preserves the existing four-stage transfer controller, CRT identification, and Event Director.
 
-Existing four-stage transfer and identification are unchanged. Data imports from 007D.1 on first launch, preserving old localStorage.
+New: searchable combined deposit and incident history; complete CU-01 JSON export/import with confirmation and basic validation; session summary and print command. Previous 007E browser data is imported automatically on first launch when using the same site origin.
 
-TEST: F6 TEST EVENT -> REINFORCE FIELD -> resolution; ACTIVITY SPIKE; THEATRICAL auto activity; then routine trap transfer.
+NOTE: Browser storage is per site/origin; opening another local file may not see prior records. Export a backup from the original build first when changing origins or devices. Import overwrites current local data after confirmation.
+
+TEST: routine transfer, archive search, export JSON, import JSON, event session summary, automatic event.
