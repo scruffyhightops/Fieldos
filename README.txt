@@ -1,9 +1,5 @@
-ECTO 007D - Living Containment
+ECTO 007D.1 — Event Director Repair
 
-Built from working 007C.1. Retains the four-stage transfer controller and CRT selectors.
+Uses 007D data on first launch. Manual ACTIVITY SPIKE and TEST EVENT use the same deterministic event sequence as automatic events. Events visibly mark sectors, change telemetry, log activity and resolve after approximately 4.5 seconds. Auto event pacing: THEATRICAL about 18 seconds, ACTIVE about 40 seconds, NORMAL about 85 seconds after last event. Automatic events pause during transfers and when tab is hidden. Four-stage transfer controller and CRT selectors preserved.
 
-Adds stored-spectre-weighted autonomous events, persistent per-sector incident history, automatic corrections, occasional operator field reinforcement, and additional interface-only button feedback.
-
-Existing 007C data is copied into a new 007D localStorage key on first launch; original data is not modified.
-
-Test transfer first, then SECTORS, then automatic events in Engineering. Operator intervention occurs only outside transfers.
+Test manual TEST EVENT in F6 Engineering; then THEATRICAL and wait ~20 seconds on an idle screen. Verify one complete trap transfer.
