@@ -1,5 +1,12 @@
-ECTO 007D.1 — Event Director Repair
+ECTO 007E — Containment Operations
 
-Uses 007D data on first launch. Manual ACTIVITY SPIKE and TEST EVENT use the same deterministic event sequence as automatic events. Events visibly mark sectors, change telemetry, log activity and resolve after approximately 4.5 seconds. Auto event pacing: THEATRICAL about 18 seconds, ACTIVE about 40 seconds, NORMAL about 85 seconds after last event. Automatic events pause during transfers and when tab is hidden. Four-stage transfer controller and CRT selectors preserved.
+Built from 007D.1. Adds behaviour-dependent incident selection:
+AGGRESSIVE: field instability / grid surge
+ERRATIC: sector variance / activity spike
+DORMANT: signature transient / sector variance
+STABLE: mostly signature transients.
+Automatic events may be quiet or dramatic. Field instability requires operator acknowledgement and reinforcement. Manual Engineering controls now use the same event controller. TEST EVENT exercises operator intervention. Computer-only tones retained; no machinery sounds.
 
-Test manual TEST EVENT in F6 Engineering; then THEATRICAL and wait ~20 seconds on an idle screen. Verify one complete trap transfer.
+Existing four-stage transfer and identification are unchanged. Data imports from 007D.1 on first launch, preserving old localStorage.
+
+TEST: F6 TEST EVENT -> REINFORCE FIELD -> resolution; ACTIVITY SPIKE; THEATRICAL auto activity; then routine trap transfer.
