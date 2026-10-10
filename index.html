@@ -145,7 +145,24 @@
 .h-slider{width:100%;accent-color:#6ad5d8;margin:12px 0}
 .h-alert{color:#e1af65}.h-ok{color:#7fdaa4}
 @media(max-width:600px){.h-cols{grid-template-columns:1fr}.h-panel{max-height:90dvh}}
-</style></head><body><main class="app"><header class="top"><div><div class="brand">E.C.T.O.</div><div class="sub">ECTOPLASMIC CONTAINMENT &amp; TECHNICAL OPERATIONS // CU-01 // BUILD 007H.1</div></div><div class="clock"><span id="date"></span><br><span id="clock"></span></div></header><div class="status"><span class="pill ok">UNIT ONLINE</span><span id="fieldPill" class="pill ok">FIELD STABLE</span><span id="alarmIndicator" class="pill ok">ALARM CLEAR</span><span class="pill">PORT <b id="portState" class="ok">READY</b></span><span class="pill">SESSION <b id="sessionShort" class="ok">GENERAL</b></span></div><section class="console"><aside class="panel"><div class="hd">SYSTEM TELEMETRY</div><div class="tele"><div class="meter"><div class="meterline"><span>FIELD</span><b id="fieldVal">96%</b></div><div class="bar"><i id="fieldBar" style="width:96%"></i></div></div><div class="meter"><div class="meterline"><span>LOAD</span><b id="loadVal">27%</b></div><div class="bar"><i id="loadBar" style="width:27%"></i></div></div><div class="meter"><div class="meterline"><span>THERMAL</span><b id="thermalVal">31%</b></div><div class="bar"><i id="thermalBar" style="width:31%"></i></div></div></div><div class="scope"><canvas id="scope" width="360" height="120"></canvas></div><div class="mini" id="autoLog">AUTO REGULATION ACTIVE<br>COOLING LOOP NOMINAL<br>INTEGRITY 94.6%</div></aside><section class="panel"><div class="hd">CONTAINMENT GRID // LIVE</div><div id="matrix" class="matrix"></div><div class="occ"><div><div class="pct" id="occupancy">18.4%</div><div class="desc">GRID OCCUPANCY</div></div><div class="desc" style="text-align:right">SELECT SECTOR<br><span id="sectorInfo" class="ok">SECTOR 01 // STABLE</span></div></div><div id="sectors" class="sectors"></div></section><aside class="panel"><div id="unitMode" class="mode on"><div class="hd">UNIT STATUS</div><div class="eventstats"><div class="stat">OPERATING TIME<b id="hours">418 HRS</b></div><div class="stat">DEPOSITS<b id="totalDep">0</b></div><div class="stat">GRID BALANCES<b id="balCount">12</b></div><div class="stat">INTEGRITY<b id="integrity">94.6%</b></div></div><div class="desc" id="livingStatus">AUTONOMOUS CONTAINMENT MONITORING ONLINE</div><div class="terminal" id="unitLog">CU-01 READY\nAutomatic field regulation active.\nNo operator action required.</div></div><div id="sectorMode" class="mode"><div class="hd">SECTOR CONTROL</div><div class="prompt" id="sectorTitle">SECTOR 01</div><div id="sectorDetail" class="desc"></div><div class="actions"><button id="balanceSector">BALANCE</button><button id="reinforceSector">REINFORCE</button></div><div id="sectorInventory" class="inventorybox"></div><div class="hd" style="margin-top:6px">SECTOR INCIDENT HISTORY</div><div id="sectorIncidents" class="inventorybox" style="max-height:65px;overflow:auto"></div><div class="terminal" id="sectorLog">SELECT A GRID SECTOR FOR TECHNICAL READOUT.</div></div><div id="depositMode" class="mode"><div class="hd">DEPOSIT TRAP // OPERATOR PROCEDURE</div><div class="prompt" id="prompt">OPERATOR IDENTIFICATION</div><div class="desc" id="desc">Enter the operator name to create a permanent containment record.</div><div id="identification" class="identification"><div class="idrow"><label>IDENTIFICATION</label><select id="idMode"><option value="AUTO">AUTO</option><option value="MANUAL">MANUAL</option></select></div><div id="manualFields" hidden><div class="idrow"><label>SIGNATURE</label><input id="manualSignature" maxlength="24" placeholder="OPTIONAL ID"></div><div class="idrow"><label>CLASS</label><select id="manualClass"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option><option>VI</option><option>VII</option></select></div><div class="idrow"><label>TYPE</label><select id="manualType"><option>FREE-ROAMING</option><option>FOCUSED</option><option>VAPOROUS</option><option>CORPOREAL</option><option>POLTERGEIST</option><option>RESIDUAL</option></select></div><div class="idrow"><label>BEHAVIOUR</label><select id="manualBehaviour"><option>STABLE</option><option>ERRATIC</option><option>AGGRESSIVE</option><option>DORMANT</option></select></div><div class="idrow"><label>ENERGY</label><input id="manualEnergy" type="number" min="1" max="99" value="55"></div></div></div><input id="name" class="input" maxlength="32" placeholder="OPERATOR NAME" autocomplete="off"><div class="route"><div id="trapNode" class="node">TRAP<br>WAITING</div><div class="track"><i id="routeFill"></i></div><div id="gridNode" class="node">GRID<br>STANDBY</div></div><div class="terminal" id="terminal">CU-01 READY\nDeposit chamber interlock: SAFE\nTrap interface: WAITING</div><div class="actions"><button id="cancel">RESET</button><button id="primary">CONFIRM OPERATOR</button></div></div><div id="archiveMode" class="mode"><div class="hd">DEPOSIT ARCHIVE</div><div class="scrollbox"><table class="archive"><thead><tr><th>TRAP</th><th>OPERATOR</th><th>SEC</th></tr></thead><tbody id="archive"></tbody></table></div><div id="report" class="report">NO RECORD SELECTED</div><div class="actions"><button id="print" disabled>PRINT REPORT</button></div><div class="hd" style="margin-top:6px">OPERATIONS HISTORY</div><div class="f-tools"><input id="historySearch" placeholder="SEARCH SECTOR / EVENT / SIGNATURE"></div><div id="historyResults" class="f-history"></div><div class="f-tools"><button id="exportUnit">EXPORT UNIT DATA</button><button id="importUnit">IMPORT UNIT DATA</button></div><input type="file" id="unitFile" accept=".json,application/json" hidden></div><div id="eventMode" class="mode"><div class="hd">EVENT SESSION</div><div class="desc">Tag all new containment deposits with an event or ghost-hunt session.</div><input id="eventName" class="input" maxlength="48" placeholder="EVENT NAME"><button id="saveEvent">SET ACTIVE EVENT</button><div class="eventstats"><div class="stat">SESSION DEPOSITS<b id="eventCount">0</b></div><div class="stat">CURRENT EVENT<b id="eventLabel">GENERAL</b></div></div><div id="sessionReport" class="f-summary"></div><div class="f-tools"><button id="printSession">PRINT SESSION SUMMARY</button></div></div><div id="engineeringMode" class="mode"><div class="hd">LIVE EVENT DIRECTOR // SUPERVISOR</div><div class="f-tools"><button id="lockEngineering">LOCK ENGINEERING</button><button id="changePin">CHANGE ACCESS PIN</button></div><div class="desc" id="securityState">ENGINEERING ACCESS CONTROL ACTIVE</div><div class="actions"><button id="testDirector">TEST CRITICAL ALARM</button><button id="testWarning">TEST WARNING ALARM</button></div><div class="director"><div class="directorline"><span>AUTO DIRECTOR</span><b id="directorState">ONLINE</b></div><div class="directorline"><span>INTENSITY</span><b id="directorIntensity">ACTIVE</b></div><div class="directorline"><span>LAST EVENT</span><b id="lastEvent">NONE</b></div><div class="directorline"><span>NEXT CUE</span><b id="nextCue" class="armed">UNCOMMITTED</b></div><div class="intensity"><button data-intensity="NORMAL">NORMAL</button><button data-intensity="ACTIVE" class="on">ACTIVE</button><button data-intensity="THEATRICAL">THEATRICAL</button></div><div class="cuegrid"><button data-cue="ROUTINE">ARM ROUTINE</button><button data-cue="HIGH ENERGY">ARM HIGH ENERGY</button><button data-cue="FIELD HOLD">ARM FIELD HOLD</button><button data-cue="SECTOR REJECT">ARM SECTOR REJECT</button><button data-cue="MULTIPLE SIG">ARM MULTIPLE SIG</button><button data-cue="RAPID ACQUIRE">ARM RAPID ACQUIRE</button></div></div><div class="enggrid" style="margin-bottom:5px"><button id="toggleAutoEvents">AUTO EVENTS: ON</button><button id="openDiagnostics">SYSTEM DIAGNOSTICS</button></div>
+</style><style>
+/* 007I: CRT-only controls and dedicated confirmation interrupt */
+.i-confirm-layer{position:fixed;inset:0;background:#000e;z-index:120000;display:flex;align-items:center;justify-content:center;padding:12px}
+.i-confirm-layer[hidden]{display:none!important}
+.i-confirm-panel{width:min(530px,95vw);background:#06120e;border:2px solid #c18b53;box-shadow:0 0 0 5px #000;color:#d6e8d6;font:12px/1.5 'Courier New',monospace;padding:16px}
+.i-confirm-head{display:flex;justify-content:space-between;border-bottom:1px solid #6c5738;padding-bottom:9px;color:#f0be76;font-size:11px}
+.i-confirm-head span{color:#a4b6a3;font-size:9px}.i-confirm-title{color:#f0be76;font-size:18px;font-weight:bold;margin:15px 0 9px}
+.i-confirm-body{color:#d9a58b;min-height:50px}.i-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
+.i-confirm-actions button{border-radius:0;background:#0a1b17;border:1px solid #4e9e91;color:#b5e9d8;min-height:42px;font:11px 'Courier New',monospace}
+#iConfirmAccept{border-color:#bd8556;color:#f2c19b}.i-confirm-foot{color:#719587;font-size:9px;margin-top:12px}
+/* Replace the Safari default range track/thumb with an engineering fader */
+input[type=range].h-slider{-webkit-appearance:none;appearance:none;background:transparent;height:26px;outline:none}
+input[type=range].h-slider::-webkit-slider-runnable-track{height:7px;background:#1b4138;border:1px solid #559d91;border-radius:0}
+input[type=range].h-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:23px;background:#80d5d3;border:2px solid #09261f;border-radius:0;margin-top:-9px;box-shadow:0 0 0 1px #66a6a2}
+input[type=range].h-slider::-moz-range-track{height:7px;background:#1b4138;border:1px solid #559d91;border-radius:0}
+input[type=range].h-slider::-moz-range-thumb{width:15px;height:23px;background:#80d5d3;border:2px solid #09261f;border-radius:0}
+#iDirectorState{font:9px/1.4 'Courier New',monospace;color:#9ad6b7;border:1px solid #2f665a;padding:4px;min-height:20px}
+</style></head><body><main class="app"><header class="top"><div><div class="brand">E.C.T.O.</div><div class="sub">ECTOPLASMIC CONTAINMENT &amp; TECHNICAL OPERATIONS // CU-01 // BUILD 007I</div></div><div class="clock"><span id="date"></span><br><span id="clock"></span></div></header><div class="status"><span class="pill ok">UNIT ONLINE</span><span id="fieldPill" class="pill ok">FIELD STABLE</span><span id="alarmIndicator" class="pill ok">ALARM CLEAR</span><span class="pill">PORT <b id="portState" class="ok">READY</b></span><span class="pill">SESSION <b id="sessionShort" class="ok">GENERAL</b></span></div><section class="console"><aside class="panel"><div class="hd">SYSTEM TELEMETRY</div><div class="tele"><div class="meter"><div class="meterline"><span>FIELD</span><b id="fieldVal">96%</b></div><div class="bar"><i id="fieldBar" style="width:96%"></i></div></div><div class="meter"><div class="meterline"><span>LOAD</span><b id="loadVal">27%</b></div><div class="bar"><i id="loadBar" style="width:27%"></i></div></div><div class="meter"><div class="meterline"><span>THERMAL</span><b id="thermalVal">31%</b></div><div class="bar"><i id="thermalBar" style="width:31%"></i></div></div></div><div class="scope"><canvas id="scope" width="360" height="120"></canvas></div><div class="mini" id="autoLog">AUTO REGULATION ACTIVE<br>COOLING LOOP NOMINAL<br>INTEGRITY 94.6%</div></aside><section class="panel"><div class="hd">CONTAINMENT GRID // LIVE</div><div id="matrix" class="matrix"></div><div class="occ"><div><div class="pct" id="occupancy">18.4%</div><div class="desc">GRID OCCUPANCY</div></div><div class="desc" style="text-align:right">SELECT SECTOR<br><span id="sectorInfo" class="ok">SECTOR 01 // STABLE</span></div></div><div id="sectors" class="sectors"></div></section><aside class="panel"><div id="unitMode" class="mode on"><div class="hd">UNIT STATUS</div><div class="eventstats"><div class="stat">OPERATING TIME<b id="hours">418 HRS</b></div><div class="stat">DEPOSITS<b id="totalDep">0</b></div><div class="stat">GRID BALANCES<b id="balCount">12</b></div><div class="stat">INTEGRITY<b id="integrity">94.6%</b></div></div><div class="desc" id="livingStatus">AUTONOMOUS CONTAINMENT MONITORING ONLINE</div><div class="terminal" id="unitLog">CU-01 READY\nAutomatic field regulation active.\nNo operator action required.</div></div><div id="sectorMode" class="mode"><div class="hd">SECTOR CONTROL</div><div class="prompt" id="sectorTitle">SECTOR 01</div><div id="sectorDetail" class="desc"></div><div class="actions"><button id="balanceSector">BALANCE</button><button id="reinforceSector">REINFORCE</button></div><div id="sectorInventory" class="inventorybox"></div><div class="hd" style="margin-top:6px">SECTOR INCIDENT HISTORY</div><div id="sectorIncidents" class="inventorybox" style="max-height:65px;overflow:auto"></div><div class="terminal" id="sectorLog">SELECT A GRID SECTOR FOR TECHNICAL READOUT.</div></div><div id="depositMode" class="mode"><div class="hd">DEPOSIT TRAP // OPERATOR PROCEDURE</div><div class="prompt" id="prompt">OPERATOR IDENTIFICATION</div><div class="desc" id="desc">Enter the operator name to create a permanent containment record.</div><div id="identification" class="identification"><div class="idrow"><label>IDENTIFICATION</label><select id="idMode"><option value="AUTO">AUTO</option><option value="MANUAL">MANUAL</option></select></div><div id="manualFields" hidden><div class="idrow"><label>SIGNATURE</label><input id="manualSignature" maxlength="24" placeholder="OPTIONAL ID"></div><div class="idrow"><label>CLASS</label><select id="manualClass"><option>I</option><option>II</option><option>III</option><option selected>IV</option><option>V</option><option>VI</option><option>VII</option></select></div><div class="idrow"><label>TYPE</label><select id="manualType"><option>FREE-ROAMING</option><option>FOCUSED</option><option>VAPOROUS</option><option>CORPOREAL</option><option>POLTERGEIST</option><option>RESIDUAL</option></select></div><div class="idrow"><label>BEHAVIOUR</label><select id="manualBehaviour"><option>STABLE</option><option>ERRATIC</option><option>AGGRESSIVE</option><option>DORMANT</option></select></div><div class="idrow"><label>ENERGY</label><input id="manualEnergy" type="number" min="1" max="99" value="55"></div></div></div><input id="name" class="input" maxlength="32" placeholder="OPERATOR NAME" autocomplete="off"><div class="route"><div id="trapNode" class="node">TRAP<br>WAITING</div><div class="track"><i id="routeFill"></i></div><div id="gridNode" class="node">GRID<br>STANDBY</div></div><div class="terminal" id="terminal">CU-01 READY\nDeposit chamber interlock: SAFE\nTrap interface: WAITING</div><div class="actions"><button id="cancel">RESET</button><button id="primary">CONFIRM OPERATOR</button></div></div><div id="archiveMode" class="mode"><div class="hd">DEPOSIT ARCHIVE</div><div class="scrollbox"><table class="archive"><thead><tr><th>TRAP</th><th>OPERATOR</th><th>SEC</th></tr></thead><tbody id="archive"></tbody></table></div><div id="report" class="report">NO RECORD SELECTED</div><div class="actions"><button id="print" disabled>PRINT REPORT</button></div><div class="hd" style="margin-top:6px">OPERATIONS HISTORY</div><div class="f-tools"><input id="historySearch" placeholder="SEARCH SECTOR / EVENT / SIGNATURE"></div><div id="historyResults" class="f-history"></div><div class="f-tools"><button id="exportUnit">EXPORT UNIT DATA</button><button id="importUnit">IMPORT UNIT DATA</button></div><input type="file" id="unitFile" accept=".json,application/json" hidden></div><div id="eventMode" class="mode"><div class="hd">EVENT SESSION</div><div class="desc">Tag all new containment deposits with an event or ghost-hunt session.</div><input id="eventName" class="input" maxlength="48" placeholder="EVENT NAME"><button id="saveEvent">SET ACTIVE EVENT</button><div class="eventstats"><div class="stat">SESSION DEPOSITS<b id="eventCount">0</b></div><div class="stat">CURRENT EVENT<b id="eventLabel">GENERAL</b></div></div><div id="sessionReport" class="f-summary"></div><div class="f-tools"><button id="printSession">PRINT SESSION SUMMARY</button></div></div><div id="engineeringMode" class="mode"><div class="hd">LIVE EVENT DIRECTOR // SUPERVISOR</div><div class="f-tools"><button id="lockEngineering">LOCK ENGINEERING</button><button id="changePin">CHANGE ACCESS PIN</button></div><div class="desc" id="securityState">ENGINEERING ACCESS CONTROL ACTIVE</div><div class="actions"><button id="testDirector">TEST CRITICAL ALARM</button><button id="testWarning">TEST WARNING ALARM</button></div><div class="director"><div class="directorline"><span>AUTO DIRECTOR</span><b id="directorState">ONLINE</b></div><div class="directorline"><span>INTENSITY</span><b id="directorIntensity">ACTIVE</b></div><div class="directorline"><span>LAST EVENT</span><b id="lastEvent">NONE</b></div><div class="directorline"><span>NEXT CUE</span><b id="nextCue" class="armed">UNCOMMITTED</b></div><div class="intensity"><button data-intensity="NORMAL">NORMAL</button><button data-intensity="ACTIVE" class="on">ACTIVE</button><button data-intensity="THEATRICAL">THEATRICAL</button></div><div class="cuegrid"><button data-cue="ROUTINE">ARM ROUTINE</button><button data-cue="HIGH ENERGY">ARM HIGH ENERGY</button><button data-cue="FIELD HOLD">ARM FIELD HOLD</button><button data-cue="SECTOR REJECT">ARM SECTOR REJECT</button><button data-cue="MULTIPLE SIG">ARM MULTIPLE SIG</button><button data-cue="RAPID ACQUIRE">ARM RAPID ACQUIRE</button></div></div><div class="enggrid" style="margin-bottom:5px"><button id="toggleAutoEvents">AUTO EVENTS: ON</button><button id="openDiagnostics">SYSTEM DIAGNOSTICS</button></div>
 <div class="director-monitor">CURRENT EVENT .... <b id="currentEvent">IDLE</b><br>
 AUTONOMOUS STATE . <b id="autoState">MONITORING</b><br>
 SHOW SAFETY ...... <b>ENABLED</b></div>
@@ -168,8 +185,13 @@ SHOW SAFETY ...... <b>ENABLED</b></div>
 <div class="h-head"><span>ECTO // CU-01 ENGINEERING DIAGNOSTICS</span><button id="hClose">RETURN</button></div>
 <div class="h-cols"><div><div class="h-sub">LIVE SYSTEM CONDITION</div><div id="hReadings"></div><div class="h-buttons"><button id="hScan">RUN DIAGNOSTIC</button><button id="hFieldFault">INJECT FIELD FAULT</button><button id="hGridFault">INJECT GRID OVERLOAD</button><button id="hThermalFault">INJECT THERMAL FAULT</button><button id="hPowerFault">INJECT POWER FAULT</button><button id="hResetView">REFRESH DATA</button></div></div>
 <div><div class="h-sub">CORRECTIVE PROCEDURE</div><div id="hTask">NO ACTIVE ENGINEERING PROCEDURE.</div><div id="hAdjust" hidden><div class="h-line"><span id="hAdjustLabel">ADJUSTMENT</span><b id="hAdjustValue">50%</b></div><input class="h-slider" id="hSlider" type="range" min="0" max="100" step="5" value="50"><div id="hProjection" class="h-alert"></div></div><div class="h-buttons"><button id="hIdentify">01 / IDENTIFY</button><button id="hApply">02 / APPLY</button><button id="hVerify">03 / VERIFY</button><button id="hAbort">ABORT REPAIR</button></div><div id="hPowerControls" class="h-buttons" hidden><button id="hAux">ENGAGE AUXILIARY</button><button id="hPrimary">RESTORE PRIMARY</button></div><div id="hOutput" class="h-console">ENGINEERING MONITOR ONLINE.
-SELECT RUN DIAGNOSTIC.</div></div></div></div></div><script>
-(()=>{const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='ecto_containment_007h1';let old=JSON.parse(localStorage.getItem('ecto_containment_007h')||localStorage.getItem('ecto_containment_007g')||localStorage.getItem('ecto_containment_007f')||localStorage.getItem('ecto_containment_007e')||localStorage.getItem('ecto_containment_007d1')||localStorage.getItem('ecto_containment_007d')||localStorage.getItem('ecto_containment_007c')||localStorage.getItem('ecto_containment_007b')||localStorage.getItem('ecto_containment_007a4')||localStorage.getItem('ecto_containment_006')||localStorage.getItem('ecto_containment_005')||localStorage.getItem('ecto_containment_003')||localStorage.getItem('ecto_containment_002')||'null'),d=JSON.parse(localStorage.getItem(key)||'null')||old||{occ:18.4,records:[],seq:268,hours:418,balances:12,event:'',maintenance:94.6};d.sectors=d.sectors||Array.from({length:8},(_,i)=>({occ:+Math.max(2,d.occ/8+(i%3)*.5).toFixed(1),stability:96-(i%4),activity:18+(i*7)%31}));d.director=d.director||{intensity:'ACTIVE',next:'UNCOMMITTED',last:'NONE',recent:[],sound:true};d.activityHistory=Array.isArray(d.activityHistory)?d.activityHistory:[];d.autoCorrections=Number(d.autoCorrections)||0;d.operatorInterventions=Number(d.operatorInterventions)||0;let activeCue='ROUTINE',interventionPending=false;let step=0,operator='',sel=0,timer=null,scopeMode='normal';const save=()=>localStorage.setItem(key,JSON.stringify(d));const esc=s=>(s||'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+SELECT RUN DIAGNOSTIC.</div></div></div></div></div><div id="iConfirmLayer" class="i-confirm-layer" hidden role="dialog" aria-modal="true" aria-labelledby="iConfirmTitle">
+ <div class="i-confirm-panel"><div class="i-confirm-head">ECTO // ENGINEERING INTERRUPT <span>SYS / CONFIRM</span></div>
+ <div id="iConfirmTitle" class="i-confirm-title">OPERATOR CONFIRMATION</div>
+ <div id="iConfirmBody" class="i-confirm-body"></div>
+ <div class="i-confirm-actions"><button type="button" id="iConfirmCancel">RETURN TO PROCEDURE</button><button type="button" id="iConfirmAccept">CONFIRM</button></div>
+ <div class="i-confirm-foot">CU-01 // AUTHORISED OPERATOR ACTION</div></div><script>
+(()=>{const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='ecto_containment_007i';let old=JSON.parse(localStorage.getItem('ecto_containment_007h1')||localStorage.getItem('ecto_containment_007h')||localStorage.getItem('ecto_containment_007g')||localStorage.getItem('ecto_containment_007f')||localStorage.getItem('ecto_containment_007e')||localStorage.getItem('ecto_containment_007d1')||localStorage.getItem('ecto_containment_007d')||localStorage.getItem('ecto_containment_007c')||localStorage.getItem('ecto_containment_007b')||localStorage.getItem('ecto_containment_007a4')||localStorage.getItem('ecto_containment_006')||localStorage.getItem('ecto_containment_005')||localStorage.getItem('ecto_containment_003')||localStorage.getItem('ecto_containment_002')||'null'),d=JSON.parse(localStorage.getItem(key)||'null')||old||{occ:18.4,records:[],seq:268,hours:418,balances:12,event:'',maintenance:94.6};d.sectors=d.sectors||Array.from({length:8},(_,i)=>({occ:+Math.max(2,d.occ/8+(i%3)*.5).toFixed(1),stability:96-(i%4),activity:18+(i*7)%31}));d.director=d.director||{intensity:'ACTIVE',next:'UNCOMMITTED',last:'NONE',recent:[],sound:true};d.activityHistory=Array.isArray(d.activityHistory)?d.activityHistory:[];d.autoCorrections=Number(d.autoCorrections)||0;d.operatorInterventions=Number(d.operatorInterventions)||0;let activeCue='ROUTINE',interventionPending=false;let step=0,operator='',sel=0,timer=null,scopeMode='normal';const save=()=>localStorage.setItem(key,JSON.stringify(d));const esc=s=>(s||'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 let ac=null;function tone(f=440,dur=.08,type='square',gain=.025){if(!d.director.sound)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();let o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.value=gain;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+dur);o.stop(ac.currentTime+dur)}catch(e){}}
 
 let sectorVisual=Array(8).fill(''), currentEvent='IDLE', autonomousBusy=false, popupResolve=null;
@@ -353,6 +375,21 @@ document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');i
 // 007D.1: independent, observable idle event sequencer.
 // Transfer controller and trap identification are not modified.
 let directorTimer=null,directorLast=0,directorNext=Date.now()+14000,directorSerial=0;
+// 007I: staged activity pacing; director controls only idle incident scheduling.
+let iQuietUntil=Date.now()+9000,iRecent=[],iPendingEscalation=null,iEventCount=0;
+function iDirectorPace(){
+ const level=d.director.intensity;
+ return level==='THEATRICAL'?{quiet:18000,chance:.46}:level==='ACTIVE'?{quiet:33000,chance:.28}:{quiet:65000,chance:.13};
+}
+function iDirectorStatus(msg){
+ const el=document.getElementById('directorDiagnostic');if(el)el.textContent='DIRECTOR 3.0 // '+msg;
+ const stat=document.getElementById('iDirectorState');if(stat)stat.textContent=msg;
+}
+function iDirectorRecord(kind,phase){
+ iRecent.unshift({kind,phase,at:Date.now()});iRecent=iRecent.slice(0,8);
+ iDirectorStatus(phase+' // '+kind+' // '+d.director.intensity);
+}
+
 function directorInterval(){
  return d.director.intensity==='THEATRICAL'?18000:d.director.intensity==='ACTIVE'?40000:85000;
 }
@@ -374,11 +411,18 @@ function directorFinish(i,kind,source,serial,action='AUTO CORRECTED'){
  logEvent('SECTOR '+String(i+1).padStart(2,'0')+' // '+kind+' // '+action);
  autonomousBusy=false;scopeMode='normal';setCurrentEvent('IDLE');
  directorLast=Date.now();directorNext=directorLast+directorInterval();
+ // Quiet interval after each incident; optional follow-up for a measured escalation.
+ const pace=iDirectorPace();iQuietUntil=Date.now()+pace.quiet;
+ if(action==='AUTO CORRECTED' && kind==='SIGNATURE TRANSIENT' && iPendingEscalation && Math.random()<pace.chance){
+   iPendingEscalation={kind:'SECTOR VARIANCE',at:Date.now()+Math.max(8000,pace.quiet*.65)};
+ }else if(action!=='AUTO CORRECTED'){iPendingEscalation=null;}
+ iDirectorRecord(kind,'RECOVERY');
  directorStatus('AUTO DIRECTOR ONLINE // LAST '+kind+' // NEXT ~'+Math.round(directorInterval()/1000)+'S');
  render();toast(action==='OPERATOR COMPLETE'?'FIELD REINFORCEMENT CONFIRMED':'AUTOMATIC FIELD CORRECTION COMPLETE');
 }
 function directorEvent(requestedKind,manual=false){
  if(step!==0){directorStatus('DIRECTOR STANDBY // TRANSFER PROCEDURE ACTIVE');return false}
+ if(manual)iPendingEscalation=null;
  if(autonomousBusy){
   if(!manual)return false;
   clearTimeout(directorTimer);directorSerial++;autonomousBusy=false;closePopup();
@@ -400,6 +444,8 @@ function directorEvent(requestedKind,manual=false){
  let quiet=kind==='SIGNATURE TRANSIENT'||kind==='COOLING CYCLE';
  let needsOperator=kind==='FIELD INSTABILITY'||kind==='FIELD INTERVENTION'||kind==='GRID SURGE'||kind==='SECTOR VARIANCE';
  autonomousBusy=true;scopeMode=quiet?'scan':'active';setCurrentEvent(kind);
+ iEventCount++;iDirectorRecord(kind,quiet?'SUBTLE ACTIVITY':needsOperator?'ESCALATION':'DISTURBANCE');
+ if(requestedKind==='AUTO'&&quiet&&Math.random()<iDirectorPace().chance)iPendingEscalation={kind:'SECTOR VARIANCE',at:Date.now()+iDirectorPace().quiet};
  d.sectors[i].stability=Math.max(70,d.sectors[i].stability-(quiet?2:needsOperator?13:8));
  d.sectors[i].activity=Math.min(99,d.sectors[i].activity+(quiet?7:needsOperator?32:23));
  sectorState(i,quiet?'scan':'reject');
@@ -440,11 +486,14 @@ $('#idleVariance').onclick=()=>directorEvent('SECTOR VARIANCE',true);
 $('#testDirector').onclick=()=>directorEvent('FIELD INSTABILITY',true);
 directorStatus('AUTO DIRECTOR ONLINE // NEXT EVENT WINDOW PENDING');
 setInterval(()=>{
- if(!d.autoEvents||document.hidden||step!==0||autonomousBusy)return;
- if(Date.now()<directorNext)return;
- if(directorEvent('AUTO')){
-   directorNext=Date.now()+directorInterval();
+ if(!d.autoEvents||document.hidden||step!==0||autonomousBusy||alarm||hState.fault)return;
+ if(Date.now()<iQuietUntil)return;
+ if(iPendingEscalation&&Date.now()>=iPendingEscalation.at){
+   const next=iPendingEscalation.kind;iPendingEscalation=null;
+   if(directorEvent(next)){directorNext=Date.now()+directorInterval();return}
  }
+ if(Date.now()<directorNext)return;
+ if(directorEvent('AUTO'))directorNext=Date.now()+directorInterval();
 },1000);
 
 // 007F archive subsystem. Deliberately independent of the transfer controller.
@@ -477,7 +526,7 @@ $('#unitFile').onchange=async e=>{
  if(json.format!=='ECTO-CU-BACKUP'||json.unit!=='CU-01'||!json.data||!Array.isArray(json.data.records)||!Array.isArray(json.data.sectors)||json.data.sectors.length!==8||!json.data.director)throw Error('INVALID BACKUP FORMAT');
  if(step!==0||autonomousBusy)throw Error('UNIT BUSY: FINISH CURRENT PROCEDURE');
  if(!engineeringAuthorized())throw Error('ENGINEERING AUTHORISATION REQUIRED');
- if(!confirm('RESTORE CU-01 BACKUP? This replaces the current local archive. Export a backup first if needed.'))return;
+ if(!await iConfirm('RESTORE CU-01 BACKUP?', 'THIS WILL REPLACE THE CURRENT LOCAL ARCHIVE. EXPORT A BACKUP BEFORE CONTINUING.', 'CONFIRM RESTORE'))return;
  const incoming=json.data;
  if(!Number.isFinite(incoming.occ)||!Number.isFinite(incoming.seq)||incoming.records.length>100000)throw Error('INVALID UNIT DATA');
  d=incoming;d.activityHistory=Array.isArray(d.activityHistory)?d.activityHistory:[];d.autoCorrections=Number(d.autoCorrections)||0;d.operatorInterventions=Number(d.operatorInterventions)||0;
@@ -642,6 +691,30 @@ directorEvent=function(kind,manual=false){if(alarm){toast('RESOLVE ACTIVE ALARM 
 $('#testDirector').onclick=()=>{try{testAlarmDirect('FIELD INSTABILITY')}catch(e){alarmDiag('TEST ERROR',String(e.message||e))}};
 $('#testWarning').onclick=()=>{try{testAlarmDirect('SECTOR VARIANCE')}catch(e){alarmDiag('TEST ERROR',String(e.message||e))}};
 
+
+// 007I: confirmation is rendered in the CRT, never delegated to iPadOS.
+let iConfirmResolver=null;
+function iConfirm(title,body,accept='CONFIRM'){
+ return new Promise(resolve=>{
+  if(iConfirmResolver){iConfirmResolver(false);iConfirmResolver=null}
+  document.getElementById('iConfirmTitle').textContent=title;
+  document.getElementById('iConfirmBody').textContent=body;
+  document.getElementById('iConfirmAccept').textContent=accept;
+  document.getElementById('iConfirmLayer').hidden=false;
+  iConfirmResolver=resolve;
+  tone(330,.08);
+ });
+}
+function iConfirmClose(result){
+ document.getElementById('iConfirmLayer').hidden=true;
+ const resolve=iConfirmResolver;iConfirmResolver=null;
+ if(resolve)resolve(result);
+ tone(result?700:390,.06);
+}
+document.getElementById('iConfirmCancel').onclick=()=>iConfirmClose(false);
+document.getElementById('iConfirmAccept').onclick=()=>iConfirmClose(true);
+document.getElementById('iConfirmLayer').addEventListener('keydown',e=>{if(e.key==='Escape')iConfirmClose(false)});
+
 // 007H: separate diagnostic controller. The existing transfer and 007G alarm controllers are unchanged.
 const hState=d.engineeringDiagnostics&&typeof d.engineeringDiagnostics==='object'?d.engineeringDiagnostics:{field:96,grid:83,thermal:94,power:100,aux:94,fault:null};
 hState.auxEngaged=!!hState.auxEngaged;hState.primaryRestored=!!hState.primaryRestored;hState.coolingComplete=!!hState.coolingComplete;
@@ -731,11 +804,11 @@ $('#hVerify').onclick=()=>{
  recordActivity(i,f.kind,'ENGINEERING DIAGNOSTIC','OPERATOR VERIFIED');
  save();render();hReadings();hOutput('VERIFICATION PASSED // '+hName(i)+'\n'+f.kind+' CORRECTED.\nCONTAINMENT FIELD STABLE.');tone(890,.1);
 };
-$('#hAbort').onclick=()=>{if(!hProcedure){hOutput('NO REPAIR IN PROGRESS.');return}if(!confirm('ABORT ENGINEERING REPAIR?\nCURRENT UNAPPLIED ADJUSTMENTS WILL BE DISCARDED.\nTHE SYSTEM FAULT WILL REMAIN ACTIVE.'))return;const kind=hProcedure;hProcedure=null;hStage=0;hReadings();hOutput('REPAIR ABORTED // '+kind+'\nFAULT REMAINS ACTIVE. RESTART IDENTIFICATION TO CONTINUE.');try{recordActivity(hState.fault?.sector||0,kind,'ENGINEERING','REPAIR ABORTED')}catch(e){}save();};
+$('#hAbort').onclick=async()=>{if(!hProcedure){hOutput('NO REPAIR IN PROGRESS.');return}if(!await iConfirm('ABORT REPAIR PROCEDURE?', 'CURRENT UNAPPLIED ADJUSTMENTS WILL BE DISCARDED. THE SYSTEM FAULT WILL REMAIN ACTIVE.', 'CONFIRM ABORT'))return;const kind=hProcedure;hProcedure=null;hStage=0;hReadings();hOutput('REPAIR ABORTED // '+kind+'\nFAULT REMAINS ACTIVE. RESTART IDENTIFICATION TO CONTINUE.');try{recordActivity(hState.fault?.sector||0,kind,'ENGINEERING','REPAIR ABORTED')}catch(e){}save();};
 // Preserve fault telemetry across reloads, without persisting a stale alarm modal.
 if(hState.fault){hReadings();$('#fieldPill').className='pill warn';$('#fieldPill').textContent='ENGINEERING FAULT';}
 
 // Do not require Engineering access to acknowledge or correct a containment alarm.
 
 })();
-</script></body></html>
+</script></div></body></html>
