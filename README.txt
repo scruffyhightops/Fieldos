@@ -1,9 +1,6 @@
-ECTO 007F — Containment Archive & System Memory
-
-Built from working 007E. Preserves the existing four-stage transfer controller, CRT identification, and Event Director.
-
-New: searchable combined deposit and incident history; complete CU-01 JSON export/import with confirmation and basic validation; session summary and print command. Previous 007E browser data is imported automatically on first launch when using the same site origin.
-
-NOTE: Browser storage is per site/origin; opening another local file may not see prior records. Export a backup from the original build first when changing origins or devices. Import overwrites current local data after confirmation.
-
-TEST: routine transfer, archive search, export JSON, import JSON, event session summary, automatic event.
+ECTO CONTAINMENT CONCEPT 007G
+Open index.html in Safari.
+007G adds F6 PIN access, auto-lock, alarm acknowledgment and fault correction, computer tones, and logs.
+First F6 access prompts for a 4-8 digit PIN. Keep your PIN safe. Browser-local protection deters casual use, not advanced tampering.
+Existing 007F localStorage is imported when running on the same browser origin. Export a 007F backup before switching deployments.
+The four-stage trap transfer remains based on 007F.
