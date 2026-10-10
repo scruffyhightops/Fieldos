@@ -1,7 +1,4 @@
-ECTO 008A - Vehicle Operations & Registration
-
-Open index.html in Safari. Select VEH-01 ECTOMOBILE at top right.
-Vehicle data is stored separately from CU-01 data.
-Siren audio files may be selected for the current session; they are not saved in local storage.
-For best persistence, use the same origin/URL as your existing CU-01 installation and back up your records first.
-This is a first-build candidate requiring iPad testing.
+ECTO 008A.1 — Preflight & CRT Interface Correction
+Open index.html in iPad Safari. CU-01 controller retained from 007L.1. Vehicle local storage key unchanged from 008A.
+Preflight: VEH-01 > BEGIN PREFLIGHT PROCEDURE > tick all fitted checks > enter operator > RECORD PREFLIGHT.
+Siren MP3 files are optional and session-only.
