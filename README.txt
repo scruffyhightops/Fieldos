@@ -1,2 +1,7 @@
-ECTO 007L.1 — Engineering and Audio Recovery
-Based on 007L. Adds always-visible Engineering Diagnostics, direct audio test and sound toggle. Retains A4 print system. Safari may still require print permission. Verify on iPad; preserve 007K backup.
+ECTO 008A - Vehicle Operations & Registration
+
+Open index.html in Safari. Select VEH-01 ECTOMOBILE at top right.
+Vehicle data is stored separately from CU-01 data.
+Siren audio files may be selected for the current session; they are not saved in local storage.
+For best persistence, use the same origin/URL as your existing CU-01 installation and back up your records first.
+This is a first-build candidate requiring iPad testing.
