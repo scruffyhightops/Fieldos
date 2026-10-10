@@ -1,13 +1,10 @@
-ECTO 007I — Event Director 3.0 & CRT Interface Consistency
+ECTO CONTAINMENT CONCEPT 007J — EVENT OPERATIONS & REPORTING
 
-Open index.html in Safari or deploy the folder as a static web application.
+Open index.html in Safari on iPad landscape.
 
-Changes:
-- CRT-native confirmation interrupts for ABORT REPAIR and backup restoration.
-- CRT-styled engineering adjustment fader.
-- Director 3.0 paced quiet periods and occasional staged follow-up incidents.
-- Existing alarm, diagnostics, PIN, archive and four-stage trap transfer preserved.
+F5 EVENT: start and close named sessions; inspect past sessions and print summaries.
+F4 ARCHIVE: search deposits and incidents, inspect and print individual records, export or restore complete unit backups.
 
-Test on iPad Safari; JS syntax check alone does not verify runtime operation.
+Engineering PIN, Event Director, alarms and four-stage transfer inherited from 007I.
 
-Browser localStorage is origin-specific. Export a backup before changing deployment locations.
+Back up the 007I data before testing. Local browser storage depends on origin; file:// and hosted locations may not share storage.
