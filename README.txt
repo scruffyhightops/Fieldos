@@ -1,1 +1,1 @@
-ECTO 008A.2 - preflight touch controls, equipment test and operations logging. Retains CU-01 baseline and vehicle local storage. Test in iPad Safari.
+ECTO 008A.3 — Operations and Equipment List correction. Open index.html in Safari. Retains vehicle local storage key ecto_vehicle_008a and existing CU-01 code. Keep backups before testing.
