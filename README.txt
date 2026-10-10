@@ -1,5 +1,4 @@
-ECTO 008B.1 - Roof Systems Control
-Built on 008A.6. Open VEH-01, Section 03, OPEN ROOF SYSTEMS CONTROL.
-F4 equipment readiness is shared. Roof array and spectral detection array are supported.
-No live scanning or fault simulation in this phase. Siren MP3s remain user-supplied.
-CU-01 controller preserved. Keep backup before testing.
+ECTO 008B.2 - Spectral Monitoring
+Open index.html. Switch to VEH-01, open Roof Systems, activate SPECTRAL DETECTION ARRAY, then OPEN SPECTRAL MONITOR.
+AUTO/MANUAL/HOLD, density bargraph, directional acquisition and environmental telemetry. Synthetic readings only.
+Preserves existing CU-01 and VEH-01 code. Test on iPad Safari.
