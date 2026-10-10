@@ -1,3 +1,3 @@
-ECTO 007G.1 — iPad landscape layout correction
+ECTO 007G.2 — Alarm Activation Correction
 
-Open index.html in Safari. F6 Engineering now uses a two-column workspace with TEST EVENT at the top. All 007G logic and data keys are preserved. Keep your 007F/007G backup.
+Open index.html in Safari. F6 Engineering: TEST CRITICAL ALARM and TEST WARNING ALARM now trigger alarm overlay directly, independent of the Event Director timer. ACKNOWLEDGE silences, CORRECT resolves. Existing local storage key is retained for compatibility with 007G.1.
