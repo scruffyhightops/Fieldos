@@ -1,10 +1,16 @@
-ECTO CONTAINMENT CONCEPT 007J — EVENT OPERATIONS & REPORTING
+ECTO 007K — CRT Interface & Audio Polish
+========================================
+Built from user-tested 007J.
 
-Open index.html in Safari on iPad landscape.
+Changes:
+- Unified terminal styling for buttons, inputs, dialogs and selection controls.
+- Focus indicators and tactile active states.
+- Refined interface tone families (navigation, confirmation, cancellation, sector and warning).
+- Explicit iPad touch audio activation.
+- TEST INTERFACE AUDIO control in F6 Engineering.
+- Compact landscape refinements for shorter Safari viewports.
+- No changes to four-stage transfer, Event Director, alarms, archive, sessions, PIN or recovery controllers.
 
-F5 EVENT: start and close named sessions; inspect past sessions and print summaries.
-F4 ARCHIVE: search deposits and incidents, inspect and print individual records, export or restore complete unit backups.
-
-Engineering PIN, Event Director, alarms and four-stage transfer inherited from 007I.
-
-Back up the 007I data before testing. Local browser storage depends on origin; file:// and hosted locations may not share storage.
+To test: open index.html in Safari, unlock F6, test audio, inspect dialogs,
+run an alarm and a four-stage transfer. Back up records before upgrading.
+Native Safari file picker and print dialogs remain platform controlled.
