@@ -1,16 +1,9 @@
-ECTO 007K — CRT Interface & Audio Polish
-========================================
-Built from user-tested 007J.
+ECTO 007L — Containment Unit Release Candidate
 
-Changes:
-- Unified terminal styling for buttons, inputs, dialogs and selection controls.
-- Focus indicators and tactile active states.
-- Refined interface tone families (navigation, confirmation, cancellation, sector and warning).
-- Explicit iPad touch audio activation.
-- TEST INTERFACE AUDIO control in F6 Engineering.
-- Compact landscape refinements for shorter Safari viewports.
-- No changes to four-stage transfer, Event Director, alarms, archive, sessions, PIN or recovery controllers.
+Built from user-tested 007K.
 
-To test: open index.html in Safari, unlock F6, test audio, inspect dialogs,
-run an alarm and a four-stage transfer. Back up records before upgrading.
-Native Safari file picker and print dialogs remain platform controlled.
+Changes: dedicated A4 containment record and event summary print layouts, clean typography, data tables, pagination rules and archival footer. The working transfer, Engineering, alarms, Director, sessions, archive and audio controllers are preserved.
+
+Before deployment: export a full backup from 007K. Open 007L in the same Safari origin to migrate existing records. Test print previews for a single deposit and a multi-deposit event; test transfer, alarm, PIN and restore separately.
+
+Note: iOS/Safari's print picker is operating-system controlled. Reports may run beyond one A4 page for long event histories.
