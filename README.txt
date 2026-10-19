@@ -1,7 +1,5 @@
-ECTO 008B.3A — Detection Array Stability
+ECTO 008B.3B — Equipment Unfit Register
 
-Based on 008B.2.2. Focus: consistent READY/ACTIVE state, monitor activation, live scan and fixed iPad landscape panel.
+New: Unfit Register accessible from Section 03. Mark an item UNAVAILABLE in F4, record the reason, then verify return to service with operator name. Returned items go to STANDBY and require a new Ops checklist. Built-in F4 UNFIT action now marks unavailable rather than removing equipment.
 
-Test: VEH-01 > OPEN SPECTRAL MONITOR > FIT (if required) > F4 READY > ACTIVATE > AUTO/MANUAL/HOLD/ACQUIRE > STANDBY.
-
-Keep 008B.1 as last user-confirmed stable roof controller backup. Keep vehicle JSON backup before testing.
+Keeps 008B.3A monitoring and CU-01 code. Offline single-file HTML. Browser storage persists only for the same origin. Back up your existing data before testing.
