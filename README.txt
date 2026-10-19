@@ -1,6 +1,7 @@
-ECTO 008B.3C — Re-fit standard equipment and roof interference warning.
+ECTO 008B.3D — Advanced Roof Warnings
 
-F4: re-fit removed standard systems; new items enter STANDBY and require a new Ops checklist.
-Roof Systems: test signal interference when detection array is active and READY; acknowledge then recalibrate. All steps logged.
+Open index.html in Safari. Local vehicle storage key unchanged.
 
-Preserves existing CU-01, siren and vehicle records. Back up existing data before testing.
+Test: F4 detection array READY; activate roof array; open Roof Systems; trigger SIGNAL LOSS, acknowledge, diagnose, correct, verify. Repeat for calibration drift and antenna interference. Verify F3 warnings and deployment readiness.
+
+No browser runtime test has been performed.
