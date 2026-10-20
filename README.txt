@@ -1,14 +1,6 @@
-ECTO 008B.3F — Roof Systems Housekeeping & Stability
-
-Open index.html in Safari. Single-file offline build.
-
-Based on the user-confirmed 008B.3E.1.
-- Refined iPad landscape spectral monitor sizing.
-- Roof ACTIVATE is disabled unless the equipment is READY.
-- Spectral events expire and offline signal tracking clears even when monitor window is closed.
-- Switching to CU-01 closes vehicle modal windows and turns the VEH-01 Event Director OFF.
-- RELEASE TRACK control is disabled when no signal is acquired.
-- Updated version labels.
-- No change to localStorage keys or CU-01 transfer logic.
-
-Manual testing requested on iPad Safari.
+ECTO 008C.1 - Vehicle Communications Console
+Based on confirmed 008B.3F.
+Open index.html in iPad Safari. Offline single-file terminal.
+F4: set VEHICLE COMMUNICATIONS to READY, then open COMMUNICATIONS CONSOLE in Section 03.
+HQ link and radio checks are local terminal interactions, not external transmissions.
+Vehicle localStorage key remains ecto_vehicle_008a.
