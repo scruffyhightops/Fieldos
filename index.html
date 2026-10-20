@@ -378,6 +378,24 @@ body.vehicle-active>.app{display:none!important}body:not(.vehicle-active)>#vehic
  #v-monitor-modal .m-grid{flex:0 0 auto}
  #v-monitor-modal .m-panel{overflow:visible}
 }
+</style><style id="ecto-008c5-crt-selects">
+/* ECTO universal CRT selection control: underlying native select remains authoritative. */
+.ecto-select-shell{position:relative;display:inline-flex;min-width:0;max-width:100%;vertical-align:middle;align-items:stretch;flex:1 1 auto}
+.ecto-select-shell>select{position:absolute!important;left:0!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;clip-path:inset(50%)!important;overflow:hidden!important}
+.ecto-select-trigger{width:100%;min-width:0;min-height:30px;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;white-space:nowrap;overflow:hidden;padding:5px 9px!important;border:1px solid #4c9275!important;border-radius:0!important;background:#071711!important;color:#a5e5c1!important;font:11px/1.25 'Courier New',monospace!important;letter-spacing:.35px;box-shadow:inset 0 0 0 1px #102a20;cursor:pointer}
+.ecto-select-trigger .ecto-select-value{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ecto-select-trigger .ecto-select-arrow{flex:none;color:#dbb76b;font-size:11px}
+.ecto-select-trigger:focus-visible{outline:2px solid #e3c278;outline-offset:1px}
+.ecto-select-trigger:disabled{opacity:.48;cursor:not-allowed}
+.ecto-select-list{position:fixed;z-index:2147483646;background:#06140f;border:1px solid #78cba1;box-shadow:0 5px 0 #020a07,0 0 0 2px #173629;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:3px;max-height:min(45dvh,320px);font:11px/1.3 'Courier New',monospace;color:#b9edcc}
+.ecto-select-list[hidden]{display:none!important}
+.ecto-select-option{display:block;width:100%;text-align:left;padding:9px 10px;min-height:35px;border:0!important;border-bottom:1px solid #17372a!important;border-radius:0!important;background:transparent!important;color:#b9edcc!important;font:inherit!important;white-space:normal;cursor:pointer}
+.ecto-select-option[aria-selected="true"]{background:#153a2a!important;color:#f3d68b!important}
+.ecto-select-option:focus-visible,.ecto-select-option:hover{outline:none;background:#20503a!important;color:#fff0b3!important}
+.ecto-select-option:disabled{opacity:.4}
+.ecto-credits{font:9px/1.4 'Courier New',monospace;color:#649d83;text-align:center;letter-spacing:.45px;padding:3px 8px;pointer-events:none}
+#ectoModuleSwitch .ecto-credits{display:none}
+@media (max-width:800px){.ecto-select-trigger{min-height:34px;font-size:10px!important}.ecto-select-option{min-height:40px}}
 </style></head><body><div id="ectoModuleSwitch"><button id="goContainment" class="selected">CU-01 CONTAINMENT</button><button id="goVehicle">VEH-01 ECTOMOBILE</button></div>
 <section id="vehicle008a" aria-label="Vehicle Operations">
  <div class="v-head"><div><div class="v-brand">E.C.T.O. // VEHICLE OPERATIONS</div><div class="v-muted">ECTOPLASMIC CONTAINMENT &amp; TECHNICAL OPERATIONS // VEH-01 // BUILD 008B.3F</div></div><div class="v-muted" id="v-clock"></div></div>
@@ -1752,5 +1770,33 @@ r('r-search').oninput=rDrawReports;r('r-filter').onchange=rDrawReports;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')r('v-reports-modal').classList.add('v-hidden')});
 
 setupFields();sirenUI();
+})();
+</script><script id="ecto-008c5-crt-selects-script">
+(()=>{'use strict';
+let active=null, list=null, current=-1;
+const shells=new WeakSet();
+function close(){if(list){list.remove();list=null}if(active){active.trigger.setAttribute('aria-expanded','false');active=null}current=-1}
+function refresh(entry){const s=entry.select;const o=s.selectedOptions&&s.selectedOptions[0];entry.label.textContent=o?o.textContent.trim():'SELECT';entry.trigger.disabled=s.disabled;entry.trigger.title=entry.label.textContent}
+function open(entry){if(active===entry){close();return}close();refresh(entry);if(entry.select.disabled)return;
+const opts=Array.from(entry.select.options);if(!opts.length)return;
+list=document.createElement('div');list.className='ecto-select-list';list.setAttribute('role','listbox');list.setAttribute('aria-label',entry.select.getAttribute('aria-label')||entry.select.id||'Selection');
+opts.forEach((o,i)=>{const b=document.createElement('button');b.type='button';b.className='ecto-select-option';b.setAttribute('role','option');b.setAttribute('aria-selected',String(o.selected));b.textContent=o.textContent.trim();b.disabled=o.disabled;b.addEventListener('click',()=>choose(i));list.appendChild(b)});
+document.body.appendChild(list);active=entry;entry.trigger.setAttribute('aria-expanded','true');position();current=Math.max(0,opts.findIndex(o=>o.selected));
+const chosen=list.children[current];if(chosen)chosen.scrollIntoView({block:'nearest'});
+}
+function position(){if(!active||!list)return;const r=active.trigger.getBoundingClientRect();const vh=window.innerHeight,vw=window.innerWidth;const width=Math.min(Math.max(r.width,170),vw-12);list.style.width=width+'px';list.style.left=Math.max(6,Math.min(r.left,vw-width-6))+'px';const below=vh-r.bottom-8,above=r.top-8;const max=Math.max(70,Math.min(320,Math.max(below,above)));list.style.maxHeight=max+'px';list.style.top=(below>=Math.min(180,above)?r.bottom+2:Math.max(5,r.top-Math.min(list.scrollHeight,max)-2))+'px'}
+function choose(i){if(!active)return;const entry=active,o=entry.select.options[i];if(!o||o.disabled)return;entry.select.selectedIndex=i;entry.select.dispatchEvent(new Event('input',{bubbles:true}));entry.select.dispatchEvent(new Event('change',{bubbles:true}));refresh(entry);close();entry.trigger.focus()}
+function enhance(s){if(shells.has(s)||s.multiple||s.size>1||s.closest('.ecto-select-shell'))return;shells.add(s);
+const parent=s.parentNode;if(!parent)return;const shell=document.createElement('span');shell.className='ecto-select-shell';const computed=getComputedStyle(s);if(computed.width&&computed.width!=='auto')shell.style.minWidth='0';parent.insertBefore(shell,s);shell.appendChild(s);
+const trigger=document.createElement('button');trigger.type='button';trigger.className='ecto-select-trigger';trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-expanded','false');const label=document.createElement('span');label.className='ecto-select-value';const arrow=document.createElement('span');arrow.className='ecto-select-arrow';arrow.textContent='[▼]';trigger.append(label,arrow);shell.appendChild(trigger);
+const entry={select:s,trigger,label};refresh(entry);trigger.addEventListener('click',()=>open(entry));trigger.addEventListener('keydown',e=>{if(['ArrowDown','ArrowUp',' ','Enter'].includes(e.key)){e.preventDefault();if(!active)open(entry);else if(active===entry){if(e.key==='ArrowDown'||e.key==='ArrowUp'){current=(current+(e.key==='ArrowDown'?1:-1)+s.options.length)%s.options.length;const b=list.children[current];if(b)b.focus()}else choose(current)}}});
+s.addEventListener('change',()=>refresh(entry));const observer=new MutationObserver(()=>refresh(entry));observer.observe(s,{attributes:true,childList:true,subtree:true,characterData:true});
+}
+function scan(){document.querySelectorAll('select').forEach(enhance)}
+document.addEventListener('pointerdown',e=>{if(active&&!active.trigger.contains(e.target)&&(!list||!list.contains(e.target)))close()},true);
+document.addEventListener('keydown',e=>{if(!active)return;if(e.key==='Escape'){e.preventDefault();close();return}if(!list)return;if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();let n=current;for(let j=0;j<list.children.length;j++){n=(n+(e.key==='ArrowDown'?1:-1)+list.children.length)%list.children.length;if(!list.children[n].disabled)break}current=n;list.children[current].focus()}else if(e.key==='Enter'&&list.contains(document.activeElement)){e.preventDefault();choose(Array.from(list.children).indexOf(document.activeElement))}},true);
+window.addEventListener('resize',position);window.addEventListener('scroll',()=>{if(active)position()},true);
+const mo=new MutationObserver(records=>{if(records.some(r=>Array.from(r.addedNodes).some(n=>n.nodeType===1&&(n.matches?.('select')||n.querySelector?.('select')))))scan()});
+function init(){scan();mo.observe(document.body,{childList:true,subtree:true})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
