@@ -1,3 +1,1 @@
-ECTO 008C.5.1 — CU-01 automatic incident sector recovery correction.
-Based on 008C.5. Preserves localStorage keys and VEH-01.
-Recovery now returns the affected sector to a stable band; BALANCE/REINFORCE can complete an eligible automatic incident once stability reaches 92%.
+ECTO 008C.5.2 — CU-01 targeted recovery maintenance. Based on confirmed 008C.5; restores original engineering handlers, preserves CRT dropdowns and vehicle functions. CU-01 recovery completes via existing alarm correction workflow and restores sector stability to 94 or higher. Test on iPad before treating as stable.
