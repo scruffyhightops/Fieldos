@@ -404,7 +404,15 @@ body.vehicle-active>.app{display:none!important}body:not(.vehicle-active)>#vehic
 <section id="vehicle008a" aria-label="Vehicle Operations">
  <div class="v-head"><div><div class="v-brand">E.C.T.O. // VEHICLE OPERATIONS</div><div class="v-muted">ECTOPLASMIC CONTAINMENT &amp; TECHNICAL OPERATIONS // VEH-01 // BUILD 008B.3F</div></div><div class="v-muted" id="v-clock"></div></div>
  <div class="v-strip"><div class="v-chip">CALLSIGN <b id="v-callsign">ECTO-1</b></div><div class="v-chip">STATE <b id="v-state">STANDBY</b></div><div class="v-chip">READINESS <b id="v-ready">CHECK REQUIRED</b></div><div class="v-chip">SIREN <b id="v-siren">STANDBY</b></div></div>
- <div class="v-columns">
+ <section id="v-flow" aria-label="Sequential deployment workflow">
+ <div class="f-progress"><span>VEH-01 / GUIDED OPERATIONS</span><span id="f-progress-count">READY FOR DISPATCH</span></div>
+ <div id="f-steps" class="f-steps" aria-label="Mission progress"></div>
+ <div class="f-body"><div class="f-hero"><div id="f-kicker" class="f-kicker">OPERATIONS CONTROL / 008D.1.4</div><h1 id="f-title">AWAITING DISPATCH</h1><p id="f-desc">Register a new assignment to begin the operational sequence.</p><div id="f-case" class="f-case">VEHICLE STANDBY / READY FOR ASSIGNMENT</div>
+ <div id="f-register" class="f-register"><label>CASE REFERENCE<input id="f-ref" maxlength="48" placeholder="CASE REFERENCE"></label><label>DESTINATION<input id="f-location" maxlength="90" placeholder="LOCATION"></label><label>OPERATOR<input id="f-operator" maxlength="40" placeholder="OPERATOR NAME"></label><label>DISPATCH INSTRUCTIONS<input id="f-notes" maxlength="500" placeholder="ASSIGNMENT DETAILS (OPTIONAL)"></label></div>
+ <button id="f-primary" type="button">ACCEPT DISPATCH / BEGIN OPERATION</button><div id="f-message" role="status">SYSTEM READY. AWAITING OPERATOR INPUT.</div></div>
+ <aside class="f-aside"><div class="f-aside-head">OPERATIONAL TELEMETRY</div><div class="f-metric">VEHICLE STATE <b id="f-state">STANDBY</b></div><div class="f-metric">PREFLIGHT <b id="f-ready">CHECK REQUIRED</b></div><div class="f-metric">MISSION <b id="f-mission">NONE</b></div><div class="f-divider"></div><div class="f-aside-head">SUPPORTING SYSTEMS</div><div class="f-tools"><button type="button" data-flow-tool="v-opencomms">COMMUNICATIONS</button><button type="button" data-flow-tool="v-openmonitor-direct">SPECTRAL MONITOR</button><button type="button" data-flow-tool="v-openroof">ROOF SYSTEMS</button><button type="button" data-flow-tool="v-openequip">EQUIPMENT</button><button type="button" data-flow-tool="v-openreports">REPORT ARCHIVE</button><button type="button" data-flow-tool="v-openpreflight">PREFLIGHT</button></div><div class="f-divider"></div><button id="f-advanced" type="button">ENGINEERING / ADVANCED CONTROLS</button><button id="f-hold" type="button">HOLD OPERATION</button><button id="f-cancel" type="button">CANCEL OPERATION</button><button id="f-history" type="button">MISSION HISTORY</button></aside></div>
+</section>
+<div class="v-columns">
   <section class="v-panel"><h2>01 / VEHICLE IDENTIFICATION</h2><div class="v-fields"><div><label>DESIGNATION</label><input id="v-designation" maxlength="28"></div><div><label>CALLSIGN</label><input id="v-call" maxlength="24"></div><div><label>MAKE / MODEL</label><input id="v-model" maxlength="55"></div><div><label>YEAR</label><input id="v-year" maxlength="8"></div><div><label>REGISTRATION</label><input id="v-reg" maxlength="24"></div><div><label>ASSIGNED TEAM</label><input id="v-team" maxlength="50"></div></div><button id="v-save">SAVE VEHICLE REGISTRATION</button><h2>OPERATIONAL STATE</h2><button id="v-openops" class="v-good-button" type="button">OPEN OPERATIONS CONSOLE / F2</button><label>SELECT VEHICLE STATE</label><div id="v-status-options" class="v-state-options" role="group" aria-label="Vehicle operational state"><button type="button" data-v-state="STANDBY">STANDBY</button><button type="button" data-v-state="PREFLIGHT">PREFLIGHT</button><button type="button" data-v-state="DEPLOYED">DEPLOYED</button><button type="button" data-v-state="RETURNING">RETURNING</button><button type="button" data-v-state="UNAVAILABLE">UNAVAILABLE</button></div><input type="hidden" id="v-status" value="STANDBY"><button id="v-setstatus">CONFIRM STATUS</button><div class="v-box v-compact">STATE IS OPERATOR-CONTROLLED. READINESS IS CALCULATED FROM PREFLIGHT AND INSTALLED EQUIPMENT.</div></section>
   <section class="v-panel"><h2>02 / OPERATIONS &amp; EMERGENCY SIGNAL</h2><div class="v-row"><div><div class="v-muted">VEHICLE READINESS</div><div class="v-readout" id="v-mainready">CHECK REQUIRED</div></div><div id="v-lastcheck" class="v-muted">NO CHECK RECORDED</div></div><div class="v-box"><h3>SIREN CONTROL // AUDIO PLAYBACK</h3><div class="v-row"><span>EMERGENCY SIGNAL</span><b id="v-siren2" class="v-sound">STANDBY</b></div><div class="v-actions" style="margin-top:8px"><button id="v-siren-on" class="v-good-button">ACTIVATE SIREN</button><button id="v-siren-off" class="v-danger-button" disabled>DEACTIVATE SIREN</button></div><div class="v-muted" id="v-audio-msg" style="margin-top:6px">LOAD YOUR MP3 FILES TO ENABLE AUDIO.</div><details style="margin-top:7px"><summary>MP3 AUDIO FILES // LOAD</summary><div class="v-fields" style="margin-top:7px"><div><label>ACTIVATION MP3</label><input type="file" id="v-startfile" accept="audio/mpeg,audio/mp3,audio/*"></div><div><label>LOOP MP3 (OPTIONAL)</label><input type="file" id="v-loopfile" accept="audio/mpeg,audio/mp3,audio/*"></div><div><label>DEACTIVATION MP3</label><input type="file" id="v-stopfile" accept="audio/mpeg,audio/mp3,audio/*"></div></div><div class="v-muted" style="margin-top:6px">FILES ARE LOADED FOR THIS SESSION ONLY. NO AUDIO IS GENERATED OR UPLOADED.</div></details></div><h2>OPERATIONS CHECKLIST // PRIORITY</h2><div class="v-box v-preflight-summary"><div class="v-row"><span>INSPECTION STATUS</span><b id="v-preflightstate" class="v-warn">NOT COMPLETE</b></div><div class="v-muted">OPEN THE OPS CHECKLIST, VERIFY EACH ITEM AND SIGN OFF BEFORE DEPLOYMENT.</div><div class="v-muted">UNFIT EQUIPMENT / <b id="v-f3-unfit-count">0</b> REQUIRING ATTENTION<div class="v-muted">ROOF WARNINGS / <b id="v-f3-roof-warnings">0</b> ACTIVE</div></div><div id="v-f3-check-list" class="v-f3-check-list"></div></div><button id="v-openpreflight" class="v-good-button">OPEN OPS CHECKLIST / F3</button><div class="v-muted" id="v-checkmsg" role="status">PREFLIGHT NOT YET VERIFIED.</div></section>
   <section class="v-panel"><h2>03 / EQUIPMENT &amp; OPERATIONS LOG</h2><button id="v-openroof" class="v-good-button" type="button">OPEN ROOF SYSTEMS CONTROL / 008B</button><button type="button" id="v-openmonitor-direct">OPEN SPECTRAL MONITOR</button><button id="v-openequip" class="v-good-button" type="button">F4 / OPEN EQUIPMENT LIST</button><button id="v-opencomms" class="v-good-button" type="button">OPEN COMMUNICATIONS CONSOLE / 008C</button><button id="v-openreports" class="v-good-button" type="button">DETECTION REPORTS &amp; LOCATION REGISTRY / 008C.4</button><button id="v-open-unfit" class="v-danger-button" type="button">VIEW UNFIT REGISTER / <span id="v-unfit-count">0</span> FLAGGED</button><div class="v-muted">FITTED SYSTEMS // STATUS MIRRORS F4 EQUIPMENT LIST</div><div id="v-equipment-summary" class="v-f3-check-list"></div><div class="v-actions"><button type="button" id="v-equipment-test">TEST FITTED EQUIPMENT</button><button type="button" id="v-ops-log">RECORD OPS CHECK</button></div><div id="v-equip-feedback" class="v-muted" role="status">EQUIPMENT CHECK AWAITING OPERATOR.</div><h2>VEHICLE ACTIVITY HISTORY</h2><div class="v-log" id="v-log"></div><div class="v-actions"><button id="v-export">EXPORT VEHICLE JSON</button><button id="v-import">RESTORE VEHICLE JSON</button><input id="v-importfile" type="file" accept="application/json,.json" class="v-hidden"></div></section>
@@ -1423,7 +1431,43 @@ l1RefreshAudio();
 @media(max-width:740px){#v-mission-modal .d-full{grid-template-columns:1fr}#v-mission-modal .d-side{max-height:150px}#v-mission-modal .d-side .d-steps{grid-template-columns:repeat(3,1fr)}}
 @media(max-height:780px) and (orientation:landscape){#v-mission-modal .d-main,#v-mission-modal .d-side{padding:8px}#v-mission-modal .d-stage{padding:8px 0}#v-mission-modal .d-instruction{min-height:54px;padding:7px 0}#v-mission-modal .d-actionbar{margin:7px 0}}
 </style>
-<script id="vehicle008a-script">
+<style id="ecto-008d14-style">
+body.vehicle-active #vehicle008a{--f-green:#a9e8b8;--f-line:#345b4b;--f-cyan:#7ed1d2;--f-amber:#f0bd79;overflow:hidden}
+#vehicle008a #v-flow{display:flex;flex:1;flex-direction:column;min-height:0;gap:10px;background:#040d0a;border:1px solid #35644f;padding:13px}
+#vehicle008a:not(.f-advanced-mode)>.v-columns{display:none!important}
+#vehicle008a.f-advanced-mode>#v-flow{display:none!important}
+#vehicle008a .f-progress{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--f-cyan);font-size:11px;letter-spacing:1.5px;font-weight:bold}
+#vehicle008a .f-steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+#vehicle008a .f-step{min-width:0;border:1px solid #294739;background:#071610;color:#6c9280;padding:10px 5px;font:700 10px/1.5 'Courier New',monospace;letter-spacing:.2px;text-align:center}
+#vehicle008a .f-step.done{color:#8edc9e;border-color:#478960;background:#0b2618}
+#vehicle008a .f-step.current{color:#d9fbe1;border:2px solid #80c9a0;background:#17442d}
+#vehicle008a .f-body{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,.7fr);gap:12px;min-height:0;flex:1}
+#vehicle008a .f-hero{border:1px solid var(--f-line);background:linear-gradient(120deg,#0a1e15,#040b08);padding:clamp(12px,2.2vw,30px);display:flex;flex-direction:column;min-height:0;overflow:auto}
+#vehicle008a .f-kicker{color:var(--f-cyan);font-size:11px;letter-spacing:1px}
+#vehicle008a #f-title{font:700 clamp(21px,3.1vw,37px)/1.15 'Courier New',monospace;color:var(--f-green);margin:16px 0 10px;letter-spacing:1px}
+#vehicle008a #f-desc{font:13px/1.7 'Courier New',monospace;color:#b8d4c2;max-width:640px;min-height:50px;margin:0 0 12px}
+#vehicle008a .f-case{color:var(--f-amber);border-top:1px solid #345441;border-bottom:1px solid #345441;padding:11px 0;font-size:11px;margin-bottom:14px}
+#vehicle008a .f-register{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:12px}
+#vehicle008a .f-register label{font-size:10px;letter-spacing:.4px}
+#vehicle008a .f-register input{margin-top:5px;min-height:37px}
+#vehicle008a #f-primary{width:100%;max-width:640px;min-height:62px;border:2px solid #8ed5a4;background:#19482c;color:#d5f6d7;font:700 clamp(13px,1.6vw,18px) 'Courier New',monospace;letter-spacing:1px;margin-top:auto}
+#vehicle008a #f-primary:disabled{opacity:.35}
+#vehicle008a #f-message{font:11px/1.5 'Courier New',monospace;color:var(--f-cyan);margin-top:13px;min-height:22px}
+#vehicle008a .f-aside{border:1px solid var(--f-line);background:#07140e;padding:14px;display:flex;flex-direction:column;gap:9px;min-height:0;overflow:auto}
+#vehicle008a .f-aside-head{font-size:11px;color:var(--f-cyan);letter-spacing:1px;font-weight:bold}
+#vehicle008a .f-metric{display:flex;justify-content:space-between;gap:10px;color:#89b09c;font-size:10px;padding:5px 0;border-bottom:1px solid #294536}
+#vehicle008a .f-metric b{color:#b7e6c3;text-align:right}
+#vehicle008a .f-divider{height:1px;background:#345744;margin:5px 0}
+#vehicle008a .f-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#vehicle008a .f-tools button{min-height:41px;font-size:9px;line-height:1.4}
+#vehicle008a #f-advanced{border-color:#6d8b73;color:#c2d5b9}
+#vehicle008a #f-cancel{border-color:#86564c;color:#e7b2a6}
+#vehicle008a #f-hold,#vehicle008a #f-history{border-color:#6d7151;color:#e7d4a0}
+#vehicle008a .f-aside>button{min-height:36px}
+#vehicle008a .v-foot{flex-shrink:0}
+@media(max-height:780px) and (min-width:851px){#vehicle008a #v-flow{padding:8px;gap:7px}#vehicle008a .f-step{padding:6px 3px;font-size:9px}#vehicle008a .f-hero{padding:12px 18px}#vehicle008a #f-title{margin:8px 0 5px}#vehicle008a #f-desc{min-height:35px;margin-bottom:6px}#vehicle008a .f-case{padding:6px 0;margin-bottom:8px}#vehicle008a .f-aside{padding:8px;gap:5px}#vehicle008a .f-tools button{min-height:32px}#vehicle008a .f-register{gap:5px}#vehicle008a .f-register input{min-height:30px}#vehicle008a #f-primary{min-height:47px}}
+@media(max-width:850px){#vehicle008a #v-flow{overflow:auto}#vehicle008a .f-body{grid-template-columns:1fr}#vehicle008a .f-steps{grid-template-columns:repeat(3,1fr)}#vehicle008a .f-aside{overflow:visible}#vehicle008a .f-hero{overflow:visible}}
+</style><script id="vehicle008a-script">
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id), KEY='ecto_vehicle_008a';
@@ -2035,6 +2079,83 @@ setInterval(()=>{
 },500);
 $('goContainment').addEventListener('click',()=>{missionLinked=null;d('v-mission-modal').classList.add('v-hidden')});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')d('v-mission-modal').classList.add('v-hidden')});
+
+
+// 008D.1.4 / Primary sequential operating surface. Existing subsystems are retained.
+const flowVehicle=$('vehicle008a');
+const flowStageNames=['01 / DISPATCH','02 / PREFLIGHT','03 / DEPLOY','04 / INVESTIGATE','05 / REPORT','06 / RETURN'];
+const flowTitles=['DISPATCH RECEIVED','VEHICLE PREFLIGHT','AUTHORISE DEPLOYMENT','ON-SITE INVESTIGATION','TRANSMIT FINDINGS','RETURN TO HEADQUARTERS'];
+const flowInstructions=[
+ 'Dispatch received. Begin vehicle inspection to prepare for departure.',
+ 'Verify the operations checklist. When the inspection is signed off, ECTO automatically advances to deployment authorisation.',
+ 'All required systems verified. Authorise the vehicle to depart for the assigned location.',
+ 'Vehicle deployed. Confirm arrival at the investigation site to begin the field report.',
+ 'Complete a detection report and transmit it to HQ. The system automatically recognises the new transmission.',
+ 'Investigation complete. Confirm arrival back at headquarters to archive this mission and reset the vehicle for the next dispatch.'
+];
+const flowActions=['BEGIN PREFLIGHT','OPEN PREFLIGHT CHECKLIST','AUTHORISE DEPARTURE','CONFIRM ARRIVAL ON SITE','OPEN DETECTION REPORT','CONFIRM ARRIVAL AT HQ'];
+const flowEl=id=>document.getElementById(id);
+function flowNotice(msg){flowEl('f-message').textContent=msg}
+function flowRender(){
+ const m=missionCurrent(),stage=m?m.stage:-1;
+ flowEl('f-progress-count').textContent=m?'STAGE '+(stage+1)+' OF 06':'READY FOR DISPATCH';
+ flowEl('f-steps').replaceChildren();
+ flowStageNames.forEach((name,i)=>{const x=document.createElement('div');x.className='f-step'+(m&&i<stage?' done':'')+(m&&i===stage?' current':'');x.textContent=name;flowEl('f-steps').appendChild(x)});
+ flowEl('f-title').textContent=m?flowTitles[stage]:'AWAITING DISPATCH';
+ flowEl('f-desc').textContent=m?flowInstructions[stage]:'Register a dispatch below. ECTO will guide you through each operation in sequence.';
+ flowEl('f-case').textContent=m?m.reference+' / '+m.location+' / '+m.operator+(m.hold?' / ON HOLD':''):'VEHICLE STANDBY / READY FOR ASSIGNMENT';
+ flowEl('f-register').hidden=!!m;
+ flowEl('f-primary').textContent=m?flowActions[stage]:'ACCEPT DISPATCH / BEGIN OPERATION';
+ flowEl('f-primary').disabled=!!(m&&m.hold);
+ flowEl('f-state').textContent=v.status;
+ flowEl('f-ready').textContent=ready()?'VERIFIED':'CHECK REQUIRED';
+ flowEl('f-mission').textContent=m?m.reference:'NONE';
+ flowEl('f-hold').disabled=!m;flowEl('f-cancel').disabled=!m;
+ flowEl('f-hold').textContent=m&&m.hold?'RESUME OPERATION':'HOLD OPERATION';
+}
+function flowLaunch(target){
+ const map={'v-openpreflight':'v-preflight-modal','v-opencomms':'v-comms-modal','v-openreports':'v-reports-modal','v-openmonitor-direct':'v-monitor-modal','v-openroof':'v-roof-modal'};
+ const trigger=$(target),modal=$(map[target]||'');
+ if(!trigger){flowNotice('SYSTEM CONTROL UNAVAILABLE');return}
+ trigger.click();
+ if(modal){
+   let back=modal.querySelector('.f-return');
+   if(!back){back=document.createElement('button');back.type='button';back.className='f-return v-good-button';back.textContent='RETURN TO OPERATION';back.style.margin='6px';back.onclick=()=>{modal.classList.add('v-hidden');missionSync();flowRender();flowNotice('RETURNED TO OPERATIONAL SEQUENCE')};const top=modal.querySelector('.v-modal-top')||modal.querySelector('.v-modal-frame');if(top)top.appendChild(back)}
+ }
+}
+flowEl('f-primary').onclick=()=>{
+ const m=missionCurrent();
+ if(!m){
+   const reference=flowEl('f-ref').value.trim(),location=flowEl('f-location').value.trim(),operator=flowEl('f-operator').value.trim();
+   if(!reference||!location||!operator){flowNotice('CASE REFERENCE, DESTINATION AND OPERATOR ARE REQUIRED');return}
+   const fresh={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:flowEl('f-notes').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};
+   v.preflight=null;v.opsDraft={};v.missions.unshift(fresh);v.missions=v.missions.slice(0,100);missionSelected=fresh.id;
+   log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);
+   missionSync();flowRender();flowNotice('DISPATCH ACCEPTED / BEGIN PREFLIGHT');return;
+ }
+ if(m.hold)return;
+ if(m.stage===0){missionAdvance(m,'DISPATCH ACCEPTED');flowLaunch('v-openpreflight');flowNotice('VERIFY AND SIGN OFF THE PREFLIGHT CHECKLIST')}
+ else if(m.stage===1){flowLaunch('v-openpreflight');flowNotice('COMPLETE PREFLIGHT TO ADVANCE AUTOMATICALLY')}
+ else if(m.stage===2){if(!ready()){flowNotice('PREFLIGHT NOT VERIFIED / COMPLETE CHECKLIST FIRST');return}v.status='DEPLOYED';log('VEHICLE DEPLOYED / '+m.reference);setupFields();missionAdvance(m,'DEPARTURE AUTHORISED');flowNotice('DEPARTURE AUTHORISED / PROCEED TO SITE')}
+ else if(m.stage===3){missionAdvance(m,'ARRIVAL ON SITE CONFIRMED');flowNotice('ON SITE / PREPARE DETECTION REPORT')}
+ else if(m.stage===4){flowLaunch('v-openreports');flowNotice('RECORD AND TRANSMIT A NEW REPORT TO HQ')}
+ else if(m.stage===5){
+   if(!confirm('CONFIRM ARRIVAL AT HQ? THE MISSION WILL BE ARCHIVED AND VEHICLE READINESS RESET.'))return;
+   missionAdvance(m,'ARRIVAL AT HQ CONFIRMED');missionReset(m);flowRender();flowNotice('MISSION ARCHIVED / VEHICLE RESET TO STANDBY / READY FOR NEXT DISPATCH');
+ }
+ flowRender();
+};
+flowEl('f-hold').onclick=()=>{const m=missionCurrent();if(!m)return;m.hold=!m.hold;log('DEPLOYMENT / '+m.reference+' / '+(m.hold?'HOLD':'RESUMED'));flowRender();flowNotice(m.hold?'OPERATION ON HOLD':'OPERATION RESUMED')};
+flowEl('f-cancel').onclick=()=>{const m=missionCurrent();if(!m||!confirm('CANCEL ACTIVE OPERATION? THE MISSION RECORD WILL BE RETAINED.'))return;m.cancelled=true;v.status='STANDBY';v.preflight=null;v.opsDraft={};log('DEPLOYMENT CANCELLED / '+m.reference);setupFields();flowRender();flowNotice('OPERATION CANCELLED / VEHICLE STANDBY')};
+flowEl('f-advanced').onclick=()=>{flowVehicle.classList.add('f-advanced-mode');flowNotice('ADVANCED CONTROLS OPEN');const back=document.getElementById('f-advanced-return');if(back)back.hidden=false};
+const advancedReturn=document.createElement('button');advancedReturn.type='button';advancedReturn.id='f-advanced-return';advancedReturn.textContent='RETURN TO GUIDED OPERATION';advancedReturn.hidden=true;advancedReturn.style.cssText='border-color:#79bf92;color:#d6f9de;min-height:35px';advancedReturn.onclick=()=>{flowVehicle.classList.remove('f-advanced-mode');advancedReturn.hidden=true;missionSync();flowRender()};flowVehicle.querySelector('.v-strip').appendChild(advancedReturn);
+flowEl('f-history').onclick=()=>{missionDraw();d('v-mission-modal').classList.remove('v-hidden');flowNotice('MISSION REGISTER OPENED')};
+flowVehicle.querySelectorAll('[data-flow-tool]').forEach(b=>b.onclick=()=>flowLaunch(b.dataset.flowTool));
+const oldSwitch=$('goVehicle').onclick;
+$('goVehicle').onclick=()=>{oldSwitch();flowVehicle.classList.remove('f-advanced-mode');advancedReturn.hidden=true;missionSync();flowRender()};
+let flowLast='';
+setInterval(()=>{if(!document.body.classList.contains('vehicle-active'))return;missionSync();const m=missionCurrent();const signature=[m?.id,m?.stage,m?.hold,v.status,!!ready()].join('/');if(signature!==flowLast){flowLast=signature;flowRender()}},400);
+flowRender();
 
 setupFields();sirenUI();
 })();

@@ -1,7 +1,7 @@
-ECTO 008D.1.3 / Integrated Deployment Console
+ECTO 008D.1.4 — SEQUENTIAL OPERATIONS
 
-Open index.html in Safari. Offline single-file build.
+Open index.html in iPad Safari. Fully offline.
 
-One full-screen mission workflow. Auto progression on successful preflight and newly transmitted report. Linked system windows return to the console. Arrival at HQ archives mission and resets vehicle status/preflight; records remain.
+VEH-01 now opens a guided full-screen mission interface. Accept dispatch, complete preflight, authorise deployment, confirm arrival, transmit detection report and confirm return to HQ. Existing detailed panels are retained under ENGINEERING / ADVANCED CONTROLS. CU-01 code remains unchanged. Local data retained.
 
-Note: existing 008D mission records remain stored locally; only one active deployment is allowed.
+TEST: Open VEH-01, register mission, follow the large action button, complete preflight, transmit new report and return to HQ.
