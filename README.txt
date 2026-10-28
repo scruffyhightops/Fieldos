@@ -1,7 +1,9 @@
-ECTO 008D.1.4 — SEQUENTIAL OPERATIONS
+ECTO 008D.1.5 — GUIDED MISSION EXPERIENCE
 
-Open index.html in iPad Safari. Fully offline.
+Offline, single-file iPad Safari build.
 
-VEH-01 now opens a guided full-screen mission interface. Accept dispatch, complete preflight, authorise deployment, confirm arrival, transmit detection report and confirm return to HQ. Existing detailed panels are retained under ENGINEERING / ADVANCED CONTROLS. CU-01 code remains unchanged. Local data retained.
+Default guided path: accept dispatch; tap six preflight checks; authorise departure; run animated spectral scan; add observations and transmit HQ report; confirm arrival at HQ. Reports and missions retained; vehicle preflight reset.
 
-TEST: Open VEH-01, register mission, follow the large action button, complete preflight, transmit new report and return to HQ.
+Advanced Engineering remains accessible from VEH-01. CU-01 retained.
+
+If a genuine equipment fault or HQ link-loss is present, the guided mission pauses and requests staff Engineering assistance instead of silently overriding it.

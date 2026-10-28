@@ -409,7 +409,12 @@ body.vehicle-active>.app{display:none!important}body:not(.vehicle-active)>#vehic
  <div id="f-steps" class="f-steps" aria-label="Mission progress"></div>
  <div class="f-body"><div class="f-hero"><div id="f-kicker" class="f-kicker">OPERATIONS CONTROL / 008D.1.4</div><h1 id="f-title">AWAITING DISPATCH</h1><p id="f-desc">Register a new assignment to begin the operational sequence.</p><div id="f-case" class="f-case">VEHICLE STANDBY / READY FOR ASSIGNMENT</div>
  <div id="f-register" class="f-register"><label>CASE REFERENCE<input id="f-ref" maxlength="48" placeholder="CASE REFERENCE"></label><label>DESTINATION<input id="f-location" maxlength="90" placeholder="LOCATION"></label><label>OPERATOR<input id="f-operator" maxlength="40" placeholder="OPERATOR NAME"></label><label>DISPATCH INSTRUCTIONS<input id="f-notes" maxlength="500" placeholder="ASSIGNMENT DETAILS (OPTIONAL)"></label></div>
- <button id="f-primary" type="button">ACCEPT DISPATCH / BEGIN OPERATION</button><div id="f-message" role="status">SYSTEM READY. AWAITING OPERATOR INPUT.</div></div>
+ <div id="f-experience" hidden>
+<div id="f-checks" class="f-experience-panel" hidden><div class="f-minihead">VEHICLE READINESS / TAP EACH CHECK</div><div id="f-check-grid" class="f-check-grid"></div><div id="f-check-status" class="f-subline">AWAITING SYSTEM INSPECTION</div></div>
+<div id="f-scan" class="f-experience-panel" hidden><div class="f-minihead">PORTABLE SPECTRAL SCANNER / LIVE READOUT</div><div class="f-scan-grid"><div class="f-scan-graph" id="f-scan-graph" aria-label="Spectral scan activity"></div><div class="f-scan-data"><span>DENSITY <b id="f-density">--</b></span><span>SIGNAL <b id="f-signal">--</b></span><span>BEARING <b id="f-bearing">--</b></span><span>CLASS <b id="f-class">--</b></span></div></div><div id="f-scan-status" class="f-subline">READY TO SCAN</div></div>
+<div id="f-report" class="f-experience-panel" hidden><div class="f-minihead">HQ REPORT / AUTOMATICALLY ATTACHED SCAN DATA</div><div class="f-report-grid"><div id="f-report-summary" class="f-subline"></div><label>FIELD OBSERVATIONS<textarea id="f-observations" rows="3" maxlength="600" placeholder="What did you discover?"></textarea></label></div><div id="f-report-status" class="f-subline">AWAITING REPORT</div></div>
+</div>
+<button id="f-primary" type="button">ACCEPT DISPATCH / BEGIN OPERATION</button><div id="f-message" role="status">SYSTEM READY. AWAITING OPERATOR INPUT.</div></div>
  <aside class="f-aside"><div class="f-aside-head">OPERATIONAL TELEMETRY</div><div class="f-metric">VEHICLE STATE <b id="f-state">STANDBY</b></div><div class="f-metric">PREFLIGHT <b id="f-ready">CHECK REQUIRED</b></div><div class="f-metric">MISSION <b id="f-mission">NONE</b></div><div class="f-divider"></div><div class="f-aside-head">SUPPORTING SYSTEMS</div><div class="f-tools"><button type="button" data-flow-tool="v-opencomms">COMMUNICATIONS</button><button type="button" data-flow-tool="v-openmonitor-direct">SPECTRAL MONITOR</button><button type="button" data-flow-tool="v-openroof">ROOF SYSTEMS</button><button type="button" data-flow-tool="v-openequip">EQUIPMENT</button><button type="button" data-flow-tool="v-openreports">REPORT ARCHIVE</button><button type="button" data-flow-tool="v-openpreflight">PREFLIGHT</button></div><div class="f-divider"></div><button id="f-advanced" type="button">ENGINEERING / ADVANCED CONTROLS</button><button id="f-hold" type="button">HOLD OPERATION</button><button id="f-cancel" type="button">CANCEL OPERATION</button><button id="f-history" type="button">MISSION HISTORY</button></aside></div>
 </section>
 <div class="v-columns">
@@ -1467,7 +1472,27 @@ body.vehicle-active #vehicle008a{--f-green:#a9e8b8;--f-line:#345b4b;--f-cyan:#7e
 #vehicle008a .v-foot{flex-shrink:0}
 @media(max-height:780px) and (min-width:851px){#vehicle008a #v-flow{padding:8px;gap:7px}#vehicle008a .f-step{padding:6px 3px;font-size:9px}#vehicle008a .f-hero{padding:12px 18px}#vehicle008a #f-title{margin:8px 0 5px}#vehicle008a #f-desc{min-height:35px;margin-bottom:6px}#vehicle008a .f-case{padding:6px 0;margin-bottom:8px}#vehicle008a .f-aside{padding:8px;gap:5px}#vehicle008a .f-tools button{min-height:32px}#vehicle008a .f-register{gap:5px}#vehicle008a .f-register input{min-height:30px}#vehicle008a #f-primary{min-height:47px}}
 @media(max-width:850px){#vehicle008a #v-flow{overflow:auto}#vehicle008a .f-body{grid-template-columns:1fr}#vehicle008a .f-steps{grid-template-columns:repeat(3,1fr)}#vehicle008a .f-aside{overflow:visible}#vehicle008a .f-hero{overflow:visible}}
-</style><script id="vehicle008a-script">
+</style>
+<style id="ecto-008d15-experience-style">
+#vehicle008a .f-experience-panel{border:1px solid #467c59;background:#07170f;padding:12px;margin:8px 0;min-height:0}
+#vehicle008a .f-minihead{font:700 11px 'Courier New',monospace;color:#9cdec0;letter-spacing:.7px;margin-bottom:10px}
+#vehicle008a .f-check-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#vehicle008a .f-check-item{min-height:56px;border:1px solid #426d52;background:#10291b;color:#c8d9cc;font:700 11px 'Courier New',monospace;text-align:left;padding:10px}
+#vehicle008a .f-check-item.checked{border-color:#9bdd9b;background:#19472c;color:#d7ffce}
+#vehicle008a .f-subline{font:11px/1.5 'Courier New',monospace;color:#b6d6be;margin-top:8px}
+#vehicle008a .f-scan-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+#vehicle008a .f-scan-graph{height:105px;display:flex;align-items:end;justify-content:space-around;gap:3px;background:repeating-linear-gradient(0deg,#0d2b1b,#0d2b1b 1px,transparent 1px,transparent 21px);border:1px solid #315d41;padding:6px}
+#vehicle008a .f-scan-graph i{width:5%;height:10%;background:#79d6a0;display:block;transition:height .11s linear}
+#vehicle008a .f-scan-data{display:grid;grid-template-columns:1fr 1fr;gap:8px;font:11px 'Courier New',monospace;color:#93bba1}
+#vehicle008a .f-scan-data span{display:flex;flex-direction:column;gap:5px}
+#vehicle008a .f-scan-data b{font-size:19px;color:#d4f5c8}
+#vehicle008a .f-report-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+#vehicle008a .f-report-grid textarea{width:100%;box-sizing:border-box;background:#09190f;color:#d5efcf;border:1px solid #527f5c;font:13px 'Courier New',monospace;padding:8px}
+#vehicle008a #f-experience[hidden],#vehicle008a .f-experience-panel[hidden]{display:none!important}
+@media(max-width:700px){#vehicle008a .f-check-grid{grid-template-columns:repeat(2,1fr)}#vehicle008a .f-report-grid{grid-template-columns:1fr}}
+@media(max-height:780px) and (min-width:850px){#vehicle008a .f-experience-panel{padding:8px;margin:5px 0}#vehicle008a .f-check-item{min-height:44px;padding:6px}#vehicle008a .f-scan-graph{height:78px}}
+</style>
+<script id="vehicle008a-script">
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id), KEY='ecto_vehicle_008a';
@@ -2089,13 +2114,81 @@ const flowInstructions=[
  'Dispatch received. Begin vehicle inspection to prepare for departure.',
  'Verify the operations checklist. When the inspection is signed off, ECTO automatically advances to deployment authorisation.',
  'All required systems verified. Authorise the vehicle to depart for the assigned location.',
- 'Vehicle deployed. Confirm arrival at the investigation site to begin the field report.',
- 'Complete a detection report and transmit it to HQ. The system automatically recognises the new transmission.',
+ 'Vehicle on site. Press BEGIN SPECTRAL SCAN, watch the readings, then record your findings.',
+ 'Your spectral scan is attached automatically. Add an observation and transmit directly to HQ.',
  'Investigation complete. Confirm arrival back at headquarters to archive this mission and reset the vehicle for the next dispatch.'
 ];
-const flowActions=['BEGIN PREFLIGHT','OPEN PREFLIGHT CHECKLIST','AUTHORISE DEPARTURE','CONFIRM ARRIVAL ON SITE','OPEN DETECTION REPORT','CONFIRM ARRIVAL AT HQ'];
+const flowActions=['BEGIN PREFLIGHT','CONFIRM PREFLIGHT CHECKS','AUTHORISE DEPARTURE','BEGIN SPECTRAL SCAN','TRANSMIT REPORT TO HQ','CONFIRM ARRIVAL AT HQ'];
 const flowEl=id=>document.getElementById(id);
 function flowNotice(msg){flowEl('f-message').textContent=msg}
+
+// 008D.1.5 / Child-friendly integrated experience, preserving advanced controls.
+const flowChecks=[['visual','VEHICLE BODY'],['crew','CREW READY'],['comms','HQ RADIO'],['roof','ROOF EQUIPMENT'],['signal','EMERGENCY SIGNAL'],['kit','FIELD EQUIPMENT']];
+let flowScanTimer=null;
+function flowSound(ok=true){
+ try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const ctx=window.__ectoFlowAudio||(window.__ectoFlowAudio=new A());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(ok?680:260,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(ok?900:190,ctx.currentTime+.09);g.gain.setValueAtTime(.018,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.12);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.13)}catch(e){}
+}
+function flowInlineRender(){
+ const m=missionCurrent(),stage=m?.stage;
+ const exp=flowEl('f-experience');exp.hidden=!(m&&(stage===1||stage===3||stage===4));
+ ['f-checks','f-scan','f-report'].forEach((id,i)=>flowEl(id).hidden=stage!==[1,3,4][i]);
+ if(stage===1){
+  const grid=flowEl('f-check-grid');grid.replaceChildren();
+  flowChecks.forEach(([key,label],i)=>{
+   const b=document.createElement('button');b.type='button';b.className='f-check-item'+(v.opsDraft[key]?' checked':'');b.textContent=(v.opsDraft[key]?'✓  ':'○  ')+label;
+   b.onclick=()=>{if(m.hold)return;v.opsDraft[key]=!v.opsDraft[key];v.preflight=null;persist();flowSound();flowInlineRender();flowEl('f-check-status').textContent=flowChecks.filter(([k])=>v.opsDraft[k]).length+' / 6 SYSTEMS VERIFIED'};
+   grid.appendChild(b);
+  });
+  flowEl('f-check-status').textContent=flowChecks.filter(([k])=>v.opsDraft[k]).length+' / 6 SYSTEMS VERIFIED';
+ }
+ if(stage===3){
+  flowEl('f-scan-status').textContent=m.scan?'SCAN COMPLETE / SPECTRAL SIGNATURE RECORDED':'PRESS BEGIN SPECTRAL SCAN TO COLLECT READINGS';
+  if(m.scan)flowScanDisplay(m.scan);
+ }
+ if(stage===4){
+  flowEl('f-report-summary').textContent=m.scan?'CAPTURED / DENSITY '+m.scan.density+'% / CLASS '+m.scan.classLabel+' / BEARING '+m.scan.bearing+'°':'NO SPECTRAL CAPTURE AVAILABLE';
+  if(flowEl('f-observations').dataset.mission!==m.id){flowEl('f-observations').value='';flowEl('f-observations').dataset.mission=m.id}
+  flowEl('f-report-status').textContent='ADD OBSERVATIONS AND TRANSMIT TO HQ';
+ }
+}
+function flowScanDisplay(scan){
+ flowEl('f-density').textContent=scan.density+'%';flowEl('f-signal').textContent=scan.signal+'%';flowEl('f-bearing').textContent=scan.bearing+'°';flowEl('f-class').textContent=scan.classLabel;
+}
+function flowDoScan(m){
+ if(flowScanTimer)return;
+ flowEl('f-primary').disabled=true;flowEl('f-primary').textContent='SCANNING / PLEASE WAIT';
+ flowEl('f-scan-status').textContent='SPECTRAL SWEEP IN PROGRESS';
+ let ticks=0;flowEl('f-scan-graph').replaceChildren();
+ const bars=Array.from({length:18},()=>{const x=document.createElement('i');flowEl('f-scan-graph').appendChild(x);return x});
+ flowScanTimer=setInterval(()=>{
+  ticks++;bars.forEach((b,i)=>b.style.height=(12+Math.round(Math.random()*75))+'%');
+  flowEl('f-density').textContent=(18+Math.round(Math.random()*64))+'%';
+  flowEl('f-signal').textContent=(20+Math.round(Math.random()*65))+'%';
+  flowEl('f-bearing').textContent=Math.round(Math.random()*359)+'°';
+  flowEl('f-class').textContent=['I','II','III','IV'][Math.floor(Math.random()*4)];
+  if(ticks>=14){
+   clearInterval(flowScanTimer);flowScanTimer=null;
+   const density=20+Math.round(Math.random()*60),signal=30+Math.round(Math.random()*65),bearing=Math.round(Math.random()*359);
+   const classLabel=density<35?'I':density<50?'II':density<70?'III':'IV';
+   m.scan={time:new Date().toISOString(),density,signal,bearing,classLabel,temperature:'+'+(Math.random()*4).toFixed(1)+'°C',em:Math.round(density*.7)+' mG',acquisition:'ACQUIRED',signature:'PKE-'+classLabel,event:'NONE'};
+   log('GUIDED SPECTRAL SCAN COMPLETE / '+m.reference+' / CLASS '+classLabel);
+   flowSound();flowScanDisplay(m.scan);flowEl('f-scan-status').textContent='SIGNATURE ACQUIRED / READY TO RECORD FINDINGS';
+   flowRender();flowNotice('SCAN COMPLETE / PRESS RECORD FINDINGS TO CONTINUE');
+  }
+ },115);
+}
+function flowSendReport(m){
+ if(!m.scan){flowNotice('COMPLETE SPECTRAL SCAN BEFORE REPORTING');return}
+ if(!commAvailable()){flowNotice('HQ RADIO EQUIPMENT UNAVAILABLE / ASK STAFF TO CHECK ENGINEERING');flowSound(false);return}
+ if(comm.fault&&comm.fault.type==='LINK LOSS'){flowNotice('HQ LINK FAULT / ASK STAFF TO RESTORE COMMUNICATIONS');flowSound(false);return}
+ if(!comm.connected){comm.connected=true;log('HQ RADIO LINK ESTABLISHED / GUIDED OPERATIONS')}
+ const x={id:'DET-'+Date.now()+'-'+Math.floor(Math.random()*10000),created:new Date().toISOString(),locationId:null,locationText:m.location,capture:{...m.scan},notes:flowEl('f-observations').value.trim()||'GUIDED FIELD INVESTIGATION / NO ADDITIONAL OBSERVATIONS',transmitted:null};
+ registry.reports.unshift(x);registry.reports=registry.reports.slice(0,300);
+ const body=['DETECTION REPORT '+x.id,'CASE: '+m.reference,'LOCATION: '+x.locationText,'DENSITY: '+x.capture.density+'%','CLASS: '+x.capture.classLabel,'BEARING: '+x.capture.bearing+'°','OBSERVATIONS: '+x.notes].join('\n');
+ commMessage('OUTGOING','DETECTION REPORT',v.call||'UNASSIGNED','HEADQUARTERS',body);
+ x.transmitted=new Date().toISOString();m.reportId=x.id;log('GUIDED REPORT TRANSMITTED TO HQ / '+x.id);
+ flowSound();missionSync();flowRender();flowNotice('REPORT RECEIVED AT HQ / RETURN AUTHORISED');
+}
 function flowRender(){
  const m=missionCurrent(),stage=m?m.stage:-1;
  flowEl('f-progress-count').textContent=m?'STAGE '+(stage+1)+' OF 06':'READY FOR DISPATCH';
@@ -2105,13 +2198,14 @@ function flowRender(){
  flowEl('f-desc').textContent=m?flowInstructions[stage]:'Register a dispatch below. ECTO will guide you through each operation in sequence.';
  flowEl('f-case').textContent=m?m.reference+' / '+m.location+' / '+m.operator+(m.hold?' / ON HOLD':''):'VEHICLE STANDBY / READY FOR ASSIGNMENT';
  flowEl('f-register').hidden=!!m;
- flowEl('f-primary').textContent=m?flowActions[stage]:'ACCEPT DISPATCH / BEGIN OPERATION';
+ flowEl('f-primary').textContent=m?(stage===1?'CONFIRM PREFLIGHT CHECKS':stage===3?(m.scan?'RECORD FINDINGS / CONTINUE':'BEGIN SPECTRAL SCAN'):stage===4?'TRANSMIT REPORT TO HQ':flowActions[stage]):'ACCEPT DISPATCH / BEGIN OPERATION';
  flowEl('f-primary').disabled=!!(m&&m.hold);
  flowEl('f-state').textContent=v.status;
  flowEl('f-ready').textContent=ready()?'VERIFIED':'CHECK REQUIRED';
  flowEl('f-mission').textContent=m?m.reference:'NONE';
  flowEl('f-hold').disabled=!m;flowEl('f-cancel').disabled=!m;
  flowEl('f-hold').textContent=m&&m.hold?'RESUME OPERATION':'HOLD OPERATION';
+ flowInlineRender();
 }
 function flowLaunch(target){
  const map={'v-openpreflight':'v-preflight-modal','v-opencomms':'v-comms-modal','v-openreports':'v-reports-modal','v-openmonitor-direct':'v-monitor-modal','v-openroof':'v-roof-modal'};
@@ -2131,14 +2225,25 @@ flowEl('f-primary').onclick=()=>{
    const fresh={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:flowEl('f-notes').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};
    v.preflight=null;v.opsDraft={};v.missions.unshift(fresh);v.missions=v.missions.slice(0,100);missionSelected=fresh.id;
    log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);
-   missionSync();flowRender();flowNotice('DISPATCH ACCEPTED / BEGIN PREFLIGHT');return;
+   missionSync();flowRender();flowSound();flowNotice('DISPATCH ACCEPTED / BEGIN PREFLIGHT');return;
  }
  if(m.hold)return;
- if(m.stage===0){missionAdvance(m,'DISPATCH ACCEPTED');flowLaunch('v-openpreflight');flowNotice('VERIFY AND SIGN OFF THE PREFLIGHT CHECKLIST')}
- else if(m.stage===1){flowLaunch('v-openpreflight');flowNotice('COMPLETE PREFLIGHT TO ADVANCE AUTOMATICALLY')}
+ if(m.stage===0){missionAdvance(m,'DISPATCH ACCEPTED');flowSound();flowNotice('VEHICLE CHECKS READY')}
+ else if(m.stage===1){
+   if(flowChecks.some(([k])=>!v.opsDraft[k])){flowNotice('VERIFY ALL SIX VEHICLE SYSTEMS FIRST');flowSound(false);return}
+   if(!ready()&&(!allEquipment().some(x=>x.status==='UNAVAILABLE'))&&!(v.roofAdvisory&&v.roofAdvisory.active)&&!v.advancedRoofFault){
+     v.preflight={time:new Date().toISOString(),operator:m.operator,passed:true,configuration:JSON.stringify(v.equipment)};
+     log('GUIDED PREFLIGHT VERIFIED / '+m.operator);setupFields();
+   }
+   if(!ready()){flowNotice('VEHICLE HAS AN ACTIVE EQUIPMENT FAULT / STAFF ENGINEERING ASSISTANCE REQUIRED');flowSound(false);return}
+   missionSync();flowSound();flowNotice('ALL SYSTEMS VERIFIED / DEPLOYMENT AUTHORISED');
+ }
  else if(m.stage===2){if(!ready()){flowNotice('PREFLIGHT NOT VERIFIED / COMPLETE CHECKLIST FIRST');return}v.status='DEPLOYED';log('VEHICLE DEPLOYED / '+m.reference);setupFields();missionAdvance(m,'DEPARTURE AUTHORISED');flowNotice('DEPARTURE AUTHORISED / PROCEED TO SITE')}
- else if(m.stage===3){missionAdvance(m,'ARRIVAL ON SITE CONFIRMED');flowNotice('ON SITE / PREPARE DETECTION REPORT')}
- else if(m.stage===4){flowLaunch('v-openreports');flowNotice('RECORD AND TRANSMIT A NEW REPORT TO HQ')}
+ else if(m.stage===3){
+   if(!m.scan){flowDoScan(m);return}
+   missionAdvance(m,'SPECTRAL INVESTIGATION COMPLETE');flowSound();flowNotice('SCAN RECORDED / PREPARE HQ REPORT');
+ }
+ else if(m.stage===4){flowSendReport(m);return}
  else if(m.stage===5){
    if(!confirm('CONFIRM ARRIVAL AT HQ? THE MISSION WILL BE ARCHIVED AND VEHICLE READINESS RESET.'))return;
    missionAdvance(m,'ARRIVAL AT HQ CONFIRMED');missionReset(m);flowRender();flowNotice('MISSION ARCHIVED / VEHICLE RESET TO STANDBY / READY FOR NEXT DISPATCH');
