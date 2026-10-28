@@ -455,8 +455,28 @@ SELECT RUN DIAGNOSTIC.</div></div></div></div></div><div id="iConfirmLayer" clas
  <div id="iConfirmBody" class="i-confirm-body"></div>
  <div class="i-confirm-actions"><button type="button" id="iConfirmCancel">RETURN TO PROCEDURE</button><button type="button" id="iConfirmAccept">CONFIRM</button></div>
  <div class="i-confirm-foot">CU-01 // AUTHORISED OPERATOR ACTION</div></div><script>
-(()=>{const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='ecto_containment_007l1';let old=JSON.parse(localStorage.getItem('ecto_containment_007l')||localStorage.getItem('ecto_containment_007k')||localStorage.getItem('ecto_containment_007j')||localStorage.getItem('ecto_containment_007i')||localStorage.getItem('ecto_containment_007h1')||localStorage.getItem('ecto_containment_007h')||localStorage.getItem('ecto_containment_007g')||localStorage.getItem('ecto_containment_007f')||localStorage.getItem('ecto_containment_007e')||localStorage.getItem('ecto_containment_007d1')||localStorage.getItem('ecto_containment_007d')||localStorage.getItem('ecto_containment_007c')||localStorage.getItem('ecto_containment_007b')||localStorage.getItem('ecto_containment_007a4')||localStorage.getItem('ecto_containment_006')||localStorage.getItem('ecto_containment_005')||localStorage.getItem('ecto_containment_003')||localStorage.getItem('ecto_containment_002')||'null'),d=JSON.parse(localStorage.getItem(key)||'null')||old||{occ:18.4,records:[],seq:268,hours:418,balances:12,event:'',maintenance:94.6};d.sectors=d.sectors||Array.from({length:8},(_,i)=>({occ:+Math.max(2,d.occ/8+(i%3)*.5).toFixed(1),stability:96-(i%4),activity:18+(i*7)%31}));d.director=d.director||{intensity:'ACTIVE',next:'UNCOMMITTED',last:'NONE',recent:[],sound:true};d.activityHistory=Array.isArray(d.activityHistory)?d.activityHistory:[];d.autoCorrections=Number(d.autoCorrections)||0;d.operatorInterventions=Number(d.operatorInterventions)||0;let activeCue='ROUTINE',interventionPending=false;let step=0,operator='',sel=0,timer=null,scopeMode='normal';const save=()=>localStorage.setItem(key,JSON.stringify(d));const esc=s=>(s||'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
-let ac=null;function tone(f=440,dur=.08,type='square',gain=.025){if(!d.director.sound)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();let o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.value=gain;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+dur);o.stop(ac.currentTime+dur)}catch(e){}}
+(()=>{const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='ecto_containment_007l1';let old=JSON.parse(localStorage.getItem('ecto_containment_007l')||localStorage.getItem('ecto_containment_007k')||localStorage.getItem('ecto_containment_007j')||localStorage.getItem('ecto_containment_007i')||localStorage.getItem('ecto_containment_007h1')||localStorage.getItem('ecto_containment_007h')||localStorage.getItem('ecto_containment_007g')||localStorage.getItem('ecto_containment_007f')||localStorage.getItem('ecto_containment_007e')||localStorage.getItem('ecto_containment_007d1')||localStorage.getItem('ecto_containment_007d')||localStorage.getItem('ecto_containment_007c')||localStorage.getItem('ecto_containment_007b')||localStorage.getItem('ecto_containment_007a4')||localStorage.getItem('ecto_containment_006')||localStorage.getItem('ecto_containment_005')||localStorage.getItem('ecto_containment_003')||localStorage.getItem('ecto_containment_002')||'null'),d=JSON.parse(localStorage.getItem(key)||'null')||old||{occ:18.4,records:[],seq:268,hours:418,balances:12,event:'',maintenance:94.6};d.sectors=d.sectors||Array.from({length:8},(_,i)=>({occ:+Math.max(2,d.occ/8+(i%3)*.5).toFixed(1),stability:96-(i%4),activity:18+(i*7)%31}));d.director=d.director||{intensity:'ACTIVE',next:'UNCOMMITTED',last:'NONE',recent:[],sound:true};
+// Preserve explicit OFF choices, but repair missing/invalid legacy sound preferences.
+if(typeof d.director.sound!=='boolean')d.director.sound=true;d.activityHistory=Array.isArray(d.activityHistory)?d.activityHistory:[];d.autoCorrections=Number(d.autoCorrections)||0;d.operatorInterventions=Number(d.operatorInterventions)||0;let activeCue='ROUTINE',interventionPending=false;let step=0,operator='',sel=0,timer=null,scopeMode='normal';const save=()=>localStorage.setItem(key,JSON.stringify(d));const esc=s=>(s||'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+let ac=null;
+function cuAudioContext(){
+ const C=window.AudioContext||window.webkitAudioContext;
+ if(!C)return null;
+ if(!ac||ac.state==='closed')ac=new C();
+ if(ac.state==='suspended')ac.resume().catch(()=>{});
+ return ac;
+}
+function tone(f=440,dur=.08,type='square',gain=.025){
+ if(!d.director.sound)return;
+ try{
+  const ctx=cuAudioContext();if(!ctx)return;
+  const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;
+  o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(Math.max(.0001,gain),now);
+  g.gain.exponentialRampToValueAtTime(.0001,now+dur);
+  o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+dur+.015);
+ }catch(e){}
+}
 
 let sectorVisual=Array(8).fill(''), currentEvent='IDLE', autonomousBusy=false, popupResolve=null;
 function refreshSectorVisual(){
@@ -638,8 +658,8 @@ let autoTick=0;
 // 007K: sound feedback is activated by an explicit touch, independent of the Director timer.
 function kAudioUnlock(){
  try{
-  ac=ac||new (window.AudioContext||window.webkitAudioContext)();
-  if(ac.state==='suspended')ac.resume().catch(()=>{});
+  ac=cuAudioContext();
+  if(!ac)return;
  }catch(e){}
 }
 document.addEventListener('pointerdown',kAudioUnlock,{capture:true,passive:true});
@@ -669,6 +689,19 @@ document.addEventListener('pointerdown',e=>{
  kInterfaceTone(kind);
 },true);
 // Keep alarm siren independent: it uses the existing, proven alarmBeep controller.
+// Audio recovery remains available even if an incident is running.
+const cuAudioRecovery=document.createElement('button');
+cuAudioRecovery.type='button';cuAudioRecovery.id='cuAudioRecovery';
+cuAudioRecovery.textContent='RESTORE / TEST AUDIO';
+cuAudioRecovery.title='Enable sound, unlock iPad audio, and play a confirmation tone';
+cuAudioRecovery.addEventListener('click',()=>{
+ d.director.sound=true;save();renderDirector();
+ try{cuAudioContext();tone(540,.12,'square',.045);setTimeout(()=>tone(790,.15,'square',.045),175)}catch(e){}
+ const status=document.querySelector('#directorDiagnostic');
+ if(status)status.textContent='AUDIO ENABLED // TEST SIGNAL SENT';
+});
+const cuAudioHost=document.querySelector('#soundToggle');
+if(cuAudioHost)cuAudioHost.insertAdjacentElement('afterend',cuAudioRecovery);
 const kAudioPanel=document.querySelector('#engineeringMode .enggrid');
 if(kAudioPanel){
  const btn=document.createElement('button');btn.type='button';btn.id='kSoundTest';btn.textContent='TEST INTERFACE AUDIO';
@@ -896,8 +929,7 @@ setInterval(()=>{if(unlockedUntil&&Date.now()>=unlockedUntil)lockEngineering()},
 document.addEventListener('pointerdown',e=>{if(engineeringAuthorized()&&e.target.closest('#engineeringMode'))unlockedUntil=Date.now()+5*60*1000},true);
 function alarmBeep(freq,duration){
  try{
-  ac=ac||new (window.AudioContext||window.webkitAudioContext)();
-  if(ac.state==='suspended')ac.resume().catch(()=>{});
+  ac=cuAudioContext();
   const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=freq;
   g.gain.setValueAtTime(.0001,ac.currentTime);
   g.gain.exponentialRampToValueAtTime(.075,ac.currentTime+.025);
