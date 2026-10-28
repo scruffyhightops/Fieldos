@@ -1,9 +1,7 @@
-ECTO 008D.1.5 — GUIDED MISSION EXPERIENCE
+ECTO 008D.2 — HQ MESSAGES & SPECTRAL ANOMALIES
 
-Offline, single-file iPad Safari build.
+Single-file offline index.html for iPad Safari.
 
-Default guided path: accept dispatch; tap six preflight checks; authorise departure; run animated spectral scan; add observations and transmit HQ report; confirm arrival at HQ. Reports and missions retained; vehicle preflight reset.
+Based on confirmed stable 008D.1.5. Optional HQ messages and occasional secondary scans appear inside the guided mission screen. Staff can switch surprises on/off, and manually trigger an HQ advisory or anomaly from the supporting controls. Mission reports, reset, engineering controls and CU-01 retained.
 
-Advanced Engineering remains accessible from VEH-01. CU-01 retained.
-
-If a genuine equipment fault or HQ link-loss is present, the guided mission pauses and requests staff Engineering assistance instead of silently overriding it.
+All events and HQ communications are local simulated terminal interactions, not real radio transmissions.

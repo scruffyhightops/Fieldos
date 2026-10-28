@@ -409,13 +409,14 @@ body.vehicle-active>.app{display:none!important}body:not(.vehicle-active)>#vehic
  <div id="f-steps" class="f-steps" aria-label="Mission progress"></div>
  <div class="f-body"><div class="f-hero"><div id="f-kicker" class="f-kicker">OPERATIONS CONTROL / 008D.1.4</div><h1 id="f-title">AWAITING DISPATCH</h1><p id="f-desc">Register a new assignment to begin the operational sequence.</p><div id="f-case" class="f-case">VEHICLE STANDBY / READY FOR ASSIGNMENT</div>
  <div id="f-register" class="f-register"><label>CASE REFERENCE<input id="f-ref" maxlength="48" placeholder="CASE REFERENCE"></label><label>DESTINATION<input id="f-location" maxlength="90" placeholder="LOCATION"></label><label>OPERATOR<input id="f-operator" maxlength="40" placeholder="OPERATOR NAME"></label><label>DISPATCH INSTRUCTIONS<input id="f-notes" maxlength="500" placeholder="ASSIGNMENT DETAILS (OPTIONAL)"></label></div>
- <div id="f-experience" hidden>
+ <div id="f-event" class="f-event" hidden role="status" aria-live="polite"><div class="f-event-head"><span id="f-event-kind">INCOMING HQ MESSAGE</span><span id="f-event-tag">ATTENTION</span></div><div id="f-event-text" class="f-event-text"></div><button type="button" id="f-event-action" class="v-good-button">ACKNOWLEDGE HQ</button></div>
+<div id="f-experience" hidden>
 <div id="f-checks" class="f-experience-panel" hidden><div class="f-minihead">VEHICLE READINESS / TAP EACH CHECK</div><div id="f-check-grid" class="f-check-grid"></div><div id="f-check-status" class="f-subline">AWAITING SYSTEM INSPECTION</div></div>
 <div id="f-scan" class="f-experience-panel" hidden><div class="f-minihead">PORTABLE SPECTRAL SCANNER / LIVE READOUT</div><div class="f-scan-grid"><div class="f-scan-graph" id="f-scan-graph" aria-label="Spectral scan activity"></div><div class="f-scan-data"><span>DENSITY <b id="f-density">--</b></span><span>SIGNAL <b id="f-signal">--</b></span><span>BEARING <b id="f-bearing">--</b></span><span>CLASS <b id="f-class">--</b></span></div></div><div id="f-scan-status" class="f-subline">READY TO SCAN</div></div>
 <div id="f-report" class="f-experience-panel" hidden><div class="f-minihead">HQ REPORT / AUTOMATICALLY ATTACHED SCAN DATA</div><div class="f-report-grid"><div id="f-report-summary" class="f-subline"></div><label>FIELD OBSERVATIONS<textarea id="f-observations" rows="3" maxlength="600" placeholder="What did you discover?"></textarea></label></div><div id="f-report-status" class="f-subline">AWAITING REPORT</div></div>
 </div>
 <button id="f-primary" type="button">ACCEPT DISPATCH / BEGIN OPERATION</button><div id="f-message" role="status">SYSTEM READY. AWAITING OPERATOR INPUT.</div></div>
- <aside class="f-aside"><div class="f-aside-head">OPERATIONAL TELEMETRY</div><div class="f-metric">VEHICLE STATE <b id="f-state">STANDBY</b></div><div class="f-metric">PREFLIGHT <b id="f-ready">CHECK REQUIRED</b></div><div class="f-metric">MISSION <b id="f-mission">NONE</b></div><div class="f-divider"></div><div class="f-aside-head">SUPPORTING SYSTEMS</div><div class="f-tools"><button type="button" data-flow-tool="v-opencomms">COMMUNICATIONS</button><button type="button" data-flow-tool="v-openmonitor-direct">SPECTRAL MONITOR</button><button type="button" data-flow-tool="v-openroof">ROOF SYSTEMS</button><button type="button" data-flow-tool="v-openequip">EQUIPMENT</button><button type="button" data-flow-tool="v-openreports">REPORT ARCHIVE</button><button type="button" data-flow-tool="v-openpreflight">PREFLIGHT</button></div><div class="f-divider"></div><button id="f-advanced" type="button">ENGINEERING / ADVANCED CONTROLS</button><button id="f-hold" type="button">HOLD OPERATION</button><button id="f-cancel" type="button">CANCEL OPERATION</button><button id="f-history" type="button">MISSION HISTORY</button></aside></div>
+ <aside class="f-aside"><div class="f-aside-head">OPERATIONAL TELEMETRY</div><div class="f-metric">VEHICLE STATE <b id="f-state">STANDBY</b></div><div class="f-metric">PREFLIGHT <b id="f-ready">CHECK REQUIRED</b></div><div class="f-metric">MISSION <b id="f-mission">NONE</b></div><div class="f-divider"></div><div class="f-aside-head">SUPPORTING SYSTEMS</div><div class="f-tools"><button type="button" data-flow-tool="v-opencomms">COMMUNICATIONS</button><button type="button" data-flow-tool="v-openmonitor-direct">SPECTRAL MONITOR</button><button type="button" data-flow-tool="v-openroof">ROOF SYSTEMS</button><button type="button" data-flow-tool="v-openequip">EQUIPMENT</button><button type="button" data-flow-tool="v-openreports">REPORT ARCHIVE</button><button type="button" data-flow-tool="v-openpreflight">PREFLIGHT</button></div><div class="f-divider"></div><button id="f-advanced" type="button">ENGINEERING / ADVANCED CONTROLS</button><button id="f-hold" type="button">HOLD OPERATION</button><button id="f-cancel" type="button">CANCEL OPERATION</button><button id="f-history" type="button">MISSION HISTORY</button><div id="f-event-settings" class="f-event-settings"><span>STAFF / MISSION SURPRISES</span><button type="button" id="f-events-toggle">EVENTS ON</button><button type="button" id="f-events-hq">TEST HQ MESSAGE</button><button type="button" id="f-events-anomaly">TEST ANOMALY</button></div></aside></div>
 </section>
 <div class="v-columns">
   <section class="v-panel"><h2>01 / VEHICLE IDENTIFICATION</h2><div class="v-fields"><div><label>DESIGNATION</label><input id="v-designation" maxlength="28"></div><div><label>CALLSIGN</label><input id="v-call" maxlength="24"></div><div><label>MAKE / MODEL</label><input id="v-model" maxlength="55"></div><div><label>YEAR</label><input id="v-year" maxlength="8"></div><div><label>REGISTRATION</label><input id="v-reg" maxlength="24"></div><div><label>ASSIGNED TEAM</label><input id="v-team" maxlength="50"></div></div><button id="v-save">SAVE VEHICLE REGISTRATION</button><h2>OPERATIONAL STATE</h2><button id="v-openops" class="v-good-button" type="button">OPEN OPERATIONS CONSOLE / F2</button><label>SELECT VEHICLE STATE</label><div id="v-status-options" class="v-state-options" role="group" aria-label="Vehicle operational state"><button type="button" data-v-state="STANDBY">STANDBY</button><button type="button" data-v-state="PREFLIGHT">PREFLIGHT</button><button type="button" data-v-state="DEPLOYED">DEPLOYED</button><button type="button" data-v-state="RETURNING">RETURNING</button><button type="button" data-v-state="UNAVAILABLE">UNAVAILABLE</button></div><input type="hidden" id="v-status" value="STANDBY"><button id="v-setstatus">CONFIRM STATUS</button><div class="v-box v-compact">STATE IS OPERATOR-CONTROLLED. READINESS IS CALCULATED FROM PREFLIGHT AND INSTALLED EQUIPMENT.</div></section>
@@ -1492,6 +1493,19 @@ body.vehicle-active #vehicle008a{--f-green:#a9e8b8;--f-line:#345b4b;--f-cyan:#7e
 @media(max-width:700px){#vehicle008a .f-check-grid{grid-template-columns:repeat(2,1fr)}#vehicle008a .f-report-grid{grid-template-columns:1fr}}
 @media(max-height:780px) and (min-width:850px){#vehicle008a .f-experience-panel{padding:8px;margin:5px 0}#vehicle008a .f-check-item{min-height:44px;padding:6px}#vehicle008a .f-scan-graph{height:78px}}
 </style>
+<style id="ecto-008d2-style">
+#vehicle008a .f-event{border:2px solid #e1a453;background:#21190b;padding:10px 13px;margin:7px 0;animation:fEventFlash 1.3s ease-in-out 3}
+#vehicle008a .f-event[hidden]{display:none!important}
+#vehicle008a .f-event-head{display:flex;justify-content:space-between;gap:12px;font:700 11px 'Courier New',monospace;color:#ffcf83;letter-spacing:1px}
+#vehicle008a .f-event-text{font:13px/1.45 'Courier New',monospace;color:#f3e7c7;padding:8px 0}
+#vehicle008a .f-event button{width:100%;min-height:43px;border:1px solid #e0b06c;background:#44331b;color:#fff1cb;font:700 13px 'Courier New',monospace}
+#vehicle008a .f-event-settings{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid #365b43;padding-top:8px}
+#vehicle008a .f-event-settings span{grid-column:1/-1;color:#9eb7a5;font:10px 'Courier New',monospace}
+#vehicle008a .f-event-settings button{font:10px 'Courier New',monospace;min-height:32px;padding:4px}
+#vehicle008a .f-event-settings #f-events-toggle{grid-column:1/-1;border-color:#7ca884}
+@keyframes fEventFlash{0%,100%{border-color:#e1a453}50%{border-color:#764e20}}
+@media(max-height:780px) and (min-width:851px){#vehicle008a .f-event{padding:6px 9px;margin:4px 0}#vehicle008a .f-event-text{padding:5px 0}#vehicle008a .f-event button{min-height:35px}}
+</style>
 <script id="vehicle008a-script">
 (()=>{
 'use strict';
@@ -2122,6 +2136,91 @@ const flowActions=['BEGIN PREFLIGHT','CONFIRM PREFLIGHT CHECKS','AUTHORISE DEPAR
 const flowEl=id=>document.getElementById(id);
 function flowNotice(msg){flowEl('f-message').textContent=msg}
 
+// 008D.2 / Guided HQ dispatches and spectral anomaly encounters.
+// Events are local terminal interactions; no external radio or hardware connection.
+let flowEventsOn=localStorage.getItem('ecto_008d2_events')!=='OFF';
+let flowEventLock=false;
+const flowEventMsg=[
+ 'HQ OPERATIONS: Confirm you have reached the assigned location. We have received unusual readings in your area.',
+ 'HQ OPERATIONS: Additional spectral activity reported nearby. Please continue your investigation.',
+ 'HQ OPERATIONS: Field team, verify your instruments and proceed with caution.'
+];
+function flowEventState(m){
+ if(!m)return null;
+ if(!m.interaction)m.interaction={hq:null,anomaly:null};
+ return m.interaction;
+}
+function flowEventPending(m){
+ const e=m&&flowEventState(m);
+ if(!e)return null;
+ if(e.hq&&e.hq.status==='PENDING')return 'HQ';
+ if(e.anomaly&&e.anomaly.status==='PENDING')return 'ANOMALY';
+ return null;
+}
+function flowEventRender(){
+ const m=missionCurrent(),event=m&&flowEventState(m),kind=flowEventPending(m);
+ const panel=flowEl('f-event');panel.hidden=!kind;
+ if(!kind)return;
+ if(kind==='HQ'){
+  flowEl('f-event-kind').textContent='INCOMING / HQ OPERATIONS';
+  flowEl('f-event-tag').textContent='MESSAGE RECEIVED';
+  flowEl('f-event-text').textContent=event.hq.text;
+  flowEl('f-event-action').textContent='ACKNOWLEDGE HQ';
+ }else{
+  flowEl('f-event-kind').textContent='SPECTRAL ANOMALY DETECTED';
+  flowEl('f-event-tag').textContent='SECONDARY SCAN REQUIRED';
+  flowEl('f-event-text').textContent='Unstable spectral readings detected. Perform a secondary scan to verify the signature before reporting to HQ.';
+  flowEl('f-event-action').textContent='PERFORM SECONDARY SCAN';
+ }
+}
+function flowCreateHQ(m,forced=false){
+ if(!m||m.stage<2||m.stage>4||m.hold)return false;
+ const e=flowEventState(m);if(e.hq)return false;
+ if(!forced&&!flowEventsOn)return false;
+ e.hq={status:'PENDING',text:flowEventMsg[Math.floor(Math.random()*flowEventMsg.length)],created:new Date().toISOString()};
+ log('HQ ADVISORY RECEIVED / '+m.reference);flowSound(false);flowRender();flowNotice('INCOMING HQ ADVISORY / ACKNOWLEDGE TO CONTINUE');return true;
+}
+function flowCreateAnomaly(m,forced=false){
+ if(!m||m.stage!==3||m.hold)return false;
+ const e=flowEventState(m);if(e.anomaly)return false;
+ if(!forced&&!flowEventsOn)return false;
+ e.anomaly={status:'ARMED',created:new Date().toISOString()};
+ log('SPECTRAL ANOMALY ARMED / '+m.reference);
+ if(m.scan){e.anomaly.status='PENDING';e.anomaly.primaryScan=m.scan;m.scan=null;flowSound(false);flowRender();flowNotice('UNUSUAL SIGNATURE / SECONDARY SCAN REQUIRED')}
+ return true;
+}
+function flowEventsMaybe(m,stage){
+ if(!m||!flowEventsOn)return;
+ if(stage===3&&Math.random()<.45)flowCreateHQ(m);
+ if(stage===3&&Math.random()<.38)flowCreateAnomaly(m);
+}
+flowEl('f-event-action').onclick=()=>{
+ const m=missionCurrent();if(!m||m.hold)return;
+ const kind=flowEventPending(m),e=flowEventState(m);
+ if(kind==='HQ'){
+  e.hq.status='ACKNOWLEDGED';e.hq.acknowledged=new Date().toISOString();log('HQ ADVISORY ACKNOWLEDGED / '+m.reference);
+  flowSound();flowRender();flowNotice('HQ MESSAGE ACKNOWLEDGED / RESUME MISSION');return;
+ }
+ if(kind==='ANOMALY'){
+  e.anomaly.status='SCANNING';log('SECONDARY SPECTRAL SCAN INITIATED / '+m.reference);
+  flowRender();flowDoScan(m,true);
+ }
+};
+function flowEventButtons(){
+ flowEl('f-events-toggle').textContent=flowEventsOn?'SURPRISE EVENTS / ON':'SURPRISE EVENTS / OFF';
+}
+flowEl('f-events-toggle').onclick=()=>{
+ flowEventsOn=!flowEventsOn;localStorage.setItem('ecto_008d2_events',flowEventsOn?'ON':'OFF');
+ flowEventButtons();flowNotice(flowEventsOn?'OPTIONAL MISSION EVENTS ENABLED':'OPTIONAL MISSION EVENTS DISABLED');flowSound();
+};
+flowEl('f-events-hq').onclick=()=>{
+ const m=missionCurrent();if(!flowCreateHQ(m,true))flowNotice('HQ TEST AVAILABLE DURING DEPLOYED MISSION / ONE MESSAGE PER MISSION');
+};
+flowEl('f-events-anomaly').onclick=()=>{
+ const m=missionCurrent();if(!flowCreateAnomaly(m,true))flowNotice('ANOMALY TEST AVAILABLE DURING INVESTIGATION / ONE PER MISSION');
+};
+flowEventButtons();
+
 // 008D.1.5 / Child-friendly integrated experience, preserving advanced controls.
 const flowChecks=[['visual','VEHICLE BODY'],['crew','CREW READY'],['comms','HQ RADIO'],['roof','ROOF EQUIPMENT'],['signal','EMERGENCY SIGNAL'],['kit','FIELD EQUIPMENT']];
 let flowScanTimer=null;
@@ -2154,7 +2253,7 @@ function flowInlineRender(){
 function flowScanDisplay(scan){
  flowEl('f-density').textContent=scan.density+'%';flowEl('f-signal').textContent=scan.signal+'%';flowEl('f-bearing').textContent=scan.bearing+'°';flowEl('f-class').textContent=scan.classLabel;
 }
-function flowDoScan(m){
+function flowDoScan(m,secondary=false){
  if(flowScanTimer)return;
  flowEl('f-primary').disabled=true;flowEl('f-primary').textContent='SCANNING / PLEASE WAIT';
  flowEl('f-scan-status').textContent='SPECTRAL SWEEP IN PROGRESS';
@@ -2171,6 +2270,16 @@ function flowDoScan(m){
    const density=20+Math.round(Math.random()*60),signal=30+Math.round(Math.random()*65),bearing=Math.round(Math.random()*359);
    const classLabel=density<35?'I':density<50?'II':density<70?'III':'IV';
    m.scan={time:new Date().toISOString(),density,signal,bearing,classLabel,temperature:'+'+(Math.random()*4).toFixed(1)+'°C',em:Math.round(density*.7)+' mG',acquisition:'ACQUIRED',signature:'PKE-'+classLabel,event:'NONE'};
+   const e=flowEventState(m);
+   if(e&&e.anomaly&&e.anomaly.status==='ARMED'&&!secondary){
+     e.anomaly.primaryScan=m.scan;e.anomaly.status='PENDING';m.scan=null;
+     log('UNSTABLE SPECTRAL SIGNATURE / SECONDARY SCAN REQUIRED / '+m.reference);
+     flowSound(false);flowRender();flowNotice('ANOMALY DETECTED / PRESS PERFORM SECONDARY SCAN');return;
+   }
+   if(e&&e.anomaly&&e.anomaly.status==='SCANNING'){
+     e.anomaly.status='RESOLVED';e.anomaly.resolved=new Date().toISOString();
+     log('SECONDARY SPECTRAL SCAN VERIFIED / '+m.reference);
+   }
    log('GUIDED SPECTRAL SCAN COMPLETE / '+m.reference+' / CLASS '+classLabel);
    flowSound();flowScanDisplay(m.scan);flowEl('f-scan-status').textContent='SIGNATURE ACQUIRED / READY TO RECORD FINDINGS';
    flowRender();flowNotice('SCAN COMPLETE / PRESS RECORD FINDINGS TO CONTINUE');
@@ -2199,13 +2308,14 @@ function flowRender(){
  flowEl('f-case').textContent=m?m.reference+' / '+m.location+' / '+m.operator+(m.hold?' / ON HOLD':''):'VEHICLE STANDBY / READY FOR ASSIGNMENT';
  flowEl('f-register').hidden=!!m;
  flowEl('f-primary').textContent=m?(stage===1?'CONFIRM PREFLIGHT CHECKS':stage===3?(m.scan?'RECORD FINDINGS / CONTINUE':'BEGIN SPECTRAL SCAN'):stage===4?'TRANSMIT REPORT TO HQ':flowActions[stage]):'ACCEPT DISPATCH / BEGIN OPERATION';
- flowEl('f-primary').disabled=!!(m&&m.hold);
+ flowEl('f-primary').disabled=!!(m&&(m.hold||flowEventPending(m)))||!!flowScanTimer;
  flowEl('f-state').textContent=v.status;
  flowEl('f-ready').textContent=ready()?'VERIFIED':'CHECK REQUIRED';
  flowEl('f-mission').textContent=m?m.reference:'NONE';
  flowEl('f-hold').disabled=!m;flowEl('f-cancel').disabled=!m;
  flowEl('f-hold').textContent=m&&m.hold?'RESUME OPERATION':'HOLD OPERATION';
  flowInlineRender();
+ flowEventRender();
 }
 function flowLaunch(target){
  const map={'v-openpreflight':'v-preflight-modal','v-opencomms':'v-comms-modal','v-openreports':'v-reports-modal','v-openmonitor-direct':'v-monitor-modal','v-openroof':'v-roof-modal'};
@@ -2227,7 +2337,7 @@ flowEl('f-primary').onclick=()=>{
    log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);
    missionSync();flowRender();flowSound();flowNotice('DISPATCH ACCEPTED / BEGIN PREFLIGHT');return;
  }
- if(m.hold)return;
+ if(m.hold||flowEventPending(m))return;
  if(m.stage===0){missionAdvance(m,'DISPATCH ACCEPTED');flowSound();flowNotice('VEHICLE CHECKS READY')}
  else if(m.stage===1){
    if(flowChecks.some(([k])=>!v.opsDraft[k])){flowNotice('VERIFY ALL SIX VEHICLE SYSTEMS FIRST');flowSound(false);return}
@@ -2238,7 +2348,7 @@ flowEl('f-primary').onclick=()=>{
    if(!ready()){flowNotice('VEHICLE HAS AN ACTIVE EQUIPMENT FAULT / STAFF ENGINEERING ASSISTANCE REQUIRED');flowSound(false);return}
    missionSync();flowSound();flowNotice('ALL SYSTEMS VERIFIED / DEPLOYMENT AUTHORISED');
  }
- else if(m.stage===2){if(!ready()){flowNotice('PREFLIGHT NOT VERIFIED / COMPLETE CHECKLIST FIRST');return}v.status='DEPLOYED';log('VEHICLE DEPLOYED / '+m.reference);setupFields();missionAdvance(m,'DEPARTURE AUTHORISED');flowNotice('DEPARTURE AUTHORISED / PROCEED TO SITE')}
+ else if(m.stage===2){if(!ready()){flowNotice('PREFLIGHT NOT VERIFIED / COMPLETE CHECKLIST FIRST');return}v.status='DEPLOYED';log('VEHICLE DEPLOYED / '+m.reference);setupFields();missionAdvance(m,'DEPARTURE AUTHORISED');flowEventsMaybe(m,3);flowNotice('DEPARTURE AUTHORISED / PROCEED TO SITE')}
  else if(m.stage===3){
    if(!m.scan){flowDoScan(m);return}
    missionAdvance(m,'SPECTRAL INVESTIGATION COMPLETE');flowSound();flowNotice('SCAN RECORDED / PREPARE HQ REPORT');
