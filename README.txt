@@ -1,1 +1,2 @@
-ECTO 008D.1.1 — Guided Deployment & Return-to-HQ Reset\n\nOpen index.html in iPad Safari.\nMission completion resets operational status, preflight, roof activation and spectral Event Director; retains mission, reports, messages, equipment and CU-01 records.\n
+ECTO 008D.1.2 — access restoration
+Corrects a JavaScript parsing error in 008D.1.1 that prevented the Ectomobile module from starting. Existing data keys unchanged.

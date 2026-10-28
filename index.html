@@ -1933,7 +1933,8 @@ missionBtn.onclick=()=>{missionDraw();missionMsg('DEPLOYMENT CONTROL READY');d('
 d('d-close').onclick=()=>d('v-mission-modal').classList.add('v-hidden');
 d('d-create').onclick=()=>{
  const reference=d('d-reference').value.trim(),location=d('d-location').value.trim(),operator=d('d-operator').value.trim();if(!reference||!location||!operator){missionMsg('REFERENCE, LOCATION AND OPERATOR ARE REQUIRED');return}
- if(missionCurrent()){missionMsg('ACTIVE DEPLOYMENT EXISTS / COMPLETE OR CANCEL IT BEFORE NEW DISPATCH');return}\n const m={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:d('d-instructions').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};v.missions.unshift(m);v.missions=v.missions.slice(0,100);missionSelected=m.id;log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);missionDraw();missionMsg('DISPATCH RECORDED / PREFLIGHT REQUIRED');
+ if(missionCurrent()){missionMsg('ACTIVE DEPLOYMENT EXISTS / COMPLETE OR CANCEL IT BEFORE NEW DISPATCH');return}
+ const m={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:d('d-instructions').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};v.missions.unshift(m);v.missions=v.missions.slice(0,100);missionSelected=m.id;log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);missionDraw();missionMsg('DISPATCH RECORDED / PREFLIGHT REQUIRED');
 };
 d('d-next').onclick=()=>{
  const m=missionActive();if(!m||m.cancelled||m.hold||m.stage>=6)return;
