@@ -1398,7 +1398,32 @@ l1RefreshAudio();
 #v-mission-modal .d-foot{font:10px 'Courier New',monospace;color:#8bab96}
 @media(max-width:690px){#v-mission-modal .d-grid{grid-template-columns:1fr}}
 @media(max-height:780px) and (orientation:landscape){#v-mission-modal .d-frame{padding:7px}#v-mission-modal .d-pane{padding:7px}#v-mission-modal .d-list{height:82px}#v-mission-modal .d-detail{min-height:70px}#v-mission-modal .d-step{padding:5px}}
-</style><script id="vehicle008a-script">
+</style>
+<style id="ecto-008d13-style">
+#v-mission-modal .d-frame{width:min(1120px,99vw);height:min(96dvh,790px);max-height:96dvh;display:flex;flex-direction:column;overflow:hidden}
+#v-mission-modal .d-full{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(230px,.8fr);gap:10px;min-height:0;flex:1}
+#v-mission-modal .d-main,#v-mission-modal .d-side{min-width:0;overflow:auto;border:1px solid #335c49;background:#03100c;padding:12px}
+#v-mission-modal .d-current-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#8de6d8;font-size:12px;padding:5px 0 12px}
+#v-mission-modal .d-stage{font:700 clamp(18px,2.5vw,27px) 'Courier New',monospace;color:#b4f0c7;letter-spacing:1px;padding:14px 0}
+#v-mission-modal .d-instruction{color:#c2d6c7;min-height:80px;font:13px/1.6 'Courier New',monospace;border-top:1px solid #345b48;padding:12px 0}
+#v-mission-modal .d-actionbar{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+#v-mission-modal .d-actionbar #d-action{flex:2 1 240px;min-height:46px;font-size:13px}
+#v-mission-modal .d-actionbar button{flex:1;min-height:40px}
+#v-mission-modal .d-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#v-mission-modal .d-shortcuts button{min-height:42px}
+#v-mission-modal .d-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#v-mission-modal .d-fields .d-wide{grid-column:1/-1}
+#v-mission-modal .d-fields input,#v-mission-modal .d-fields textarea{width:100%;box-sizing:border-box}
+#v-mission-modal #d-create{width:100%;min-height:46px;margin-top:12px}
+#v-mission-modal #d-feedback{margin-top:12px}
+#v-mission-modal .d-side .d-steps{display:grid;grid-template-columns:1fr;gap:4px}
+#v-mission-modal .d-side .d-step{padding:7px;font-size:10px}
+#v-mission-modal .d-side .d-list{max-height:140px}
+#v-mission-modal [hidden]{display:none!important}
+@media(max-width:740px){#v-mission-modal .d-full{grid-template-columns:1fr}#v-mission-modal .d-side{max-height:150px}#v-mission-modal .d-side .d-steps{grid-template-columns:repeat(3,1fr)}}
+@media(max-height:780px) and (orientation:landscape){#v-mission-modal .d-main,#v-mission-modal .d-side{padding:8px}#v-mission-modal .d-stage{padding:8px 0}#v-mission-modal .d-instruction{min-height:54px;padding:7px 0}#v-mission-modal .d-actionbar{margin:7px 0}}
+</style>
+<script id="vehicle008a-script">
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id), KEY='ecto_vehicle_008a';
@@ -1864,107 +1889,151 @@ r('r-search').oninput=rDrawReports;r('r-filter').onchange=rDrawReports;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')r('v-reports-modal').classList.add('v-hidden')});
 
 
-// 008D.1 / Deployment lifecycle. Independent of the established CU-01 controllers.
+
+// 008D.1.3 / Integrated deployment workflow. CU-01 untouched.
 v.missions=Array.isArray(v.missions)?v.missions:[];
-let missionSelected=v.missions[0]?.id||null;
+let missionSelected=(v.missions.find(x=>!x.cancelled&&x.stage<6)||v.missions[0]||{}).id||null;
 const missionSteps=['DISPATCH RECEIVED','PREFLIGHT VERIFIED','DEPLOYMENT AUTHORISED','ON SITE','REPORT TO HQ','RETURN TO BASE'];
+const d=id=>document.getElementById(id);
 const missionActive=()=>v.missions.find(m=>m.id===missionSelected);
 const missionCurrent=()=>v.missions.find(m=>!m.cancelled&&m.stage<6);
-let missionReturnButton=null;
-function missionOpenLinked(target){
- d('v-mission-modal').classList.add('v-hidden');
- $(target).click();
- const modal=target==='v-openpreflight'?'v-preflight-modal':target==='v-opencomms'?'v-comms-modal':target==='v-openreports'?'v-reports-modal':'v-work-modal';
- let el=document.getElementById(modal);
- if(!el||el.classList.contains('v-hidden')){
-   el=Array.from(document.querySelectorAll('.v-modal')).find(x=>!x.classList.contains('v-hidden')&&x.id!=='v-mission-modal');
- }
- if(missionReturnButton)missionReturnButton.remove();
- if(el){
-   missionReturnButton=document.createElement('button');
-   missionReturnButton.type='button';
-   missionReturnButton.textContent='RETURN TO DEPLOYMENT';
-   missionReturnButton.className='v-good-button';
-   missionReturnButton.style.margin='6px';
-   missionReturnButton.onclick=()=>{
-     el.classList.add('v-hidden');missionReturnButton.remove();missionReturnButton=null;
-     missionDraw();d('v-mission-modal').classList.remove('v-hidden');
-     missionMsg('TASK WINDOW CLOSED / VERIFY NEXT MISSION STAGE');
-   };
-   const top=el.querySelector('.v-modal-top,.d-head')||el.querySelector('.v-modal-frame');
-   if(top)top.appendChild(missionReturnButton);
- }
-}
-function missionResetAfterReturn(m){
-  // Clear the current operational session, not the permanent archives, registry or CU-01.
-  v.status='STANDBY';
-  v.preflight=null;
-  v.opsDraft={};
-  for(const id of Object.keys(v.roofControl||{})){
-    if(v.roofControl[id]&&typeof v.roofControl[id]==='object')v.roofControl[id].active=false;
-  }
-  monitor.locked=false;monitor.signature='';monitor.hold=false;
-  director.rate='OFF';mon('m-event-rate').value='OFF';
-  directorClear('RETURNED TO HQ');directorSchedule();
-  m.returnedToHQ=new Date().toISOString();
-  log('RETURN TO HQ / '+m.reference+' / OPERATIONAL SESSION RESET / NEW PREFLIGHT REQUIRED');
-  setupFields();drawOps();drawRoof();monitorDraw();
-}
-
-const missionHtml=`<div id="v-mission-modal" class="v-modal v-hidden" role="dialog" aria-modal="true" aria-label="Deployment management"><div class="v-modal-frame d-frame"><div class="d-head"><b>VEH-01 / OPERATIONAL DEPLOYMENT</b><button type="button" id="d-close">CLOSE</button></div><div class="d-grid"><section class="d-pane"><div class="d-title">01 / NEW DISPATCH</div><label>MISSION / CASE REFERENCE<input id="d-reference" maxlength="48" placeholder="CASE REFERENCE"></label><label>DESTINATION / LOCATION<input id="d-location" maxlength="90" placeholder="LOCATION"></label><label>DISPATCH INSTRUCTIONS<textarea id="d-instructions" maxlength="500" rows="3" placeholder="ASSIGNMENT DETAILS"></textarea></label><label>RESPONSIBLE OPERATOR<input id="d-operator" maxlength="40" placeholder="OPERATOR NAME"></label><button type="button" id="d-create" class="v-good-button">REGISTER DISPATCH</button><div class="d-title">02 / MISSION REGISTER</div><div id="d-list" class="d-list"></div></section><section class="d-pane"><div class="d-title">03 / ACTIVE DEPLOYMENT</div><div id="d-detail" class="d-detail">SELECT A MISSION.</div><div id="d-steps" class="d-steps"></div><div class="d-controls"><button id="d-guide" type="button">OPEN NEXT REQUIRED ACTION</button></div><div class="d-controls"><button id="d-next" type="button" class="v-good-button">ADVANCE OPERATION</button><button id="d-hold" type="button">HOLD / RESUME</button><button id="d-abort" type="button">CANCEL MISSION</button></div><div id="d-feedback" class="d-feedback" role="status">AWAITING OPERATOR.</div><div class="d-title">04 / OPERATIONAL LINKS</div><div class="d-controls"><button id="d-preflight" type="button">OPEN PREFLIGHT</button><button id="d-comms" type="button">OPEN COMMS</button><button id="d-reports" type="button">OPEN REPORTS</button></div><div class="d-foot">AFTER COMPLETING A LINKED TASK, SELECT RETURN TO DEPLOYMENT TO CONTINUE.</div><div class="d-foot">MISSION RECORDS ARE STORED LOCALLY. HQ TRANSMISSION REQUIRES THE EXISTING COMMUNICATIONS CONSOLE.</div></section></div></div></div>`;
+let missionLinked=null, missionBusy=false;
+const missionHtml=`<div id="v-mission-modal" class="v-modal v-hidden" role="dialog" aria-modal="true" aria-label="Integrated deployment console"><div class="v-modal-frame d-frame">
+<div class="d-head"><b>ECTO / VEH-01 / DEPLOYMENT CONSOLE</b><span id="d-topstate">STANDBY</span><button id="d-close" type="button">EXIT</button></div>
+<div class="d-full">
+<section class="d-main">
+<div id="d-intro" class="d-intro"><div class="d-title">REGISTER NEW DISPATCH</div><div class="d-fields"><label>CASE REFERENCE<input id="d-reference" maxlength="48" placeholder="CASE REFERENCE"></label><label>DESTINATION<input id="d-location" maxlength="90" placeholder="LOCATION"></label><label>OPERATOR<input id="d-operator" maxlength="40" placeholder="OPERATOR NAME"></label><label class="d-wide">HQ INSTRUCTIONS<textarea id="d-instructions" maxlength="500" rows="2" placeholder="ASSIGNMENT DETAILS"></textarea></label></div><button type="button" id="d-create" class="v-good-button">ACCEPT DISPATCH / BEGIN OPERATION</button></div>
+<div id="d-active" hidden>
+<div class="d-current-head"><span id="d-reference-line">NO ACTIVE MISSION</span><span id="d-location-line"></span></div>
+<div class="d-title">CURRENT OPERATIONAL STAGE</div>
+<div id="d-stage" class="d-stage"></div><div id="d-instruction" class="d-instruction"></div>
+<div class="d-actionbar"><button id="d-action" type="button" class="v-good-button">CONTINUE</button><button id="d-hold" type="button">HOLD</button><button id="d-abort" type="button">CANCEL</button></div>
+<div class="d-title">SYSTEM ACCESS / AVAILABLE THROUGHOUT DEPLOYMENT</div>
+<div class="d-shortcuts"><button id="d-preflight" type="button">PREFLIGHT</button><button id="d-comms" type="button">COMMUNICATIONS</button><button id="d-reports" type="button">DETECTION REPORTS</button><button id="d-monitor" type="button">SPECTRAL MONITOR</button></div>
+</div>
+<div id="d-feedback" class="d-feedback" role="status">AWAITING DISPATCH.</div>
+</section>
+<aside class="d-side"><div class="d-title">MISSION PROGRESSION</div><div id="d-steps" class="d-steps"></div><div class="d-title">MISSION REGISTER</div><div id="d-list" class="d-list"></div><div class="d-foot">COMPLETED OPERATIONS REMAIN ARCHIVED. RETURN TO HQ CLEARS TEMPORARY VEHICLE READINESS.</div></aside>
+</div></div></div>`;
 document.body.insertAdjacentHTML('beforeend',missionHtml);
-const d=id=>document.getElementById(id);
-const missionBtn=document.createElement('button');missionBtn.id='v-openmissions';missionBtn.type='button';missionBtn.className='v-good-button';missionBtn.textContent='OPEN DEPLOYMENT MANAGEMENT / 008D';
+const missionBtn=document.createElement('button');missionBtn.id='v-openmissions';missionBtn.type='button';missionBtn.className='v-good-button';missionBtn.textContent='DEPLOYMENT CONSOLE / 008D';
 const reportsButton=$('v-openreports');if(reportsButton)reportsButton.insertAdjacentElement('afterend',missionBtn);else $('vehicle008a').appendChild(missionBtn);
-function missionMsg(message){d('d-feedback').textContent=message}
-function missionDraw(){
- const list=d('d-list');list.replaceChildren();
- v.missions.slice(0,50).forEach(m=>{const b=document.createElement('button');b.type='button';b.className=m.id===missionSelected?'d-selected':'';b.textContent=(m.reference||m.id)+' / '+(m.cancelled?'CANCELLED':m.stage===6?'COMPLETE':missionSteps[m.stage])+(m.hold?' / HOLD':'');b.onclick=()=>{missionSelected=m.id;missionDraw()};list.appendChild(b)});
- if(!v.missions.length)list.textContent='NO DISPATCHES REGISTERED.';
- const m=missionActive();d('d-detail').textContent=m?['REFERENCE / '+m.reference,'LOCATION / '+m.location,'OPERATOR / '+m.operator,'ASSIGNMENT / '+(m.instructions||'NONE'),'REGISTERED / '+new Date(m.created).toLocaleString('en-GB'),'STATUS / '+(m.cancelled?'CANCELLED':m.stage===6?'COMPLETE':missionSteps[m.stage])].join('\n'):'SELECT OR REGISTER A MISSION.';
- d('d-steps').replaceChildren();missionSteps.forEach((name,i)=>{const x=document.createElement('div');x.className='d-step'+(m&&i<m.stage?' d-done':'')+(m&&i===m.stage?' d-current':'');x.textContent=String(i+1).padStart(2,'0')+' / '+name;d('d-steps').appendChild(x)});
- const live=!!m&&!m.cancelled&&m.stage<6;
- const guide=['CONFIRM DISPATCH','OPEN OPS CHECKLIST','AUTHORISE DEPLOYMENT','OPEN SPECTRAL MONITOR','OPEN DETECTION REPORTS','RETURN TO HQ'][m?.stage??0];
- d('d-guide').textContent='NEXT / '+(live?guide:'NO ACTIVE OPERATION');
- d('d-guide').disabled=!live||m.hold;
- d('d-next').disabled=!live||m.hold;d('d-next').textContent=m&&m.stage<6?'CONFIRM / '+missionSteps[m.stage]:'OPERATION COMPLETE';d('d-hold').disabled=!live;d('d-hold').textContent=m&&m.hold?'RESUME OPERATION':'HOLD OPERATION';d('d-abort').disabled=!live;
+function missionMsg(t){d('d-feedback').textContent=t}
+function missionReportReady(m){
+ return (registry.reports||[]).some(x=>x.transmitted&&new Date(x.transmitted)>=new Date(m.created)&&!(m.reportIdsAtStart||[]).includes(x.id));
 }
-missionBtn.onclick=()=>{missionDraw();missionMsg('DEPLOYMENT CONTROL READY');d('v-mission-modal').classList.remove('v-hidden')};
+function missionAdvance(m,label){
+ if(!m||m.hold||m.cancelled||m.stage>=6)return;
+ m.actions=Array.isArray(m.actions)?m.actions:[];
+ m.actions.push({time:new Date().toISOString(),action:label||missionSteps[m.stage],operator:m.operator});
+ m.stage++;log('DEPLOYMENT / '+m.reference+' / '+(label||missionSteps[m.stage-1]));
+ missionDraw();
+}
+function missionReset(m){
+ v.status='STANDBY';v.preflight=null;v.opsDraft={};
+ monitor.locked=false;monitor.signature='';monitor.hold=false;
+ director.rate='OFF';mon('m-event-rate').value='OFF';directorClear('RETURNED TO HQ');directorSchedule();
+ m.returnedToHQ=new Date().toISOString();
+ log('RETURN TO HQ / '+m.reference+' / OPERATIONAL SESSION RESET / NEW PREFLIGHT REQUIRED');
+ setupFields();drawOps();drawRoof();monitorDraw();
+}
+function missionSync(){
+ const m=missionCurrent();if(!m||m.hold||missionBusy)return;
+ missionBusy=true;
+ try{
+   if(m.stage===0)missionAdvance(m,'DISPATCH ACCEPTED');
+   if(m.stage===1&&ready())missionAdvance(m,'PREFLIGHT VERIFIED');
+   if(m.stage===4&&missionReportReady(m))missionAdvance(m,'REPORT TRANSMITTED TO HQ');
+ }finally{missionBusy=false}
+}
+function missionDraw(){
+ const current=missionCurrent(),m=current||missionActive();
+ if(current)missionSelected=current.id;
+ const active=!!current;
+ d('d-intro').hidden=active;
+ d('d-active').hidden=!active;
+ d('d-topstate').textContent=active?(current.hold?'OPERATION ON HOLD':missionSteps[current.stage]):'STANDBY / READY';
+ d('d-list').replaceChildren();
+ v.missions.slice(0,40).forEach(x=>{
+   const b=document.createElement('button');b.type='button';
+   b.className=x.id===missionSelected?'d-selected':'';
+   b.textContent=(x.reference||x.id)+' / '+(x.cancelled?'CANCELLED':x.stage>=6?'COMPLETE':missionSteps[x.stage]);
+   b.onclick=()=>{if(missionCurrent()&&missionCurrent().id!==x.id){missionMsg('COMPLETE ACTIVE DEPLOYMENT BEFORE REVIEWING ARCHIVED RECORDS');return}missionSelected=x.id;missionDraw()};
+   d('d-list').appendChild(b);
+ });
+ if(!v.missions.length)d('d-list').textContent='NO PREVIOUS MISSIONS';
+ d('d-steps').replaceChildren();
+ missionSteps.forEach((name,i)=>{const x=document.createElement('div');x.className='d-step'+(active&&i<current.stage?' d-done':'')+(active&&i===current.stage?' d-current':'');x.textContent=String(i+1).padStart(2,'0')+' / '+name;d('d-steps').appendChild(x)});
+ if(!active)return;
+ d('d-reference-line').textContent=current.reference+' / '+current.operator;
+ d('d-location-line').textContent=current.location;
+ const titles=['DISPATCH RECEIVED','PREFLIGHT INSPECTION','DEPLOYMENT AUTHORISATION','ON-SITE OPERATIONS','TRANSMIT FINDINGS','RETURN TO HEADQUARTERS'];
+ const notes=[
+ 'Dispatch accepted. Preparing vehicle readiness checks.',
+ 'Complete the existing vehicle preflight inspection. The console advances automatically when it passes.',
+ 'Preflight verified. Authorise departure to place the vehicle into DEPLOYED status.',
+ 'Vehicle deployed. Confirm arrival at the destination when on site.',
+ 'Record a new detection report and transmit it through the existing HQ link. The console will detect the transmission automatically.',
+ 'Mission findings received. Confirm arrival at HQ to archive this deployment and reset operational readiness.'
+ ];
+ const labels=['CONTINUE','OPEN PREFLIGHT CHECKLIST','AUTHORISE DEPLOYMENT','CONFIRM ARRIVAL ON SITE','OPEN DETECTION REPORTS','CONFIRM ARRIVAL AT HQ'];
+ d('d-stage').textContent=titles[current.stage]||'OPERATION COMPLETE';
+ d('d-instruction').textContent=notes[current.stage]||'';
+ d('d-action').textContent=labels[current.stage]||'COMPLETE';
+ d('d-action').disabled=current.hold;
+ d('d-hold').textContent=current.hold?'RESUME':'HOLD';
+}
+function missionShow(){missionSync();missionDraw();d('v-mission-modal').classList.remove('v-hidden')}
+missionBtn.onclick=missionShow;
 d('d-close').onclick=()=>d('v-mission-modal').classList.add('v-hidden');
 d('d-create').onclick=()=>{
- const reference=d('d-reference').value.trim(),location=d('d-location').value.trim(),operator=d('d-operator').value.trim();if(!reference||!location||!operator){missionMsg('REFERENCE, LOCATION AND OPERATOR ARE REQUIRED');return}
- if(missionCurrent()){missionMsg('ACTIVE DEPLOYMENT EXISTS / COMPLETE OR CANCEL IT BEFORE NEW DISPATCH');return}
- const m={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:d('d-instructions').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};v.missions.unshift(m);v.missions=v.missions.slice(0,100);missionSelected=m.id;log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);missionDraw();missionMsg('DISPATCH RECORDED / PREFLIGHT REQUIRED');
+ const reference=d('d-reference').value.trim(),location=d('d-location').value.trim(),operator=d('d-operator').value.trim();
+ if(!reference||!location||!operator){missionMsg('CASE REFERENCE, DESTINATION AND OPERATOR REQUIRED');return}
+ if(missionCurrent()){missionMsg('AN ACTIVE DEPLOYMENT MUST BE CLOSED FIRST');return}
+ const m={id:'OPS-'+Date.now()+'-'+Math.floor(Math.random()*1000),reference,location,operator,instructions:d('d-instructions').value.trim(),created:new Date().toISOString(),stage:0,hold:false,cancelled:false,actions:[],reportIdsAtStart:(registry.reports||[]).map(x=>x.id)};
+ v.missions.unshift(m);v.missions=v.missions.slice(0,100);missionSelected=m.id;
+ log('DISPATCH REGISTERED / '+reference+' / '+location+' / '+operator);
+ missionSync();missionDraw();missionMsg('DISPATCH ACCEPTED / FOLLOW NEXT REQUIRED ACTION');
 };
-d('d-next').onclick=()=>{
- const m=missionActive();if(!m||m.cancelled||m.hold||m.stage>=6)return;
- // Preconditions are checked against the existing readiness and communications controllers.
- if(m.stage===1&&!ready()){missionMsg('PREFLIGHT NOT VERIFIED / COMPLETE OPERATIONS CHECKLIST FIRST');return}
- if(m.stage===2&&v.status!=='DEPLOYED'){missionMsg('DEPLOYMENT NOT AUTHORISED / SET VEHICLE STATUS TO DEPLOYED IN OPERATIONS CONTROL');return}
- if(m.stage===4){const reports=registry&&Array.isArray(registry.reports)?registry.reports:[];if(!reports.some(x=>x.transmitted&&new Date(x.transmitted)>=new Date(m.created)&&!(m.reportIdsAtStart||[]).includes(x.id))){missionMsg('NO HQ DETECTION REPORT TRANSMITTED / OPEN REPORTS');return}}
- if(m.stage===5&&v.status!=='STANDBY'&&v.status!=='RETURNING'){missionMsg('USE NEXT / RETURN TO HQ TO SET RETURNING STATUS');return}
- const action=missionSteps[m.stage];m.actions.push({time:new Date().toISOString(),action,operator:m.operator});m.stage++;log('DEPLOYMENT / '+m.reference+' / '+action);if(m.stage===6)missionResetAfterReturn(m);missionDraw();missionMsg(m.stage===6?'MISSION COMPLETE / RECORD RETAINED':'STAGE VERIFIED / '+action);
-};
-d('d-hold').onclick=()=>{const m=missionActive();if(!m||m.cancelled||m.stage>=6)return;m.hold=!m.hold;log('DEPLOYMENT / '+m.reference+' / '+(m.hold?'ON HOLD':'RESUMED'));missionDraw();missionMsg(m.hold?'MISSION HELD':'MISSION RESUMED')};
-d('d-abort').onclick=()=>{const m=missionActive();if(!m||m.cancelled||m.stage>=6)return;m.cancelled=true;log('DEPLOYMENT CANCELLED / '+m.reference);missionDraw();missionMsg('MISSION CANCELLED / RECORD RETAINED')};
-d('d-guide').onclick=()=>{
- const m=missionActive();if(!m||m.hold||m.cancelled||m.stage>=6)return;
- if(m.stage===0){d('d-next').click();return}
- if(m.stage===1){missionOpenLinked('v-openpreflight');return}
- if(m.stage===2){
-   if(!ready()){missionMsg('COMPLETE PREFLIGHT BEFORE AUTHORISING DEPLOYMENT');return}
-   v.status='DEPLOYED';log('DEPLOYMENT AUTHORISED / '+m.reference+' / '+m.operator);setupFields();missionMsg('VEHICLE DEPLOYED / CONFIRM DEPLOYMENT AUTHORISED');missionDraw();return;
- }
- if(m.stage===3){missionOpenLinked('v-openmonitor-direct');return}
- if(m.stage===4){missionOpenLinked('v-openreports');return}
+function missionLinkedOpen(target){
+ const modalId={'v-openpreflight':'v-preflight-modal','v-opencomms':'v-comms-modal','v-openreports':'v-reports-modal','v-openmonitor-direct':'v-monitor-modal'}[target];
+ if(!$(target)||!d(modalId)){missionMsg('SYSTEM NOT AVAILABLE');return}
+ d('v-mission-modal').classList.add('v-hidden');
+ missionLinked=modalId;
+ $(target).click();
+ let el=d(modalId);
+ let b=el.querySelector('#d-return');
+ if(!b){b=document.createElement('button');b.type='button';b.id='d-return';b.textContent='RETURN TO DEPLOYMENT';b.className='v-good-button';b.style.margin='5px';b.onclick=()=>{el.classList.add('v-hidden');missionLinked=null;missionShow();missionMsg('RETURNED TO DEPLOYMENT CONSOLE')};const frame=el.querySelector('.v-modal-frame');if(frame)frame.insertBefore(b,frame.firstChild)}
+}
+d('d-action').onclick=()=>{
+ const m=missionCurrent();if(!m||m.hold)return;
+ if(m.stage===1){missionLinkedOpen('v-openpreflight');return}
+ if(m.stage===2){if(!ready()){missionMsg('PREFLIGHT NOT VERIFIED');return}v.status='DEPLOYED';log('VEHICLE DEPLOYED / '+m.reference);setupFields();missionAdvance(m,'DEPARTURE AUTHORISED');missionMsg('VEHICLE DEPLOYED / PROCEED TO DESTINATION');return}
+ if(m.stage===3){missionAdvance(m,'ARRIVAL ON SITE CONFIRMED');missionMsg('ON SITE / RECORD AND TRANSMIT FINDINGS');return}
+ if(m.stage===4){missionLinkedOpen('v-openreports');return}
  if(m.stage===5){
-   v.status='RETURNING';log('VEHICLE RETURNING TO HQ / '+m.reference);setupFields();
-   missionMsg('VEHICLE RETURNING / CONFIRM RETURN TO BASE TO CLOSE AND RESET');
-   missionDraw();return;
+   if(!confirm('CONFIRM ARRIVAL AT HQ? THIS WILL ARCHIVE THE MISSION AND RESET VEHICLE PREFLIGHT READINESS.'))return;
+   missionAdvance(m,'ARRIVAL AT HQ CONFIRMED');missionReset(m);missionDraw();missionMsg('RETURN COMPLETE / VEHICLE STANDBY / NEW PREFLIGHT REQUIRED');return;
  }
+ missionSync();missionDraw();
 };
-[['d-preflight','v-openpreflight'],['d-comms','v-opencomms'],['d-reports','v-openreports']].forEach(([from,to])=>d(from).onclick=()=>missionOpenLinked(to));
-$('goContainment').addEventListener('click',()=>d('v-mission-modal').classList.add('v-hidden'));
+d('d-hold').onclick=()=>{const m=missionCurrent();if(!m)return;m.hold=!m.hold;log('DEPLOYMENT / '+m.reference+' / '+(m.hold?'HOLD':'RESUMED'));missionDraw();missionMsg(m.hold?'OPERATION HELD':'OPERATION RESUMED')};
+d('d-abort').onclick=()=>{const m=missionCurrent();if(!m||!confirm('CANCEL ACTIVE DEPLOYMENT?'))return;m.cancelled=true;log('DEPLOYMENT CANCELLED / '+m.reference);v.status='STANDBY';v.preflight=null;v.opsDraft={};persist();setupFields();missionDraw();missionMsg('MISSION CANCELLED / RECORD RETAINED')};
+[['d-preflight','v-openpreflight'],['d-comms','v-opencomms'],['d-reports','v-openreports'],['d-monitor','v-openmonitor-direct']].forEach(([a,b])=>d(a).onclick=()=>missionLinkedOpen(b));
+// Detect completed checklist and transmitted report; return to the console after linked windows close.
+setInterval(()=>{
+ const m=missionCurrent();if(!m)return;
+ const previous=m.stage;missionSync();
+ if(m.stage!==previous&&d('v-mission-modal').classList.contains('v-hidden')&&!missionLinked)missionDraw();
+ if(missionLinked){
+   const linked=d(missionLinked);
+   if(linked&&linked.classList.contains('v-hidden')){
+     missionLinked=null;missionShow();
+     missionMsg('TASK COMPLETED / DEPLOYMENT CONSOLE RESTORED');
+   }
+ }
+},500);
+$('goContainment').addEventListener('click',()=>{missionLinked=null;d('v-mission-modal').classList.add('v-hidden')});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')d('v-mission-modal').classList.add('v-hidden')});
 
 setupFields();sirenUI();
