@@ -396,6 +396,10 @@ body.vehicle-active>.app{display:none!important}body:not(.vehicle-active)>#vehic
 .ecto-credits{font:9px/1.4 'Courier New',monospace;color:#649d83;text-align:center;letter-spacing:.45px;padding:3px 8px;pointer-events:none}
 #ectoModuleSwitch .ecto-credits{display:none}
 @media (max-width:800px){.ecto-select-trigger{min-height:34px;font-size:10px!important}.ecto-select-option{min-height:40px}}
+</style><style>
+.cu-event-recovery{border:1px solid #4c8b76;background:#081b17;color:#9cdbba;padding:7px;margin:6px 0;display:flex;gap:8px;align-items:center;justify-content:space-between;font:11px Courier,monospace}
+.cu-event-recovery button{background:#102a22;color:#e5c886;border:1px solid #a88d4a;border-radius:0;font:11px Courier,monospace;padding:8px;min-height:36px}
+@media(max-width:800px){.cu-event-recovery{flex-wrap:wrap}.cu-event-recovery button{width:100%}}
 </style></head><body><div id="ectoModuleSwitch"><button id="goContainment" class="selected">CU-01 CONTAINMENT</button><button id="goVehicle">VEH-01 ECTOMOBILE</button></div>
 <section id="vehicle008a" aria-label="Vehicle Operations">
  <div class="v-head"><div><div class="v-brand">E.C.T.O. // VEHICLE OPERATIONS</div><div class="v-muted">ECTOPLASMIC CONTAINMENT &amp; TECHNICAL OPERATIONS // VEH-01 // BUILD 008B.3F</div></div><div class="v-muted" id="v-clock"></div></div>
@@ -685,6 +689,7 @@ syncClassTypes();initCRTSelects();render();reset();
 // 007D.1: independent, observable idle event sequencer.
 // Transfer controller and trap identification are not modified.
 let directorTimer=null,directorLast=0,directorNext=Date.now()+14000,directorSerial=0;
+let cuActiveIncident=null;
 // 007I: staged activity pacing; director controls only idle incident scheduling.
 let iQuietUntil=Date.now()+9000,iRecent=[],iPendingEscalation=null,iEventCount=0;
 function iDirectorPace(){
@@ -712,14 +717,14 @@ function directorStatus(msg){
 function directorFinish(i,kind,source,serial,action='AUTO CORRECTED'){
  if(serial!==directorSerial)return;
  clearTimeout(directorTimer);directorTimer=null;
- d.sectors[i].stability=Math.min(99,d.sectors[i].stability+8);
+ d.sectors[i].stability=Math.max(94,Math.min(99,d.sectors[i].stability+8));
  d.sectors[i].activity=Math.max(4,d.sectors[i].activity-20);
  sectorState(i,'');
  $('#fieldPill').className='pill ok';$('#fieldPill').textContent='FIELD STABLE';
  clearAlarm(serial,action);
  recordActivity(i,kind,source,action);
  logEvent('SECTOR '+String(i+1).padStart(2,'0')+' // '+kind+' // '+action);
- autonomousBusy=false;scopeMode='normal';setCurrentEvent('IDLE');
+ autonomousBusy=false;cuActiveIncident=null;scopeMode='normal';setCurrentEvent('IDLE');
  directorLast=Date.now();directorNext=directorLast+directorInterval();
  // Quiet interval after each incident; optional follow-up for a measured escalation.
  const pace=iDirectorPace();iQuietUntil=Date.now()+pace.quiet;
@@ -735,7 +740,7 @@ function directorEvent(requestedKind,manual=false){
  if(manual)iPendingEscalation=null;
  if(autonomousBusy){
   if(!manual)return false;
-  clearTimeout(directorTimer);directorSerial++;autonomousBusy=false;closePopup();
+  clearTimeout(directorTimer);directorSerial++;autonomousBusy=false;cuActiveIncident=null;closePopup();
  }
  let serial=++directorSerial;
  let choice=chooseLivingSector(),i=choice.i;
@@ -753,7 +758,7 @@ function directorEvent(requestedKind,manual=false){
  }
  let quiet=kind==='SIGNATURE TRANSIENT'||kind==='COOLING CYCLE';
  let needsOperator=kind==='FIELD INSTABILITY'||kind==='FIELD INTERVENTION'||kind==='GRID SURGE'||kind==='SECTOR VARIANCE';
- autonomousBusy=true;scopeMode=quiet?'scan':'active';setCurrentEvent(kind);
+ autonomousBusy=true;cuActiveIncident={serial,kind,sector:i,started:Date.now(),source};scopeMode=quiet?'scan':'active';setCurrentEvent(kind);
  iEventCount++;iDirectorRecord(kind,quiet?'SUBTLE ACTIVITY':needsOperator?'ESCALATION':'DISTURBANCE');
  if(requestedKind==='AUTO'&&quiet&&Math.random()<iDirectorPace().chance)iPendingEscalation={kind:'SECTOR VARIANCE',at:Date.now()+iDirectorPace().quiet};
  d.sectors[i].stability=Math.max(70,d.sectors[i].stability-(quiet?2:needsOperator?13:8));
@@ -1047,17 +1052,51 @@ function hReadings(){
  $('#hAux').disabled=!hState.fault||hState.auxEngaged;$('#hPrimary').disabled=!hState.auxEngaged||hState.primaryRestored;
 }
 function hOutput(t){$('#hOutput').textContent=t}
-function hOpen(){if(!engineeringAuthorized()){requestEngineeringAccess();return}$('#hOverlay').hidden=false;hReadings();}
+function cuIncidentSummary(){
+ if(alarm)return 'ACTIVE ALARM // '+alarm.kind+' // SECTOR '+String(alarm.sector+1).padStart(2,'0')+' // '+(alarm.ack?'ACKNOWLEDGED / CORRECTION REQUIRED':'ACKNOWLEDGE / CORRECT REQUIRED');
+ if(hState.fault)return 'ENGINEERING FAULT // '+hState.fault.kind+' // SECTOR '+String(hState.fault.sector+1).padStart(2,'0');
+ if(cuActiveIncident)return 'AUTO EVENT // '+cuActiveIncident.kind+' // SECTOR '+String(cuActiveIncident.sector+1).padStart(2,'0')+' // '+Math.round((Date.now()-cuActiveIncident.started)/1000)+'S ELAPSED';
+ return autonomousBusy?'EVENT STATE OUT OF SYNC // NO REGISTERED INCIDENT':'NO ACTIVE INCIDENT';
+}
+function cuRefreshIncidentInfo(){const el=$('#cuIncidentStatus');if(el)el.textContent=cuIncidentSummary();}
+function cuRecoverStalled(){
+ if(alarm){hOutput('ACTIVE ALARM PRESENT. USE THE ALARM INDICATOR AND COMPLETE ITS CORRECTIVE PROCEDURE.');cuRefreshIncidentInfo();return}
+ if(hState.fault){hOutput('ENGINEERING FAULT PRESENT. COMPLETE IDENTIFY / APPLY / VERIFY.');cuRefreshIncidentInfo();return}
+ const age=cuActiveIncident?Date.now()-cuActiveIncident.started:Infinity;
+ if(!autonomousBusy&&!cuActiveIncident){hOutput('NO STALLED EVENT DETECTED.');cuRefreshIncidentInfo();return}
+ if(age<12000){hOutput('EVENT STILL WITHIN ITS NORMAL RESPONSE WINDOW. RECHECK AFTER 12 SECONDS.');cuRefreshIncidentInfo();return}
+ const affected=cuActiveIncident?.sector;
+ clearTimeout(directorTimer);directorTimer=null;directorSerial++;
+ if(Number.isInteger(affected)&&affected>=0&&affected<8){
+  d.sectors[affected].stability=Math.max(94,d.sectors[affected].stability);
+  d.sectors[affected].activity=Math.min(35,d.sectors[affected].activity);
+  sectorState(affected,'');
+ }
+ autonomousBusy=false;cuActiveIncident=null;iPendingEscalation=null;scopeMode='normal';setCurrentEvent('IDLE');
+ $('#fieldPill').className='pill ok';$('#fieldPill').textContent='FIELD STABLE';closePopup();
+ directorLast=Date.now();directorNext=directorLast+directorInterval();iQuietUntil=Date.now()+iDirectorPace().quiet;
+ logEvent('ENGINEERING // STALLED EVENT STATE RECOVERED');save();render();cuRefreshIncidentInfo();hOutput('STALLED EVENT STATE RECOVERED. AUTOMATIC EVENT SCHEDULER RESET.');
+}
+function hOpen(){if(!engineeringAuthorized()){requestEngineeringAccess();return}$('#hOverlay').hidden=false;hReadings();cuRefreshIncidentInfo();if(alarm)hOutput('ACTIVE ALARM: '+cuIncidentSummary()+'\nACKNOWLEDGE AND CORRECT USING ALARM INDICATOR.');else if(autonomousBusy)hOutput(cuIncidentSummary()+'\nDIAGNOSTIC SWEEP AVAILABLE.');}
+
 $('#openDiagnostics').onclick=hOpen;
+(function(){
+ const host=$('#hOutput');if(!host)return;
+ const panel=document.createElement('div');panel.className='cu-event-recovery';
+ const info=document.createElement('div');info.id='cuIncidentStatus';info.textContent='EVENT STATUS // READY';
+ const b=document.createElement('button');b.type='button';b.id='cuRecoverStalled';b.textContent='RECOVER STALLED EVENT';b.onclick=cuRecoverStalled;
+ panel.append(info,b);host.parentNode.insertBefore(panel,host);
+})();
+
 $('#hClose').onclick=()=>{$('#hOverlay').hidden=true};
 $('#hResetView').onclick=hReadings;
 $('#hScan').onclick=()=>{
  if(hScanRunning)return;hScanRunning=true;hOutput('DIAGNOSTIC SWEEP INITIATED\nCHECKING FIELD / GRID / THERMAL / POWER...');tone(630,.08);
- setTimeout(()=>{hScanRunning=false;hReadings();hOutput(hState.fault?'FAULT LOCATED: '+hState.fault.kind+'\n'+hName(hState.fault.sector)+'\nSELECT IDENTIFY TO BEGIN CORRECTION.':'SWEEP COMPLETE // 8 SECTORS RESPONDING\nALL SYSTEMS WITHIN OPERATING TOLERANCE.');tone(810,.09);},900);
+ setTimeout(()=>{hScanRunning=false;hReadings();cuRefreshIncidentInfo();hOutput(hState.fault?'FAULT LOCATED: '+hState.fault.kind+'\n'+hName(hState.fault.sector)+'\nSELECT IDENTIFY TO BEGIN CORRECTION.':'SWEEP COMPLETE // 8 SECTORS RESPONDING\nALL SYSTEMS WITHIN OPERATING TOLERANCE.');tone(810,.09);},900);
 };
 function hInject(kind){
  if(hState.fault||alarm){hOutput('RESOLVE EXISTING FAULT BEFORE STARTING NEW TEST.');return}
- if(step!==0||autonomousBusy){hOutput('DIAGNOSTIC FAULT TEST UNAVAILABLE DURING ACTIVE TRANSFER OR EVENT.');return}
+ if(step!==0||autonomousBusy){hOutput('FAULT TEST LOCKED // '+cuIncidentSummary()+'\nDIAGNOSTIC SWEEP AND INCIDENT STATUS REMAIN AVAILABLE.');cuRefreshIncidentInfo();return}
  const i=sel>=0&&sel<8?sel:0;
  hState.fault={kind,sector:i,previousStability:d.sectors[i].stability,previousActivity:d.sectors[i].activity};
  hState.field=kind==='FIELD INSTABILITY'?66:86;hState.grid=kind==='GRID SURGE'?62:85;
